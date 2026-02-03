@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import { StatusWorkflow } from "@/components/ui/status-workflow";
 import {
   ArrowLeft,
   Edit,
@@ -207,16 +208,34 @@ const TRFDetail = () => {
         </div>
       </div>
 
-      {/* Progress Bar */}
+      {/* Status Workflow */}
       <Card className="mb-6">
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium">Overall Progress</span>
-            <span className="text-sm font-medium">{trf.progress}%</span>
-          </div>
-          <Progress value={trf.progress} className="h-3" />
-          <div className="flex items-center justify-between mt-3">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-sm font-medium">Workflow Progress</span>
             <SLAIndicator status={trf.slaStatus} dueDate={trf.dueDate} />
+          </div>
+          <StatusWorkflow
+            steps={[
+              { status: "draft", label: "Draft", description: "Form created" },
+              { status: "submitted", label: "Submitted", description: "Awaiting review" },
+              { status: "in_review", label: "In Review", description: "Under evaluation" },
+              { status: "approved", label: "Approved", description: "Ready for testing" },
+              { status: "testing", label: "Testing", description: "Lab analysis" },
+              { status: "completed", label: "Completed", description: "Results ready" },
+            ]}
+            currentStatus={trf.status}
+            size="md"
+            className="mb-4"
+          />
+          <div className="flex items-center justify-between pt-4 border-t">
+            <div>
+              <span className="text-sm text-muted-foreground">Overall Progress</span>
+              <div className="flex items-center gap-2 mt-1">
+                <Progress value={trf.progress} className="h-2 w-32" />
+                <span className="text-sm font-medium">{trf.progress}%</span>
+              </div>
+            </div>
             <span className="text-sm text-muted-foreground">
               Due: {new Date(trf.dueDate).toLocaleDateString()}
             </span>
