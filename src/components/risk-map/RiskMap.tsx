@@ -21,14 +21,12 @@ import { RiskLevel } from "@/types/inspection";
 import { Search, Filter, Map, List, Globe2, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Mercator projection for map visualization
+// Mercator projection for map visualization (matching WorldMapSVG viewBox 1009.67 x 665.96)
 function projectToMap(lat: number, lng: number, width: number, height: number) {
-  // Normalize longitude to 0-1 range
+  // Normalize longitude to 0-1 range (offset slightly for the SVG)
   const x = ((lng + 180) / 360) * width;
-  // Mercator projection for latitude with bounds
-  const latRad = (lat * Math.PI) / 180;
-  const mercN = Math.log(Math.tan(Math.PI / 4 + latRad / 2));
-  const y = height / 2 - (mercN * height) / (2 * Math.PI);
+  // Custom projection to match the simplified SVG map
+  const y = (90 - lat) / 180 * height * 1.1 - 20;
   return { x: Math.max(0, Math.min(width, x)), y: Math.max(0, Math.min(height, y)) };
 }
 
@@ -55,9 +53,9 @@ export function RiskMap() {
   const handleZoomOut = () => setZoom((prev) => Math.max(prev - 0.25, 0.5));
   const handleResetZoom = () => setZoom(1);
 
-  // Map dimensions (matching WorldMapSVG viewBox)
-  const mapWidth = 2000;
-  const mapHeight = 1000;
+  // Map dimensions (matching WorldMapSVG viewBox approximately)
+  const mapWidth = 1010;
+  const mapHeight = 666;
 
   return (
     <div className="space-y-4">
