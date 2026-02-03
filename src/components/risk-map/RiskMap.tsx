@@ -56,8 +56,8 @@ export function RiskMap() {
   const handleResetZoom = () => setZoom(1);
 
   // Map dimensions (matching WorldMapSVG viewBox)
-  const mapWidth = 1000;
-  const mapHeight = 500;
+  const mapWidth = 2000;
+  const mapHeight = 1000;
 
   return (
     <div className="space-y-4">
