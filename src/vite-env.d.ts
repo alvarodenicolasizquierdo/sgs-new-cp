@@ -1,1 +1,16 @@
 /// <reference types="vite/client" />
+
+declare module "*.geojson" {
+  const value: {
+    type: string;
+    features: Array<{
+      type: string;
+      properties: Record<string, unknown>;
+      geometry: {
+        type: string;
+        coordinates: number[][][] | number[][][][];
+      };
+    }>;
+  };
+  export default value;
+}
