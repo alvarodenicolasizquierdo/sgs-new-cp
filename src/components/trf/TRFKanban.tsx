@@ -3,13 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { TRF, TRFStatus, statusConfig } from "@/types/trf";
 import { TRFPriorityBadge } from "./TRFPriorityBadge";
 import { SLAIndicator } from "./SLAIndicator";
-import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
+import { StatusColumnHeader } from "@/components/ui/status-column-header";
+import { KanbanCard } from "@/components/ui/kanban-card";
 import { cn } from "@/lib/utils";
-import { GripVertical, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { motion, AnimatePresence } from "framer-motion";
+import { Briefcase } from "lucide-react";
 
 interface TRFKanbanProps {
   data: TRF[];
@@ -27,6 +28,7 @@ const kanbanColumns: { status: TRFStatus; label: string }[] = [
 export function TRFKanban({ data }: TRFKanbanProps) {
   const navigate = useNavigate();
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
+  const [dropTarget, setDropTarget] = useState<TRFStatus | null>(null);
 
   const getItemsByStatus = (status: TRFStatus) => {
     return data.filter((item) => item.status === status);
@@ -37,135 +39,143 @@ export function TRFKanban({ data }: TRFKanbanProps) {
     e.dataTransfer.effectAllowed = "move";
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDragOver = (e: React.DragEvent, status: TRFStatus) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
+    setDropTarget(status);
+  };
+
+  const handleDragLeave = () => {
+    setDropTarget(null);
   };
 
   const handleDrop = (e: React.DragEvent, status: TRFStatus) => {
     e.preventDefault();
-    // In a real app, this would update the TRF status
     console.log(`Move ${draggedItem} to ${status}`);
     setDraggedItem(null);
+    setDropTarget(null);
   };
 
   const handleDragEnd = () => {
     setDraggedItem(null);
+    setDropTarget(null);
   };
 
   return (
-    <div className="flex gap-4 overflow-x-auto pb-4 min-h-[600px]">
-      {kanbanColumns.map((column) => {
-        const items = getItemsByStatus(column.status);
-        const config = statusConfig[column.status];
+    <ScrollArea className="w-full">
+      <div className="flex gap-4 pb-4 min-h-[600px] px-1">
+        {kanbanColumns.map((column, columnIndex) => {
+          const items = getItemsByStatus(column.status);
+          const isDropTarget = dropTarget === column.status;
 
-        return (
-          <div
-            key={column.status}
-            className="flex-shrink-0 w-[300px]"
-            onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e, column.status)}
-          >
-            {/* Column Header */}
-            <div className="flex items-center justify-between mb-3 px-1">
-              <div className="flex items-center gap-2">
-                <span
-                  className={cn(
-                    "w-3 h-3 rounded-full",
-                    config.bgColor.replace("/10", "")
-                  )}
-                  style={{
-                    backgroundColor:
-                      column.status === "completed" || column.status === "approved"
-                        ? "hsl(var(--success))"
-                        : column.status === "testing"
-                        ? "hsl(var(--primary))"
-                        : column.status === "in_review"
-                        ? "hsl(var(--warning))"
-                        : column.status === "submitted"
-                        ? "hsl(var(--info))"
-                        : "hsl(var(--muted-foreground))",
-                  }}
-                />
-                <span className="font-medium text-sm">{column.label}</span>
-                <Badge variant="secondary" className="h-5 px-1.5 text-xs">
-                  {items.length}
-                </Badge>
-              </div>
-              <Button variant="ghost" size="icon" className="h-6 w-6">
-                <Plus className="h-4 w-4" />
-              </Button>
-            </div>
+          return (
+            <motion.div
+              key={column.status}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: columnIndex * 0.05 }}
+              className="flex-shrink-0 w-[320px]"
+              onDragOver={(e) => handleDragOver(e, column.status)}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleDrop(e, column.status)}
+            >
+              {/* Linear-style Column Header */}
+              <StatusColumnHeader
+                status={column.status}
+                label={column.label}
+                count={items.length}
+                isDraggable
+                onAdd={() => navigate("/tests/new")}
+              />
 
-            {/* Column Content */}
-            <div className="space-y-3 min-h-[500px] bg-muted/30 rounded-lg p-2">
-              {items.map((trf) => (
-                <Card
-                  key={trf.id}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, trf.id)}
-                  onDragEnd={handleDragEnd}
-                  onClick={() => navigate(`/tests/${trf.id}`)}
-                  className={cn(
-                    "cursor-pointer hover:shadow-md transition-all duration-200 group",
-                    draggedItem === trf.id && "opacity-50 rotate-2"
-                  )}
-                >
-                  <CardContent className="p-3">
-                    {/* Card Header */}
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <GripVertical className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity cursor-grab" />
-                        <span className="text-xs font-medium text-primary">
+              {/* Column Content */}
+              <div
+                className={cn(
+                  "space-y-3 min-h-[500px] rounded-xl p-2 transition-all duration-200",
+                  "bg-gradient-to-b from-muted/20 to-muted/5",
+                  isDropTarget && "bg-primary/5 ring-2 ring-primary/20 ring-dashed"
+                )}
+              >
+                <AnimatePresence mode="popLayout">
+                  {items.map((trf, index) => (
+                    <KanbanCard
+                      key={trf.id}
+                      id={trf.id}
+                      priority={trf.priority}
+                      isDragging={draggedItem === trf.id}
+                      onClick={() => navigate(`/tests/${trf.id}`)}
+                      onDragStart={(e) => handleDragStart(e, trf.id)}
+                      onDragEnd={handleDragEnd}
+                    >
+                      {/* Card Header */}
+                      <div className="flex items-start justify-between mb-2">
+                        <span className="text-xs font-semibold text-primary">
                           {trf.trfNumber}
                         </span>
+                        <TRFPriorityBadge priority={trf.priority} showLabel={false} />
                       </div>
-                      <TRFPriorityBadge priority={trf.priority} showLabel={false} />
-                    </div>
 
-                    {/* Product Info */}
-                    <h4 className="font-medium text-sm mb-1 line-clamp-2">
-                      {trf.productName}
-                    </h4>
-                    <p className="text-xs text-muted-foreground mb-3">
-                      {trf.supplier.name}
-                    </p>
+                      {/* Product Info */}
+                      <h4 className="font-medium text-sm mb-1 line-clamp-2 leading-snug">
+                        {trf.productName}
+                      </h4>
+                      
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
+                        <Briefcase className="h-3 w-3" />
+                        <span className="truncate">{trf.supplier.name}</span>
+                      </div>
 
-                    {/* Progress */}
-                    <div className="flex items-center gap-2 mb-3">
-                      <Progress value={trf.progress} className="h-1.5 flex-1" />
-                      <span className="text-xs text-muted-foreground">
-                        {trf.progress}%
-                      </span>
-                    </div>
+                      {/* Progress */}
+                      <div className="flex items-center gap-2 mb-3">
+                        <Progress 
+                          value={trf.progress} 
+                          className="h-1.5 flex-1 bg-muted" 
+                        />
+                        <span className={cn(
+                          "text-xs font-medium",
+                          trf.progress >= 75 ? "text-success" : 
+                          trf.progress >= 50 ? "text-warning" : 
+                          "text-muted-foreground"
+                        )}>
+                          {trf.progress}%
+                        </span>
+                      </div>
 
-                    {/* Footer */}
-                    <div className="flex items-center justify-between">
-                      <SLAIndicator status={trf.slaStatus} dueDate={trf.dueDate} />
-                      {trf.assignedTo && (
-                        <Avatar className="h-6 w-6">
-                          <AvatarFallback className="text-xs bg-primary/10 text-primary">
-                            {trf.assignedTo.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                      {/* Footer */}
+                      <div className="flex items-center justify-between pt-2 border-t border-border/50">
+                        <SLAIndicator status={trf.slaStatus} dueDate={trf.dueDate} />
+                        {trf.assignedTo && (
+                          <Avatar className="h-6 w-6 ring-2 ring-background">
+                            <AvatarFallback className="text-[10px] bg-primary/10 text-primary font-semibold">
+                              {trf.assignedTo.name.split(" ").map((n) => n[0]).join("")}
+                            </AvatarFallback>
+                          </Avatar>
+                        )}
+                      </div>
+                    </KanbanCard>
+                  ))}
+                </AnimatePresence>
 
-              {items.length === 0 && (
-                <div className="flex items-center justify-center h-32 border-2 border-dashed border-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground">No items</p>
-                </div>
-              )}
-            </div>
-          </div>
-        );
-      })}
-    </div>
+                {items.length === 0 && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className={cn(
+                      "flex flex-col items-center justify-center h-32",
+                      "border-2 border-dashed border-muted rounded-xl",
+                      "text-muted-foreground"
+                    )}
+                  >
+                    <p className="text-sm">No items</p>
+                    <p className="text-xs mt-1">Drag items here</p>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+      <ScrollBar orientation="horizontal" />
+    </ScrollArea>
   );
 }
