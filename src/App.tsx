@@ -9,6 +9,7 @@ import TRFDetail from "./pages/TRFDetail";
 import TRFCreate from "./pages/TRFCreate";
 import Inspections from "./pages/Inspections";
 import InspectionDetail from "./pages/InspectionDetail";
+import RiskAssessment from "./pages/RiskAssessment";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/tests/:id" element={<TRFDetail />} />
           <Route path="/inspections" element={<Inspections />} />
           <Route path="/inspections/:id" element={<InspectionDetail />} />
+          <Route path="/risk-assessment" element={<RiskAssessment />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

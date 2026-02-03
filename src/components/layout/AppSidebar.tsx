@@ -15,6 +15,7 @@ import {
   Calendar,
   Bell,
   LogOut,
+  ShieldAlert,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ const mainNavItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Inspections", url: "/inspections", icon: ClipboardCheck },
   { title: "Tests", url: "/tests", icon: FlaskConical },
+  { title: "Risk Assessment", url: "/risk-assessment", icon: ShieldAlert },
   { title: "Reports", url: "/reports", icon: FileText },
   { title: "Schedule", url: "/schedule", icon: Calendar },
   { title: "Analytics", url: "/analytics", icon: BarChart3 },
