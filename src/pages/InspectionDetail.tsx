@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { StatusWorkflow } from "@/components/ui/status-workflow";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -99,6 +100,34 @@ const InspectionDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Status Workflow */}
+      <Card className="mb-6">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-sm font-medium">Inspection Workflow</span>
+            <InspectionResultBadge result={inspection.result} />
+          </div>
+          <StatusWorkflow
+            steps={[
+              { status: "scheduled", label: "Scheduled", description: "Inspection planned" },
+              { status: "confirmed", label: "Confirmed", description: "Details verified" },
+              { status: "in_progress", label: "In Progress", description: "On-site inspection" },
+              { status: "pending_report", label: "Pending Report", description: "Compiling findings" },
+              { status: "completed", label: "Completed", description: "Report finalized" },
+            ]}
+            currentStatus={inspection.status}
+            size="md"
+            className="mb-4"
+          />
+          <div className="flex items-center justify-between pt-4 border-t text-sm text-muted-foreground">
+            <span>Scheduled: {format(new Date(inspection.scheduledDate), "MMM d, yyyy")}</span>
+            {inspection.completedDate && (
+              <span>Completed: {format(new Date(inspection.completedDate), "MMM d, yyyy")}</span>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Content Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
