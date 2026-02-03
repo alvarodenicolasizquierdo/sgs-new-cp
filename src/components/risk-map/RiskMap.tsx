@@ -1,10 +1,9 @@
 import { useState, useMemo } from "react";
 import { mockFactories, Factory } from "@/data/mockFactories";
-import { FactoryMarker } from "./FactoryMarker";
+import { LeafletMap } from "./LeafletMap";
 import { FactoryDetailPanel } from "./FactoryDetailPanel";
 import { RiskMapLegend } from "./RiskMapLegend";
 import { RiskMapStats } from "./RiskMapStats";
-import { WorldMapSVG } from "./WorldMapSVG";
 import { RiskLevelBadge } from "@/components/inspection/RiskLevelBadge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -18,24 +17,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RiskLevel } from "@/types/inspection";
-import { Search, Filter, Map, List, Globe2, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
+import { Search, Filter, Map, List, Globe2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-// Mercator projection for map visualization (matching WorldMapSVG viewBox 1009.67 x 665.96)
-function projectToMap(lat: number, lng: number, width: number, height: number) {
-  // Normalize longitude to 0-1 range (offset slightly for the SVG)
-  const x = ((lng + 180) / 360) * width;
-  // Custom projection to match the simplified SVG map
-  const y = (90 - lat) / 180 * height * 1.1 - 20;
-  return { x: Math.max(0, Math.min(width, x)), y: Math.max(0, Math.min(height, y)) };
-}
 
 export function RiskMap() {
   const [selectedFactory, setSelectedFactory] = useState<Factory | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [riskFilter, setRiskFilter] = useState<RiskLevel | "all">("all");
   const [viewMode, setViewMode] = useState<"map" | "list">("map");
-  const [zoom, setZoom] = useState(1);
 
   const filteredFactories = useMemo(() => {
     return mockFactories.filter((factory) => {
@@ -48,14 +37,6 @@ export function RiskMap() {
       return matchesSearch && matchesRisk;
     });
   }, [searchQuery, riskFilter]);
-
-  const handleZoomIn = () => setZoom((prev) => Math.min(prev + 0.25, 2));
-  const handleZoomOut = () => setZoom((prev) => Math.max(prev - 0.25, 0.5));
-  const handleResetZoom = () => setZoom(1);
-
-  // Map dimensions (matching WorldMapSVG viewBox approximately)
-  const mapWidth = 1010;
-  const mapHeight = 666;
 
   return (
     <div className="space-y-4">
@@ -121,54 +102,13 @@ export function RiskMap() {
 
         <CardContent className="p-0">
           {viewMode === "map" ? (
-            <div className="relative w-full aspect-[2/1] min-h-[400px] bg-gradient-to-b from-sky-50/50 to-sky-100/30 dark:from-slate-900/50 dark:to-slate-800/30 overflow-hidden rounded-b-lg">
-              {/* World Map Background */}
-              <div
-                className="absolute inset-0 transition-transform duration-300"
-                style={{ transform: `scale(${zoom})`, transformOrigin: "center" }}
-              >
-                <WorldMapSVG className="w-full h-full" />
-              </div>
-
-              {/* Factory Markers */}
-              <div
-                className="absolute inset-0 transition-transform duration-300"
-                style={{ transform: `scale(${zoom})`, transformOrigin: "center" }}
-              >
-                {filteredFactories.map((factory) => {
-                  const pos = projectToMap(
-                    factory.coordinates.lat,
-                    factory.coordinates.lng,
-                    mapWidth,
-                    mapHeight
-                  );
-                  return (
-                    <FactoryMarker
-                      key={factory.id}
-                      factory={factory}
-                      isSelected={selectedFactory?.id === factory.id}
-                      onClick={() => setSelectedFactory(factory)}
-                      style={{
-                        left: `${(pos.x / mapWidth) * 100}%`,
-                        top: `${(pos.y / mapHeight) * 100}%`,
-                      }}
-                    />
-                  );
-                })}
-              </div>
-
-              {/* Zoom Controls */}
-              <div className="absolute top-4 left-4 flex flex-col gap-1 z-10">
-                <Button variant="secondary" size="icon" className="h-8 w-8 shadow-md" onClick={handleZoomIn}>
-                  <ZoomIn className="h-4 w-4" />
-                </Button>
-                <Button variant="secondary" size="icon" className="h-8 w-8 shadow-md" onClick={handleZoomOut}>
-                  <ZoomOut className="h-4 w-4" />
-                </Button>
-                <Button variant="secondary" size="icon" className="h-8 w-8 shadow-md" onClick={handleResetZoom}>
-                  <RotateCcw className="h-4 w-4" />
-                </Button>
-              </div>
+            <div className="relative w-full h-[500px] lg:h-[600px]">
+              {/* Leaflet Map */}
+              <LeafletMap
+                factories={filteredFactories}
+                selectedFactory={selectedFactory}
+                onFactorySelect={setSelectedFactory}
+              />
 
               {/* Legend */}
               <RiskMapLegend />
