@@ -160,6 +160,11 @@
     @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5;
   }
 
+  /* Premium glass card effect */
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-xl border border-border/50 shadow-xl;
+  }
+
   /* Status badges */
   .status-badge {
     @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium;
@@ -234,5 +239,51 @@
   /* Gradient text for headings */
   .gradient-text {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+  }
+
+  /* Premium glow effects */
+  .glow-success {
+    box-shadow: 0 0 20px -5px hsl(var(--success) / 0.4);
+  }
+
+  .glow-warning {
+    box-shadow: 0 0 20px -5px hsl(var(--warning) / 0.4);
+  }
+
+  .glow-destructive {
+    box-shadow: 0 0 20px -5px hsl(var(--destructive) / 0.4);
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 20px -5px hsl(var(--primary) / 0.4);
+  }
+
+  /* Leaflet custom popup styles */
+  .leaflet-popup-content-wrapper {
+    @apply bg-card border border-border rounded-xl shadow-2xl overflow-hidden;
+    padding: 0 !important;
+  }
+
+  .leaflet-popup-content {
+    margin: 0 !important;
+    width: auto !important;
+  }
+
+  .leaflet-popup-tip {
+    @apply bg-card border-l border-b border-border;
+  }
+
+  .leaflet-container {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  /* Map marker animations */
+  .custom-marker {
+    transition: transform 0.2s ease-out;
+  }
+
+  .custom-marker:hover {
+    transform: scale(1.1);
+    z-index: 1000 !important;
   }
 }
