@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { StatusIndicator } from "./status-indicator";
 import {
   DropdownMenu,
@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
-import { ChevronDown, Check } from "lucide-react";
+import { ChevronDown, Check, Loader2 } from "lucide-react";
 
 const statusBadgeVariants = cva(
   "inline-flex items-center gap-2 rounded-full font-medium transition-all duration-200 select-none",
@@ -25,6 +25,7 @@ const statusBadgeVariants = cva(
         ghost: "hover:bg-secondary/50",
         outline: "border border-border bg-transparent",
         filled: "",
+        subtle: "bg-transparent",
       },
       interactive: {
         true: "cursor-pointer hover:shadow-md hover:-translate-y-0.5 active:translate-y-0",
@@ -42,16 +43,18 @@ const statusBadgeVariants = cva(
 // Status color mappings for filled variant
 const statusColorMap = {
   draft: "bg-muted text-muted-foreground",
-  submitted: "bg-info/10 text-info",
-  in_review: "bg-warning/10 text-warning",
-  approved: "bg-success/10 text-success",
-  testing: "bg-primary/10 text-primary",
-  completed: "bg-success/10 text-success",
-  rejected: "bg-destructive/10 text-destructive",
-  on_hold: "bg-warning/10 text-warning",
-  scheduled: "bg-info/10 text-info",
-  in_progress: "bg-primary/10 text-primary",
-  pending_review: "bg-warning/10 text-warning",
+  submitted: "bg-info/10 text-info border border-info/20",
+  in_review: "bg-warning/10 text-warning border border-warning/20",
+  approved: "bg-success/10 text-success border border-success/20",
+  testing: "bg-primary/10 text-primary border border-primary/20",
+  completed: "bg-success/10 text-success border border-success/20",
+  rejected: "bg-destructive/10 text-destructive border border-destructive/20",
+  on_hold: "bg-warning/10 text-warning border border-warning/20",
+  scheduled: "bg-info/10 text-info border border-info/20",
+  confirmed: "bg-info/10 text-info border border-info/20",
+  in_progress: "bg-primary/10 text-primary border border-primary/20",
+  pending_review: "bg-warning/10 text-warning border border-warning/20",
+  pending_report: "bg-warning/10 text-warning border border-warning/20",
   cancelled: "bg-muted text-muted-foreground",
 } as const;
 
@@ -64,23 +67,27 @@ export interface StatusBadgeProps
   label?: string;
   showIndicator?: boolean;
   pulse?: boolean;
+  isLoading?: boolean;
   onChange?: (newStatus: StatusType) => void;
-  availableStatuses?: { value: StatusType; label: string }[];
+  availableStatuses?: { value: StatusType; label: string; description?: string }[];
 }
 
 function StatusBadge({
   className,
   size,
-  variant,
+  variant = "filled",
   interactive,
   status,
   label,
   showIndicator = true,
   pulse,
+  isLoading,
   onChange,
   availableStatuses,
   ...props
 }: StatusBadgeProps) {
+  const [isOpen, setIsOpen] = React.useState(false);
+
   const statusLabel =
     label ||
     status
@@ -93,7 +100,8 @@ function StatusBadge({
       className={cn(
         statusBadgeVariants({ size, variant, interactive: interactive || !!onChange }),
         variant === "filled" && statusColorMap[status],
-        onChange && "pr-1.5",
+        onChange && "pr-2",
+        isLoading && "opacity-70",
         className
       )}
       initial={{ opacity: 0, scale: 0.95 }}
@@ -103,35 +111,96 @@ function StatusBadge({
       whileTap={interactive || onChange ? { scale: 0.98 } : undefined}
       {...(props as any)}
     >
-      {showIndicator && (
-        <StatusIndicator
-          status={status}
-          size={size === "xs" ? "xs" : size === "sm" ? "sm" : "md"}
-          pulse={pulse}
-        />
+      <AnimatePresence mode="wait">
+        {isLoading ? (
+          <motion.div
+            key="loading"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+          >
+            <Loader2 className="h-3 w-3 animate-spin" />
+          </motion.div>
+        ) : showIndicator ? (
+          <motion.div
+            key="indicator"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+          >
+            <StatusIndicator
+              status={status}
+              size={size === "xs" ? "xs" : size === "sm" ? "sm" : "md"}
+              pulse={pulse}
+            />
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+      
+      <motion.span 
+        layout
+        className="leading-none"
+      >
+        {statusLabel}
+      </motion.span>
+      
+      {onChange && (
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <ChevronDown className="h-3 w-3 opacity-60" />
+        </motion.div>
       )}
-      <span>{statusLabel}</span>
-      {onChange && <ChevronDown className="h-3 w-3 opacity-60" />}
     </motion.div>
   );
 
   if (onChange && availableStatuses) {
     return (
-      <DropdownMenu>
+      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>{badgeContent}</DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="min-w-[180px]">
-          {availableStatuses.map((s) => (
-            <DropdownMenuItem
+        <DropdownMenuContent align="start" className="min-w-[200px] p-1">
+          {availableStatuses.map((s, index) => (
+            <motion.div
               key={s.value}
-              onClick={() => onChange(s.value)}
-              className="gap-3"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.03 }}
             >
-              <StatusIndicator status={s.value} size="sm" />
-              <span className="flex-1">{s.label}</span>
-              {s.value === status && (
-                <Check className="h-4 w-4 text-primary" />
-              )}
-            </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  onChange(s.value);
+                  setIsOpen(false);
+                }}
+                className={cn(
+                  "gap-3 py-2.5 px-3 cursor-pointer rounded-lg",
+                  "transition-colors duration-150",
+                  s.value === status && "bg-primary/5"
+                )}
+              >
+                <StatusIndicator status={s.value} size="sm" glow={s.value === status} />
+                <div className="flex-1 min-w-0">
+                  <span className="block font-medium">{s.label}</span>
+                  {s.description && (
+                    <span className="block text-xs text-muted-foreground truncate">
+                      {s.description}
+                    </span>
+                  )}
+                </div>
+                <AnimatePresence>
+                  {s.value === status && (
+                    <motion.div
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      <Check className="h-4 w-4 text-primary" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </DropdownMenuItem>
+            </motion.div>
           ))}
         </DropdownMenuContent>
       </DropdownMenu>

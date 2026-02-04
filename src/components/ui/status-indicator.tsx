@@ -23,8 +23,10 @@ const statusIndicatorVariants = cva(
         rejected: "bg-destructive",
         on_hold: "bg-warning",
         scheduled: "bg-info",
+        confirmed: "bg-info",
         in_progress: "bg-primary",
         pending_review: "bg-warning",
+        pending_report: "bg-warning",
         cancelled: "bg-muted-foreground",
       },
       animated: {
@@ -43,6 +45,7 @@ export interface StatusIndicatorProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof statusIndicatorVariants> {
   pulse?: boolean;
+  glow?: boolean;
 }
 
 function StatusIndicator({
@@ -51,11 +54,15 @@ function StatusIndicator({
   status,
   animated,
   pulse,
+  glow,
   ...props
 }: StatusIndicatorProps) {
-  if (animated || pulse) {
+  const showAnimation = animated || pulse;
+
+  if (showAnimation) {
     return (
       <span className="relative inline-flex">
+        {/* Main indicator */}
         <motion.span
           className={cn(statusIndicatorVariants({ size, status }), className)}
           initial={{ scale: 0.8, opacity: 0 }}
@@ -63,19 +70,58 @@ function StatusIndicator({
           transition={{ duration: 0.2 }}
           {...(props as any)}
         />
+        
+        {/* Pulse ring effect */}
         {pulse && (
+          <>
+            <motion.span
+              className={cn(
+                "absolute inset-0 rounded-full",
+                statusIndicatorVariants({ size, status })
+              )}
+              initial={{ scale: 1, opacity: 0.6 }}
+              animate={{ scale: 2.5, opacity: 0 }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                repeatType: "loop",
+                ease: "easeOut",
+              }}
+            />
+            <motion.span
+              className={cn(
+                "absolute inset-0 rounded-full",
+                statusIndicatorVariants({ size, status })
+              )}
+              initial={{ scale: 1, opacity: 0.4 }}
+              animate={{ scale: 2, opacity: 0 }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                repeatType: "loop",
+                ease: "easeOut",
+                delay: 0.3,
+              }}
+            />
+          </>
+        )}
+
+        {/* Glow effect */}
+        {glow && (
           <motion.span
             className={cn(
-              "absolute inset-0 rounded-full opacity-75",
+              "absolute inset-0 rounded-full blur-sm opacity-50",
               statusIndicatorVariants({ size, status })
             )}
-            initial={{ scale: 1, opacity: 0.6 }}
-            animate={{ scale: 2, opacity: 0 }}
+            animate={{
+              opacity: [0.3, 0.6, 0.3],
+              scale: [1, 1.2, 1],
+            }}
             transition={{
-              duration: 1.5,
+              duration: 2,
               repeat: Infinity,
               repeatType: "loop",
-              ease: "easeOut",
+              ease: "easeInOut",
             }}
           />
         )}
@@ -85,7 +131,11 @@ function StatusIndicator({
 
   return (
     <span
-      className={cn(statusIndicatorVariants({ size, status }), className)}
+      className={cn(
+        statusIndicatorVariants({ size, status }), 
+        glow && "shadow-sm",
+        className
+      )}
       {...props}
     />
   );
