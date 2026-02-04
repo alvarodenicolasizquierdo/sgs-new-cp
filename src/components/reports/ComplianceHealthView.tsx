@@ -5,6 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
+  Tooltip as UITooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Award,
   AlertTriangle,
   CheckCircle2,
@@ -27,7 +33,7 @@ import {
   Pie,
   Cell,
   ResponsiveContainer,
-  Tooltip,
+  Tooltip as ChartTooltip,
   AreaChart,
   Area,
   XAxis,
@@ -293,7 +299,7 @@ export function ComplianceHealthView() {
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="month" tick={{ fontSize: 12 }} />
                     <YAxis domain={[80, 100]} tick={{ fontSize: 12 }} />
-                    <Tooltip
+                    <ChartTooltip
                       formatter={(value: number) => [`${value}%`, "Compliance"]}
                       contentStyle={{
                         backgroundColor: "hsl(var(--card))",
@@ -342,7 +348,7 @@ export function ComplianceHealthView() {
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip
+                    <ChartTooltip
                       contentStyle={{
                         backgroundColor: "hsl(var(--card))",
                         borderColor: "hsl(var(--border))",
@@ -539,15 +545,24 @@ export function ComplianceHealthView() {
                                 </div>
                               </div>
                             ))}
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              className="w-full gap-2"
-                              onClick={() => handleViewSupplierCertificates(supplier.supplier)}
-                            >
-                              View All Supplier Certificates
-                              <ExternalLink className="h-4 w-4" />
-                            </Button>
+                            <TooltipProvider>
+                              <UITooltip>
+                                <TooltipTrigger asChild>
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    className="w-full gap-2"
+                                    onClick={() => handleViewSupplierCertificates(supplier.supplier)}
+                                  >
+                                    View All Supplier Certificates
+                                    <ExternalLink className="h-4 w-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Navigate to Risk Assessment for {supplier.supplier}</p>
+                                </TooltipContent>
+                              </UITooltip>
+                            </TooltipProvider>
                           </div>
                         </motion.div>
                       )}
