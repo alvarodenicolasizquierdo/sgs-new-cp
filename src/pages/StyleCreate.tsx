@@ -80,6 +80,7 @@ export default function StyleCreate() {
     garmentTechId: "",
     // Care
     selectedCareSymbols: [] as string[],
+    careWording: "",
     // Components
     selectedComponents: [] as string[],
     // Images
@@ -503,55 +504,105 @@ export default function StyleCreate() {
             {currentStep === "care" && (
               <div className="space-y-6">
                 <CardDescription>
-                  Select care symbols for the product label
+                  Select care symbols and add care wording instructions for the product label
                 </CardDescription>
                 
-                {["wash", "bleach", "tumble_dry", "iron", "dry_clean"].map(category => (
-                  <div key={category} className="space-y-3">
-                    <Label className="text-base font-medium capitalize">{category.replace("_", " ")}</Label>
-                    <div className="flex flex-wrap gap-2">
-                      {mockCareSymbols.filter(s => s.category === category).map(symbol => (
-                        <button
-                          key={symbol.id}
-                          type="button"
-                          onClick={() => {
-                            const isSelected = formData.selectedCareSymbols.includes(symbol.id);
-                            updateFormData({
-                              selectedCareSymbols: isSelected
-                                ? formData.selectedCareSymbols.filter(id => id !== symbol.id)
-                                : [...formData.selectedCareSymbols, symbol.id]
-                            });
-                          }}
-                          className={cn(
-                            "flex flex-col items-center p-3 border rounded-lg transition-all min-w-[80px]",
-                            formData.selectedCareSymbols.includes(symbol.id)
-                              ? "border-primary bg-primary/5 ring-1 ring-primary"
-                              : "hover:border-primary/50"
-                          )}
-                        >
-                          <span className="text-2xl">{symbol.icon}</span>
-                          <span className="text-xs mt-1 text-center">{symbol.description}</span>
-                        </button>
-                      ))}
+                {/* Care Symbols Section */}
+                <div className="space-y-4">
+                  <Label className="text-lg font-semibold">Care Symbols</Label>
+                  {["wash", "bleach", "tumble_dry", "iron", "dry_clean"].map(category => (
+                    <div key={category} className="space-y-3">
+                      <Label className="text-base font-medium capitalize">{category.replace("_", " ")}</Label>
+                      <div className="flex flex-wrap gap-2">
+                        {mockCareSymbols.filter(s => s.category === category).map(symbol => (
+                          <button
+                            key={symbol.id}
+                            type="button"
+                            onClick={() => {
+                              const isSelected = formData.selectedCareSymbols.includes(symbol.id);
+                              updateFormData({
+                                selectedCareSymbols: isSelected
+                                  ? formData.selectedCareSymbols.filter(id => id !== symbol.id)
+                                  : [...formData.selectedCareSymbols, symbol.id]
+                              });
+                            }}
+                            className={cn(
+                              "flex flex-col items-center p-3 border rounded-lg transition-all min-w-[80px]",
+                              formData.selectedCareSymbols.includes(symbol.id)
+                                ? "border-primary bg-primary/5 ring-1 ring-primary"
+                                : "hover:border-primary/50"
+                            )}
+                          >
+                            <span className="text-2xl">{symbol.icon}</span>
+                            <span className="text-xs mt-1 text-center">{symbol.description}</span>
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
 
-                {formData.selectedCareSymbols.length > 0 && (
-                  <div className="pt-4 border-t">
-                    <Label className="text-base font-medium">Selected Symbols</Label>
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {formData.selectedCareSymbols.map(id => {
-                        const symbol = mockCareSymbols.find(s => s.id === id);
-                        return symbol ? (
-                          <Badge key={id} variant="secondary" className="gap-1">
-                            {symbol.icon} {symbol.description}
-                          </Badge>
-                        ) : null;
-                      })}
+                  {formData.selectedCareSymbols.length > 0 && (
+                    <div className="pt-4 border-t">
+                      <Label className="text-base font-medium">Selected Symbols</Label>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {formData.selectedCareSymbols.map(id => {
+                          const symbol = mockCareSymbols.find(s => s.id === id);
+                          return symbol ? (
+                            <Badge key={id} variant="secondary" className="gap-1">
+                              {symbol.icon} {symbol.description}
+                            </Badge>
+                          ) : null;
+                        })}
+                      </div>
                     </div>
+                  )}
+                </div>
+
+                {/* Care Wording Section */}
+                <div className="space-y-4 pt-6 border-t">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-lg font-semibold">Care Wording</Label>
+                    <Badge variant="outline" className="text-xs">
+                      {formData.singleOrMultipack === "multipack" ? "Multipack" : "Single Pack"}
+                    </Badge>
                   </div>
-                )}
+                  <p className="text-sm text-muted-foreground">
+                    Add text instructions that will appear on the care label alongside the symbols
+                  </p>
+                  <Textarea
+                    placeholder="e.g., Machine wash cold with like colours. Tumble dry low. Do not bleach. Iron on low heat if needed. Do not dry clean."
+                    value={formData.careWording}
+                    onChange={(e) => updateFormData({ careWording: e.target.value })}
+                    rows={4}
+                    className="font-mono text-sm"
+                  />
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const selectedSymbolsText = formData.selectedCareSymbols
+                          .map(id => mockCareSymbols.find(s => s.id === id)?.description)
+                          .filter(Boolean)
+                          .join(". ");
+                        updateFormData({ careWording: selectedSymbolsText + "." });
+                      }}
+                      disabled={formData.selectedCareSymbols.length === 0}
+                    >
+                      Generate from Symbols
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => updateFormData({ careWording: "" })}
+                      disabled={!formData.careWording}
+                    >
+                      Clear Wording
+                    </Button>
+                  </div>
+                </div>
               </div>
             )}
 
