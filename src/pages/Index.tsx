@@ -6,6 +6,12 @@ import {
   FlaskConical,
   TrendingUp,
 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import markAvatar from "@/assets/profiles/mark.png";
+import karukaAvatar from "@/assets/profiles/karuka.jpg";
+import alvaroAvatar from "@/assets/profiles/alvaro.jpg";
+import ammAvatar from "@/assets/profiles/amm.jpg";
+import saritaAvatar from "@/assets/profiles/sarita.jpg";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { RecentTestsTable } from "@/components/dashboard/RecentTestsTable";
@@ -113,51 +119,62 @@ const Index = () => {
                 details: "TST-2024-0847 passed all requirements",
                 time: "2 hours ago",
                 type: "success",
+                user: { name: "Karuka Yamamoto", avatar: karukaAvatar, initials: "KY" },
               },
               {
                 action: "New inspection scheduled",
                 details: "PPE Batch Inspection for SafeGuard Manufacturing",
                 time: "4 hours ago",
                 type: "info",
+                user: { name: "Alvaro Mendez", avatar: alvaroAvatar, initials: "AM" },
               },
               {
                 action: "Report generated",
                 details: "Monthly quality summary - January 2024",
                 time: "Yesterday",
                 type: "default",
+                user: { name: "Mark Thompson", avatar: markAvatar, initials: "MT" },
               },
               {
                 action: "Test failed",
                 details: "TST-2024-0849 did not meet flame resistance standards",
                 time: "2 days ago",
                 type: "destructive",
+                user: { name: "Amm Rattanakorn", avatar: ammAvatar, initials: "AR" },
               },
               {
                 action: "Supplier added",
                 details: "NewTech Materials Inc. registered as new supplier",
                 time: "3 days ago",
                 type: "default",
+                user: { name: "Sarita Kim", avatar: saritaAvatar, initials: "SK" },
               },
             ].map((item, index) => (
               <div
                 key={index}
                 className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors"
               >
-                <div
-                  className={`w-2 h-2 rounded-full mt-2 ${
-                    item.type === "success"
-                      ? "bg-success"
-                      : item.type === "destructive"
-                      ? "bg-destructive"
-                      : item.type === "info"
-                      ? "bg-info"
-                      : "bg-muted-foreground"
-                  }`}
-                />
+                <Avatar className="h-8 w-8 flex-shrink-0">
+                  <AvatarImage src={item.user.avatar} alt={item.user.name} />
+                  <AvatarFallback className="text-xs">{item.user.initials}</AvatarFallback>
+                </Avatar>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm">{item.action}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium text-sm">{item.action}</p>
+                    <div
+                      className={`w-2 h-2 rounded-full ${
+                        item.type === "success"
+                          ? "bg-success"
+                          : item.type === "destructive"
+                          ? "bg-destructive"
+                          : item.type === "info"
+                          ? "bg-info"
+                          : "bg-muted-foreground"
+                      }`}
+                    />
+                  </div>
                   <p className="text-xs text-muted-foreground mt-0.5">{item.details}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{item.time}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{item.time} • {item.user.name}</p>
                 </div>
               </div>
             ))}
