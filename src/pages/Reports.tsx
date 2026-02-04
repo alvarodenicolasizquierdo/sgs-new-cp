@@ -9,6 +9,9 @@ import {
   FileSpreadsheet,
   ChevronLeft,
   ChevronRight,
+  ShieldAlert,
+  Activity,
+  Award,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -19,12 +22,15 @@ import { TransactionTable } from "@/components/reports/TransactionTable";
 import { ColumnEditor } from "@/components/reports/ColumnEditor";
 import { CustomReports } from "@/components/reports/CustomReports";
 import { BalancesView } from "@/components/reports/BalancesView";
+import { RiskSummaryDashboard } from "@/components/reports/RiskSummaryDashboard";
+import { ComplianceHealthView } from "@/components/reports/ComplianceHealthView";
+import { PipelineFlowDashboard } from "@/components/reports/PipelineFlowDashboard";
 import { mockTransactions, transactionColumns } from "@/data/mockReports";
 
 const ITEMS_PER_PAGE = 20;
 
 export default function Reports() {
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("risk");
   const [filters, setFilters] = useState<TransactionFiltersState>({
     search: "",
     type: "all",
@@ -103,45 +109,69 @@ export default function Reports() {
         >
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Reports</h1>
-            <p className="text-muted-foreground">
-              Analyze transactions, track balances, and generate custom reports
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={handleRefresh} className="gap-2">
-              <RefreshCw className="h-4 w-4" />
-              Refresh
-            </Button>
-            <Button variant="outline" size="sm" onClick={handleExport} className="gap-2">
-              <Download className="h-4 w-4" />
-              Export
-            </Button>
-          </div>
-        </motion.div>
+        <p className="text-muted-foreground">
+          Decision-oriented insights on risk, compliance, and pipeline health
+        </p>
+      </div>
+      <div className="flex items-center gap-2">
+        <Button variant="outline" size="sm" onClick={handleRefresh} className="gap-2">
+          <RefreshCw className="h-4 w-4" />
+          Refresh
+        </Button>
+        <Button variant="outline" size="sm" onClick={handleExport} className="gap-2">
+          <Download className="h-4 w-4" />
+          Export
+        </Button>
+      </div>
+    </motion.div>
 
-        {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-muted/50 p-1">
-            <TabsTrigger value="overview" className="gap-2">
-              Overview
-            </TabsTrigger>
-            <TabsTrigger value="transactions" className="gap-2">
-              Transactions
-              <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-xs">
-                {mockTransactions.length}
-              </Badge>
-            </TabsTrigger>
-            <TabsTrigger value="balances" className="gap-2">
-              Balances
-            </TabsTrigger>
-            <TabsTrigger value="reports" className="gap-2">
-              Custom Reports
-            </TabsTrigger>
-          </TabsList>
+    {/* Tabs */}
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <TabsList className="bg-muted/50 p-1 flex-wrap h-auto gap-1">
+        <TabsTrigger value="risk" className="gap-2">
+          <ShieldAlert className="h-4 w-4" />
+          Risk Summary
+        </TabsTrigger>
+        <TabsTrigger value="compliance" className="gap-2">
+          <Award className="h-4 w-4" />
+          Compliance
+        </TabsTrigger>
+        <TabsTrigger value="pipeline" className="gap-2">
+          <Activity className="h-4 w-4" />
+          Pipeline Flow
+        </TabsTrigger>
+        <TabsTrigger value="overview" className="gap-2">
+          Overview
+        </TabsTrigger>
+        <TabsTrigger value="transactions" className="gap-2">
+          Transactions
+          <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-xs">
+            {mockTransactions.length}
+          </Badge>
+        </TabsTrigger>
+        <TabsTrigger value="balances" className="gap-2">
+          Balances
+        </TabsTrigger>
+        <TabsTrigger value="reports" className="gap-2">
+          Custom Reports
+        </TabsTrigger>
+      </TabsList>
 
-          <TabsContent value="overview" className="mt-0">
-            <ReportOverview />
-          </TabsContent>
+      <TabsContent value="risk" className="mt-0">
+        <RiskSummaryDashboard />
+      </TabsContent>
+
+      <TabsContent value="compliance" className="mt-0">
+        <ComplianceHealthView />
+      </TabsContent>
+
+      <TabsContent value="pipeline" className="mt-0">
+        <PipelineFlowDashboard />
+      </TabsContent>
+
+      <TabsContent value="overview" className="mt-0">
+        <ReportOverview />
+      </TabsContent>
 
           <TabsContent value="transactions" className="mt-0 space-y-4">
             {/* Filters */}
