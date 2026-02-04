@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+// Profile images
+import karukaAvatar from "@/assets/profiles/karuka.jpg";
+import alvaroAvatar from "@/assets/profiles/alvaro.jpg";
+import ammAvatar from "@/assets/profiles/amm.jpg";
+import saritaAvatar from "@/assets/profiles/sarita.jpg";
+import markAvatar from "@/assets/profiles/mark.png";
+import hajraAvatar from "@/assets/profiles/hajra.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -69,53 +77,69 @@ interface User {
 const mockUsers: User[] = [
   {
     id: "1",
-    name: "John Doe",
-    email: "john.doe@sgs.com",
+    name: "Mark Thompson",
+    email: "mark.thompson@sgs.com",
     role: "admin",
     department: "Quality Assurance",
     status: "active",
     lastLogin: "2024-01-15T09:30:00Z",
     createdAt: "2023-06-01T00:00:00Z",
+    avatar: markAvatar,
   },
   {
     id: "2",
-    name: "Sarah Chen",
-    email: "sarah.chen@sgs.com",
+    name: "Karuka Yamamoto",
+    email: "karuka.yamamoto@sgs.com",
     role: "manager",
     department: "Testing Lab",
     status: "active",
     lastLogin: "2024-01-14T14:20:00Z",
     createdAt: "2023-08-15T00:00:00Z",
+    avatar: karukaAvatar,
   },
   {
     id: "3",
-    name: "Michael Brown",
-    email: "michael.brown@sgs.com",
+    name: "Alvaro Mendez",
+    email: "alvaro.mendez@sgs.com",
     role: "inspector",
     department: "Field Inspection",
     status: "active",
     lastLogin: "2024-01-15T08:00:00Z",
     createdAt: "2023-09-20T00:00:00Z",
+    avatar: alvaroAvatar,
   },
   {
     id: "4",
-    name: "Emily Johnson",
-    email: "emily.johnson@sgs.com",
+    name: "Amm Rattanakorn",
+    email: "amm.rattanakorn@sgs.com",
     role: "inspector",
     department: "Quality Assurance",
-    status: "inactive",
+    status: "active",
     lastLogin: "2023-12-01T10:00:00Z",
     createdAt: "2023-07-10T00:00:00Z",
+    avatar: ammAvatar,
   },
   {
     id: "5",
-    name: "David Wilson",
-    email: "david.wilson@sgs.com",
+    name: "Sarita Kim",
+    email: "sarita.kim@sgs.com",
     role: "viewer",
     department: "Compliance",
     status: "pending",
     lastLogin: "",
     createdAt: "2024-01-10T00:00:00Z",
+    avatar: saritaAvatar,
+  },
+  {
+    id: "6",
+    name: "Hajra Begum",
+    email: "hajra.begum@sgs.com",
+    role: "manager",
+    department: "Compliance",
+    status: "active",
+    lastLogin: "2024-01-13T11:45:00Z",
+    createdAt: "2023-05-20T00:00:00Z",
+    avatar: hajraAvatar,
   },
 ];
 
