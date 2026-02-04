@@ -27,6 +27,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import sgsLogo from "@/assets/sgs-logo.png";
 
 const mainNavItems = [
   { title: "Inbox", url: "/inbox", icon: Bell },
@@ -101,9 +102,14 @@ export function AppSidebar() {
       {/* Logo */}
       <div className={cn("flex items-center h-16 px-4 border-b border-sidebar-border", collapsed && "justify-center px-2")}>
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center">
-            <span className="text-sidebar-primary-foreground font-bold text-sm">SGS</span>
-          </div>
+          <img 
+            src={sgsLogo} 
+            alt="SGS Logo" 
+            className={cn(
+              "object-contain",
+              collapsed ? "h-8 w-8" : "h-8 w-auto max-w-[80px]"
+            )}
+          />
           {!collapsed && (
             <div className="flex flex-col">
               <span className="font-semibold text-sidebar-foreground text-sm">Testing Portal</span>
