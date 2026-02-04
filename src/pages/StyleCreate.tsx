@@ -37,11 +37,15 @@ import {
   Scissors,
   Save,
   Leaf,
+  ClipboardCheck,
+  Edit2,
 } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
-type WizardStep = "header" | "product" | "technologists" | "care" | "components" | "images";
+type WizardStep = "header" | "product" | "technologists" | "care" | "components" | "images" | "review";
 
 const STEPS: { id: WizardStep; label: string; icon: React.ElementType }[] = [
   { id: "header", label: "Header Info", icon: Building2 },
@@ -50,6 +54,7 @@ const STEPS: { id: WizardStep; label: string; icon: React.ElementType }[] = [
   { id: "care", label: "Care Labels", icon: Tag },
   { id: "components", label: "Components", icon: Scissors },
   { id: "images", label: "Images", icon: Image },
+  { id: "review", label: "Review", icon: ClipboardCheck },
 ];
 
 export default function StyleCreate() {
@@ -178,6 +183,7 @@ export default function StyleCreate() {
 
   const selectedSupplier = mockSuppliers.find(s => s.id === formData.supplierId);
   const availableFactories = selectedSupplier?.factories || [];
+  const selectedFactory = availableFactories.find(f => f.id === formData.factoryId);
   const availableDepartments = formData.division ? divisionConfig[formData.division]?.departments || [] : [];
 
   return (
@@ -840,19 +846,302 @@ export default function StyleCreate() {
                     </div>
                   ))}
                 </div>
+              </div>
+            )}
 
-                <div className="p-4 bg-muted rounded-lg">
-                  <h4 className="font-medium mb-2">Summary</h4>
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div><span className="text-muted-foreground">Style No:</span> {formData.tuStyleNo || "—"}</div>
-                    <div><span className="text-muted-foreground">Description:</span> {formData.description || "—"}</div>
-                    <div><span className="text-muted-foreground">Supplier:</span> {selectedSupplier?.name || "—"}</div>
-                    <div><span className="text-muted-foreground">Season:</span> {formData.season || "—"}</div>
-                    <div><span className="text-muted-foreground">Components:</span> {formData.selectedComponents.length}</div>
-                    <div><span className="text-muted-foreground">Care Symbols:</span> {formData.selectedCareSymbols.length}</div>
+            {/* Review Step */}
+            {currentStep === "review" && (
+              <ScrollArea className="h-[500px] pr-4">
+                <div className="space-y-6">
+                  <CardDescription>
+                    Review all entered information before creating the style
+                  </CardDescription>
+
+                  {/* Header Info Section */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-semibold flex items-center gap-2">
+                        <Building2 className="h-4 w-4" />
+                        Header Info
+                      </h3>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => setCurrentStep("header")}
+                        className="text-primary"
+                      >
+                        <Edit2 className="h-3 w-3 mr-1" />
+                        Edit
+                      </Button>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 p-4 bg-muted/50 rounded-lg text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Supplier:</span>
+                        <p className="font-medium">{selectedSupplier?.name || "—"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Factory:</span>
+                        <p className="font-medium">{selectedFactory?.name || "—"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">TU Style No:</span>
+                        <p className="font-medium font-mono">{formData.tuStyleNo || "—"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Design Style Ref:</span>
+                        <p className="font-medium">{formData.designStyleRef || "—"}</p>
+                      </div>
+                      <div className="col-span-2">
+                        <span className="text-muted-foreground">Description:</span>
+                        <p className="font-medium">{formData.description || "—"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Product Colour:</span>
+                        <p className="font-medium">{formData.productColour || "—"}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Product Details Section */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-semibold flex items-center gap-2">
+                        <Package className="h-4 w-4" />
+                        Product Details
+                      </h3>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => setCurrentStep("product")}
+                        className="text-primary"
+                      >
+                        <Edit2 className="h-3 w-3 mr-1" />
+                        Edit
+                      </Button>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 p-4 bg-muted/50 rounded-lg text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Division:</span>
+                        <p className="font-medium">{formData.division ? divisionConfig[formData.division as Division]?.label : "—"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Department:</span>
+                        <p className="font-medium">{formData.department || "—"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Season:</span>
+                        <p className="font-medium">{formData.season || "—"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">End Use:</span>
+                        <p className="font-medium">{formData.endUse || "—"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Country of Origin:</span>
+                        <p className="font-medium">{formData.countryOfOrigin || "—"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Pack Type:</span>
+                        <p className="font-medium capitalize">{formData.singleOrMultipack}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Gold Seal Date:</span>
+                        <p className="font-medium">{formData.goldSealDate ? format(formData.goldSealDate, "PPP") : "—"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Fabric Cut Date:</span>
+                        <p className="font-medium">{formData.fabricCutDate ? format(formData.fabricCutDate, "PPP") : "—"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Washed Product:</span>
+                        <p className="font-medium">{formData.washedProduct ? "Yes" : "No"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Order Quantity:</span>
+                        <p className="font-medium">{formData.orderQuantity || "—"}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Technologists Section */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-semibold flex items-center gap-2">
+                        <Users className="h-4 w-4" />
+                        Technologists
+                      </h3>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => setCurrentStep("technologists")}
+                        className="text-primary"
+                      >
+                        <Edit2 className="h-3 w-3 mr-1" />
+                        Edit
+                      </Button>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 p-4 bg-muted/50 rounded-lg text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Fabric Technologist:</span>
+                        <div className="flex items-center gap-2 mt-1">
+                          {formData.fabricTechId ? (
+                            <>
+                              <Avatar className="h-6 w-6">
+                                <AvatarImage src={mockTechnologists.find(t => t.id === formData.fabricTechId)?.avatar} />
+                                <AvatarFallback className="text-xs">
+                                  {mockTechnologists.find(t => t.id === formData.fabricTechId)?.name.split(' ').map(n => n[0]).join('')}
+                                </AvatarFallback>
+                              </Avatar>
+                              <span className="font-medium">{mockTechnologists.find(t => t.id === formData.fabricTechId)?.name}</span>
+                            </>
+                          ) : "—"}
+                        </div>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Garment Technologist:</span>
+                        <div className="flex items-center gap-2 mt-1">
+                          {formData.garmentTechId ? (
+                            <>
+                              <Avatar className="h-6 w-6">
+                                <AvatarImage src={mockTechnologists.find(t => t.id === formData.garmentTechId)?.avatar} />
+                                <AvatarFallback className="text-xs">
+                                  {mockTechnologists.find(t => t.id === formData.garmentTechId)?.name.split(' ').map(n => n[0]).join('')}
+                                </AvatarFallback>
+                              </Avatar>
+                              <span className="font-medium">{mockTechnologists.find(t => t.id === formData.garmentTechId)?.name}</span>
+                            </>
+                          ) : "—"}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Care Labels Section */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-semibold flex items-center gap-2">
+                        <Tag className="h-4 w-4" />
+                        Care Labels
+                      </h3>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => setCurrentStep("care")}
+                        className="text-primary"
+                      >
+                        <Edit2 className="h-3 w-3 mr-1" />
+                        Edit
+                      </Button>
+                    </div>
+                    <div className="p-4 bg-muted/50 rounded-lg text-sm space-y-3">
+                      <div>
+                        <span className="text-muted-foreground">Care Symbols:</span>
+                        {formData.selectedCareSymbols.length > 0 ? (
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {formData.selectedCareSymbols.map(id => {
+                              const symbol = mockCareSymbols.find(s => s.id === id);
+                              return symbol ? (
+                                <Badge key={id} variant="secondary" className="gap-1 text-xs">
+                                  {symbol.icon} {symbol.description}
+                                </Badge>
+                              ) : null;
+                            })}
+                          </div>
+                        ) : (
+                          <p className="font-medium">No care symbols selected</p>
+                        )}
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Care Wording:</span>
+                        <p className="font-medium mt-1">{formData.careWording || "—"}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Components Section */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-semibold flex items-center gap-2">
+                        <Scissors className="h-4 w-4" />
+                        Components
+                      </h3>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => setCurrentStep("components")}
+                        className="text-primary"
+                      >
+                        <Edit2 className="h-3 w-3 mr-1" />
+                        Edit
+                      </Button>
+                    </div>
+                    <div className="p-4 bg-muted/50 rounded-lg text-sm">
+                      {formData.selectedComponents.length > 0 ? (
+                        <div className="space-y-2">
+                          {formData.selectedComponents.map(id => {
+                            const comp = mockComponents.find(c => c.id === id);
+                            return comp ? (
+                              <div key={id} className="flex items-center gap-2">
+                                <Badge variant="outline" className="text-xs">
+                                  {comp.componentType === "fabric" ? "🧵" : "🔘"}
+                                </Badge>
+                                <span className="font-mono text-xs">{comp.tuReference}</span>
+                                <span className="text-muted-foreground">•</span>
+                                <span>{comp.mill}</span>
+                                {comp.isSustainable && (
+                                  <Badge variant="outline" className="border-success text-success text-xs">
+                                    <Leaf className="h-3 w-3 mr-1" />
+                                    Sustainable
+                                  </Badge>
+                                )}
+                              </div>
+                            ) : null;
+                          })}
+                        </div>
+                      ) : (
+                        <p className="text-muted-foreground">No components selected</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Images Section */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-semibold flex items-center gap-2">
+                        <Image className="h-4 w-4" />
+                        Images
+                      </h3>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => setCurrentStep("images")}
+                        className="text-primary"
+                      >
+                        <Edit2 className="h-3 w-3 mr-1" />
+                        Edit
+                      </Button>
+                    </div>
+                    <div className="p-4 bg-muted/50 rounded-lg text-sm">
+                      <p className="text-muted-foreground">
+                        {formData.images.length > 0 
+                          ? `${formData.images.length} image(s) uploaded`
+                          : "No images uploaded (can be added later)"
+                        }
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </ScrollArea>
             )}
           </CardContent>
         </Card>
