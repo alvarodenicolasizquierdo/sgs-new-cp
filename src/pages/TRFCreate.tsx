@@ -48,10 +48,10 @@ const steps: WizardStep[] = [
     description: "TRF details and priority",
   },
   {
-    id: "product",
-    title: "Product Details",
+    id: "style",
+    title: "Style Details",
     icon: Package,
-    description: "Product and sample information",
+    description: "Style and sample information",
   },
   {
     id: "supplier",
@@ -105,9 +105,9 @@ const TRFCreate = () => {
     testingLevel: "" as TestingLevel | "",
     dueDate: "",
     notes: "",
-    // Product
-    productName: "",
-    productCode: "",
+    // Style (TU-Online terminology)
+    styleName: "",
+    styleNumber: "",
     category: "",
     sampleDescription: "",
     // Supplier & Lab
@@ -139,7 +139,7 @@ const TRFCreate = () => {
       case 0:
         return formData.priority && formData.testingLevel && formData.dueDate;
       case 1:
-        return formData.productName && formData.productCode;
+        return formData.styleName && formData.styleNumber;
       case 2:
         return formData.supplierId && formData.labId;
       case 3:
@@ -245,26 +245,28 @@ const TRFCreate = () => {
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="productName">Product Name *</Label>
+                <Label htmlFor="styleName">Style Name *</Label>
                 <Input
-                  id="productName"
-                  placeholder="e.g., Cotton Blend T-Shirt"
-                  value={formData.productName}
-                  onChange={(e) => updateFormData("productName", e.target.value)}
+                  id="styleName"
+                  placeholder="e.g., Men's Cotton Crew T-Shirt"
+                  value={formData.styleName}
+                  onChange={(e) => updateFormData("styleName", e.target.value)}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="productCode">Product Code *</Label>
+                <Label htmlFor="styleNumber">Style Number *</Label>
                 <Input
-                  id="productCode"
-                  placeholder="e.g., PRD-CT-001"
-                  value={formData.productCode}
-                  onChange={(e) => updateFormData("productCode", e.target.value)}
+                  id="styleNumber"
+                  placeholder="e.g., 123456789"
+                  value={formData.styleNumber}
+                  onChange={(e) => updateFormData("styleNumber", e.target.value)}
+                  maxLength={9}
                 />
+                <p className="text-xs text-muted-foreground">9-digit TU Style Number</p>
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="category">Product Category</Label>
+              <Label htmlFor="category">Style Category</Label>
               <Select
                 value={formData.category}
                 onValueChange={(value) => updateFormData("category", value)}
@@ -293,7 +295,7 @@ const TRFCreate = () => {
             </div>
             <div className="border-2 border-dashed rounded-lg p-8 text-center">
               <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-              <p className="text-sm font-medium">Upload Product Images</p>
+              <p className="text-sm font-medium">Upload Style Images</p>
               <p className="text-xs text-muted-foreground mt-1">
                 Drag and drop or click to browse
               </p>
@@ -440,16 +442,16 @@ const TRFCreate = () => {
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Product Details</CardTitle>
+                <CardTitle className="text-base">Style Details</CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-muted-foreground">Product Name</p>
-                  <p className="font-medium">{formData.productName || "-"}</p>
+                  <p className="text-sm text-muted-foreground">Style Name</p>
+                  <p className="font-medium">{formData.styleName || "-"}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Product Code</p>
-                  <p className="font-medium">{formData.productCode || "-"}</p>
+                  <p className="text-sm text-muted-foreground">Style Number</p>
+                  <p className="font-medium font-mono">{formData.styleNumber || "-"}</p>
                 </div>
               </CardContent>
             </Card>
