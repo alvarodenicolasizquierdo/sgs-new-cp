@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ import {
   ArrowUpRight,
   Timer,
   Zap,
+  ExternalLink,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -64,7 +66,16 @@ const STAGE_COLORS = {
 };
 
 export function PipelineFlowDashboard() {
+  const navigate = useNavigate();
   const [selectedPipeline, setSelectedPipeline] = useState<"trf" | "inspection" | "all">("all");
+
+  const handleItemClick = (item: StageItem) => {
+    if (item.type === "trf") {
+      navigate(`/tests/${item.id}`);
+    } else {
+      navigate(`/inspections/${item.id}`);
+    }
+  };
 
   // Calculate TRF pipeline metrics
   const trfMetrics = useMemo(() => {
@@ -514,7 +525,8 @@ export function PipelineFlowDashboard() {
                 {bottleneckItems.slice(0, 6).map((item, index) => (
                   <div
                     key={item.id}
-                    className="flex items-center justify-between p-3 rounded-lg border bg-muted/30"
+                    className="flex items-center justify-between p-3 rounded-lg border bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group"
+                    onClick={() => handleItemClick(item)}
                   >
                     <div className="flex items-center gap-3">
                       <div
@@ -545,12 +557,18 @@ export function PipelineFlowDashboard() {
                       >
                         {item.daysInStage}d in stage
                       </Badge>
+                      <ExternalLink className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
                   </div>
                 ))}
               </div>
               {bottleneckItems.length > 6 && (
-                <Button variant="outline" size="sm" className="w-full mt-4">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full mt-4"
+                  onClick={() => navigate(selectedPipeline === "inspection" ? "/inspections" : "/tests")}
+                >
                   View All {bottleneckItems.length} Items
                 </Button>
               )}

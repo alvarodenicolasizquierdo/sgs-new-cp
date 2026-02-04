@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -89,8 +90,14 @@ const COLORS = {
 };
 
 export function ComplianceHealthView() {
+  const navigate = useNavigate();
   const [expandedSupplier, setExpandedSupplier] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<Certificate["status"] | "all">("all");
+
+  const handleViewSupplierCertificates = (supplierName: string) => {
+    // Navigate to risk assessment with supplier filter
+    navigate("/risk-assessment");
+  };
 
   // Calculate compliance metrics
   const metrics = useMemo(() => {
@@ -532,7 +539,12 @@ export function ComplianceHealthView() {
                                 </div>
                               </div>
                             ))}
-                            <Button variant="outline" size="sm" className="w-full gap-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="w-full gap-2"
+                              onClick={() => handleViewSupplierCertificates(supplier.supplier)}
+                            >
                               View All Supplier Certificates
                               <ExternalLink className="h-4 w-4" />
                             </Button>
