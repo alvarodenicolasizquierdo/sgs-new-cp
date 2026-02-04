@@ -16,6 +16,8 @@ import {
   Bell,
   LogOut,
   ShieldAlert,
+  Package,
+  Scissors,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -27,12 +29,14 @@ import {
 } from "@/components/ui/tooltip";
 
 const mainNavItems = [
+  { title: "Inbox", url: "/inbox", icon: Bell },
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
+  { title: "Styles", url: "/styles", icon: Package },
+  { title: "Components", url: "/components", icon: Scissors },
   { title: "Inspections", url: "/inspections", icon: ClipboardCheck },
   { title: "Tests", url: "/tests", icon: FlaskConical },
   { title: "Risk Assessment", url: "/risk-assessment", icon: ShieldAlert },
   { title: "Reports", url: "/reports", icon: FileText },
-  { title: "Schedule", url: "/schedule", icon: Calendar },
   { title: "Analytics", url: "/analytics", icon: BarChart3 },
 ];
 
