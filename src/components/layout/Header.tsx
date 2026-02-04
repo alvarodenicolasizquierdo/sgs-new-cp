@@ -1,6 +1,7 @@
 import { Bell, Search, ChevronDown, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import sgsLogo from "@/assets/sgs-logo.png";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -15,8 +16,13 @@ import { Badge } from "@/components/ui/badge";
 export function Header() {
   return (
     <header className="h-16 border-b border-border bg-card flex items-center justify-between px-6">
-      {/* Search */}
-      <div className="flex items-center gap-4 flex-1 max-w-md">
+      {/* Logo and Search */}
+      <div className="flex items-center gap-6 flex-1 max-w-lg">
+        <img 
+          src={sgsLogo} 
+          alt="SGS Logo" 
+          className="h-8 w-auto object-contain flex-shrink-0"
+        />
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
