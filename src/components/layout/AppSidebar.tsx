@@ -36,8 +36,7 @@ const mainNavItems = [
   { title: "Inspections", url: "/inspections", icon: ClipboardCheck },
   { title: "Tests", url: "/tests", icon: FlaskConical },
   { title: "Risk Assessment", url: "/risk-assessment", icon: ShieldAlert },
-  { title: "Reports", url: "/reports", icon: FileText },
-  { title: "Analytics", url: "/analytics", icon: BarChart3 },
+  { title: "Insight", url: "/analytics", icon: BarChart3 },
 ];
 
 const managementNavItems = [
