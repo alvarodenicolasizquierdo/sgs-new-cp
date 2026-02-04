@@ -14,6 +14,7 @@ import Styles from "./pages/Styles";
 import StyleDetail from "./pages/StyleDetail";
 import StyleCreate from "./pages/StyleCreate";
 import Components from "./pages/Components";
+import ComponentCreate from "./pages/ComponentCreate";
 import SupplierInbox from "./pages/SupplierInbox";
 import NotFound from "./pages/NotFound";
 
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/styles/new" element={<StyleCreate />} />
           <Route path="/styles/:id" element={<StyleDetail />} />
           <Route path="/components" element={<Components />} />
+          <Route path="/components/new" element={<ComponentCreate />} />
           <Route path="/inbox" element={<SupplierInbox />} />
           <Route path="/risk-assessment" element={<RiskAssessment />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
