@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ComponentCreateModal } from "@/components/components/ComponentCreateModal";
 import { mockSuppliers, mockFactories, mockTechnologists, mockCareSymbols } from "@/data/mockStyles";
 import { mockComponents } from "@/data/mockComponents";
 import { divisionConfig, Season, Division } from "@/types/style";
@@ -54,6 +55,7 @@ const STEPS: { id: WizardStep; label: string; icon: React.ElementType }[] = [
 export default function StyleCreate() {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState<WizardStep>("header");
+  const [showComponentModal, setShowComponentModal] = useState(false);
   const [formData, setFormData] = useState({
     // Header
     supplierId: "",
@@ -93,6 +95,15 @@ export default function StyleCreate() {
   const updateFormData = (updates: Partial<typeof formData>) => {
     setFormData(prev => ({ ...prev, ...updates }));
   };
+
+  const handleComponentCreated = (componentId: string) => {
+    // Auto-select the newly created component
+    updateFormData({ 
+      selectedComponents: [...formData.selectedComponents, componentId] 
+    });
+    toast.success("Component added to style");
+  };
+
 
   // Step validation
   const getStepValidation = (step: WizardStep): { isValid: boolean; errors: string[] } => {
@@ -703,12 +714,23 @@ export default function StyleCreate() {
                   ))}
                 </div>
 
-                <Button variant="outline" className="w-full">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => setShowComponentModal(true)}
+                >
                   <Scissors className="h-4 w-4 mr-2" />
                   Create New Component
                 </Button>
               </div>
             )}
+
+            {/* Component Create Modal */}
+            <ComponentCreateModal 
+              open={showComponentModal} 
+              onOpenChange={setShowComponentModal}
+              onComponentCreated={handleComponentCreated}
+            />
 
             {/* Images Step */}
             {currentStep === "images" && (
