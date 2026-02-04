@@ -10,6 +10,10 @@ import TRFCreate from "./pages/TRFCreate";
 import Inspections from "./pages/Inspections";
 import InspectionDetail from "./pages/InspectionDetail";
 import RiskAssessment from "./pages/RiskAssessment";
+import Styles from "./pages/Styles";
+import StyleDetail from "./pages/StyleDetail";
+import Components from "./pages/Components";
+import SupplierInbox from "./pages/SupplierInbox";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +31,10 @@ const App = () => (
           <Route path="/tests/:id" element={<TRFDetail />} />
           <Route path="/inspections" element={<Inspections />} />
           <Route path="/inspections/:id" element={<InspectionDetail />} />
+          <Route path="/styles" element={<Styles />} />
+          <Route path="/styles/:id" element={<StyleDetail />} />
+          <Route path="/components" element={<Components />} />
+          <Route path="/inbox" element={<SupplierInbox />} />
           <Route path="/risk-assessment" element={<RiskAssessment />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
