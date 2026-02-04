@@ -19,6 +19,8 @@ import SupplierInbox from "./pages/SupplierInbox";
 import Suppliers from "./pages/Suppliers";
 import SupplierCreate from "./pages/SupplierCreate";
 import Insight from "./pages/Insight";
+import Users from "./pages/Users";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +48,8 @@ const App = () => (
           <Route path="/suppliers/new" element={<SupplierCreate />} />
           <Route path="/risk-assessment" element={<RiskAssessment />} />
           <Route path="/analytics" element={<Insight />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/settings" element={<Settings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
