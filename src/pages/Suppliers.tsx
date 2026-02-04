@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import {
@@ -66,6 +67,7 @@ import {
   List,
   ExternalLink,
   ClipboardList,
+  X,
 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -81,6 +83,29 @@ export default function Suppliers() {
   const [tierFilter, setTierFilter] = useState<string>("all");
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
   const [viewMode, setViewMode] = useState<"list" | "charts">("list");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === filteredSuppliers.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filteredSuppliers.map((s) => s.id)));
+    }
+  };
+
+  const toggleSelect = (id: string) => {
+    const newSelected = new Set(selectedIds);
+    if (newSelected.has(id)) {
+      newSelected.delete(id);
+    } else {
+      newSelected.add(id);
+    }
+    setSelectedIds(newSelected);
+  };
+
+  const handleBulkSendQuestionnaire = () => {
+    window.open("https://suppllier-uki-questionnaire.manus.space/", "_blank");
+  };
 
   const stats = useMemo(() => getSupplierStats(), []);
 
@@ -281,10 +306,53 @@ export default function Suppliers() {
         {/* List View - Suppliers Table */}
         {viewMode === "list" && (
           <>
+            {/* Bulk Action Bar */}
+            {selectedIds.size > 0 && (
+              <Card className="p-4 bg-primary/5 border-primary/20">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium">
+                      {selectedIds.size} supplier{selectedIds.size > 1 ? "s" : ""} selected
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSelectedIds(new Set())}
+                      className="gap-1 text-muted-foreground"
+                    >
+                      <X className="h-4 w-4" />
+                      Clear
+                    </Button>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      size="sm"
+                      onClick={handleBulkSendQuestionnaire}
+                      className="gap-2"
+                    >
+                      <ClipboardList className="h-4 w-4" />
+                      Send Questionnaire
+                      <ExternalLink className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            )}
+
             <Card>
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="w-12">
+                      <Checkbox
+                        checked={
+                          filteredSuppliers.length > 0 &&
+                          selectedIds.size === filteredSuppliers.length
+                        }
+                        onCheckedChange={toggleSelectAll}
+                        aria-label="Select all"
+                      />
+                    </TableHead>
                     <TableHead>Supplier</TableHead>
                     <TableHead>Location</TableHead>
                     <TableHead>Contact</TableHead>
@@ -300,13 +368,24 @@ export default function Suppliers() {
                   {filteredSuppliers.map((supplier) => {
                     const complianceConfig = complianceStatusConfig[supplier.complianceStatus];
                     const supplierTierConfig = tierConfig[supplier.tier];
+                    const isSelected = selectedIds.has(supplier.id);
 
                     return (
                       <TableRow
                         key={supplier.id}
-                        className="cursor-pointer hover:bg-muted/50"
+                        className={cn(
+                          "cursor-pointer hover:bg-muted/50",
+                          isSelected && "bg-primary/5"
+                        )}
                         onClick={() => setSelectedSupplier(supplier)}
                       >
+                        <TableCell onClick={(e) => e.stopPropagation()}>
+                          <Checkbox
+                            checked={isSelected}
+                            onCheckedChange={() => toggleSelect(supplier.id)}
+                            aria-label={`Select ${supplier.name}`}
+                          />
+                        </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-3">
                             <Avatar className="h-10 w-10">
