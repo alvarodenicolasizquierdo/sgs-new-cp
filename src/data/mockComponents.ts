@@ -261,8 +261,18 @@ export const mockTrimComponents: TrimComponent[] = [
   },
 ];
 
-// All components
-export const mockComponents: Component[] = [...mockFabricComponents, ...mockTrimComponents];
+// All components - mutable array for runtime additions
+export let mockComponents: Component[] = [...mockFabricComponents, ...mockTrimComponents];
+
+// Function to add a new component at runtime
+export const addComponent = (component: Component): void => {
+  mockComponents = [...mockComponents, component];
+  if (component.componentType === "fabric") {
+    mockFabricComponents.push(component as FabricComponent);
+  } else {
+    mockTrimComponents.push(component as TrimComponent);
+  }
+};
 
 // Mock Style-Component Links (N:M relationship)
 export const mockStyleComponentLinks: StyleComponentLink[] = [
