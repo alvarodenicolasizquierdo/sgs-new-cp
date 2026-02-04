@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TRF, TRFStatus, statusConfig } from "@/types/trf";
 import { TRFPriorityBadge } from "./TRFPriorityBadge";
+import { TRFTestingLevelBadge } from "./TRFTestingLevelBadge";
 import { SLAIndicator } from "./SLAIndicator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
@@ -10,7 +11,7 @@ import { KanbanCard } from "@/components/ui/kanban-card";
 import { cn } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { motion, AnimatePresence } from "framer-motion";
-import { Briefcase } from "lucide-react";
+import { Briefcase, Link2 } from "lucide-react";
 
 interface TRFKanbanProps {
   data: TRF[];
@@ -109,15 +110,23 @@ export function TRFKanban({ data }: TRFKanbanProps) {
                     >
                       {/* Card Header */}
                       <div className="flex items-start justify-between mb-2">
-                        <span className="text-xs font-semibold text-primary">
-                          {trf.trfNumber}
-                        </span>
-                        <TRFPriorityBadge priority={trf.priority} showLabel={false} />
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-semibold text-primary">
+                            {trf.trfNumber}
+                          </span>
+                          {trf.linkedReportNumber && (
+                            <Link2 className="h-3 w-3 text-muted-foreground" />
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <TRFTestingLevelBadge level={trf.testingLevel} size="sm" />
+                          <TRFPriorityBadge priority={trf.priority} showLabel={false} />
+                        </div>
                       </div>
 
-                      {/* Product Info */}
+                      {/* Style Info */}
                       <h4 className="font-medium text-sm mb-1 line-clamp-2 leading-snug">
-                        {trf.productName}
+                        {trf.styleName}
                       </h4>
                       
                       <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">

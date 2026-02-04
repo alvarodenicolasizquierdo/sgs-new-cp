@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { Search, Filter, X, SlidersHorizontal } from "lucide-react";
+import { Search, Filter, X, SlidersHorizontal, Layers, Archive } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,8 +17,10 @@ import {
   TRFStatus,
   TRFPriority,
   TRFFilter,
+  TestingLevel,
   statusConfig,
   priorityConfig,
+  testingLevelConfig,
 } from "@/types/trf";
 
 interface TRFFiltersProps {
@@ -46,11 +50,22 @@ export function TRFFilters({ filters, onFiltersChange }: TRFFiltersProps) {
     onFiltersChange({ ...filters, priority: newPriorities });
   };
 
+  const toggleTestingLevel = (level: TestingLevel) => {
+    const newLevels = filters.testingLevel.includes(level)
+      ? filters.testingLevel.filter((l) => l !== level)
+      : [...filters.testingLevel, level];
+    onFiltersChange({ ...filters, testingLevel: newLevels });
+  };
+
   const toggleSLA = (sla: "on_track" | "at_risk" | "overdue") => {
     const newSLA = filters.slaStatus.includes(sla)
       ? filters.slaStatus.filter((s) => s !== sla)
       : [...filters.slaStatus, sla];
     onFiltersChange({ ...filters, slaStatus: newSLA });
+  };
+
+  const toggleShowArchived = () => {
+    onFiltersChange({ ...filters, showArchived: !filters.showArchived });
   };
 
   const clearFilters = () => {
@@ -59,19 +74,23 @@ export function TRFFilters({ filters, onFiltersChange }: TRFFiltersProps) {
       search: "",
       status: [],
       priority: [],
+      testingLevel: [],
       testTypes: [],
       supplier: [],
       lab: [],
       dateRange: {},
       slaStatus: [],
+      showArchived: false,
     });
   };
 
   const activeFilterCount =
     filters.status.length +
     filters.priority.length +
+    filters.testingLevel.length +
     filters.slaStatus.length +
-    (filters.search ? 1 : 0);
+    (filters.search ? 1 : 0) +
+    (filters.showArchived ? 1 : 0);
 
   return (
     <div className="space-y-3">
@@ -110,6 +129,36 @@ export function TRFFilters({ filters, onFiltersChange }: TRFFiltersProps) {
                 onCheckedChange={() => toggleStatus(status)}
               >
                 {statusConfig[status].label}
+              </DropdownMenuCheckboxItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Testing Level Filter */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="gap-2">
+              <Layers className="h-4 w-4" />
+              Level
+              {filters.testingLevel.length > 0 && (
+                <Badge variant="secondary" className="ml-1 h-5 px-1.5">
+                  {filters.testingLevel.length}
+                </Badge>
+              )}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-44">
+            <DropdownMenuLabel>Filter by Testing Level</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {(Object.keys(testingLevelConfig) as TestingLevel[]).map((level) => (
+              <DropdownMenuCheckboxItem
+                key={level}
+                checked={filters.testingLevel.includes(level)}
+                onCheckedChange={() => toggleTestingLevel(level)}
+              >
+                <span className={testingLevelConfig[level].color}>
+                  {testingLevelConfig[level].label}
+                </span>
               </DropdownMenuCheckboxItem>
             ))}
           </DropdownMenuContent>
@@ -187,6 +236,19 @@ export function TRFFilters({ filters, onFiltersChange }: TRFFiltersProps) {
             </DropdownMenuCheckboxItem>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        {/* Show Archived Toggle */}
+        <div className="flex items-center gap-2 px-2">
+          <Switch
+            id="show-archived"
+            checked={filters.showArchived}
+            onCheckedChange={toggleShowArchived}
+          />
+          <Label htmlFor="show-archived" className="text-sm text-muted-foreground flex items-center gap-1.5">
+            <Archive className="h-3.5 w-3.5" />
+            Archived
+          </Label>
+        </div>
 
         {activeFilterCount > 0 && (
           <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1">

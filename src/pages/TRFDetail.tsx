@@ -36,6 +36,8 @@ import {
   XCircle,
   AlertTriangle,
   Sparkles,
+  Archive,
+  Link2,
 } from "lucide-react";
 import {
   Collapsible,
@@ -201,6 +203,27 @@ const TRFDetail = () => {
 
   return (
     <DashboardLayout>
+      {/* Archived Banner */}
+      {trf.isArchived && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-4 p-4 bg-muted/50 border border-muted rounded-lg flex items-center gap-3"
+        >
+          <Archive className="h-5 w-5 text-muted-foreground" />
+          <div className="flex-1">
+            <p className="font-medium text-sm">This TRF is archived</p>
+            <p className="text-xs text-muted-foreground">
+              Archived on {trf.archivedAt ? new Date(trf.archivedAt).toLocaleDateString() : "unknown date"}
+              {trf.archivedReason && ` • ${trf.archivedReason}`}
+            </p>
+          </div>
+          <Button variant="outline" size="sm">
+            Restore
+          </Button>
+        </motion.div>
+      )}
+      
       {/* Header */}
       <motion.div 
         className="flex flex-col lg:flex-row lg:items-start justify-between gap-4 mb-6"
@@ -228,8 +251,8 @@ const TRFDetail = () => {
               />
               <TRFPriorityBadge priority={trf.priority} />
             </div>
-            <p className="text-lg">{trf.productName}</p>
-            <p className="text-sm text-muted-foreground">{trf.productCode}</p>
+            <p className="text-lg">{trf.styleName}</p>
+            <p className="text-sm text-muted-foreground">{trf.styleNumber}</p>
           </div>
         </div>
 
@@ -363,15 +386,25 @@ const TRFDetail = () => {
             </div>
           </Section>
 
-          <Section id="product" title="Product Details" icon={FileText} status="complete">
+          <Section id="style" title="Style Details" icon={FileText} status="complete">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm text-muted-foreground">Product Name</label>
-                <p className="font-medium">{trf.productName}</p>
+                <label className="text-sm text-muted-foreground">Style Name</label>
+                <p className="font-medium">{trf.styleName}</p>
               </div>
               <div>
-                <label className="text-sm text-muted-foreground">Product Code</label>
-                <p className="font-medium">{trf.productCode}</p>
+                <label className="text-sm text-muted-foreground">Style Number</label>
+                <p className="font-medium">{trf.styleNumber}</p>
+              </div>
+              {trf.designStyleRef && (
+                <div>
+                  <label className="text-sm text-muted-foreground">Design Style Ref</label>
+                  <p className="font-medium">{trf.designStyleRef}</p>
+                </div>
+              )}
+              <div>
+                <label className="text-sm text-muted-foreground">Testing Level</label>
+                <p className="font-medium capitalize">{trf.testingLevel}</p>
               </div>
               <div>
                 <label className="text-sm text-muted-foreground">Supplier</label>
@@ -389,6 +422,15 @@ const TRFDetail = () => {
                 <p className="font-medium">{trf.lab.name}</p>
                 <p className="text-sm text-muted-foreground">{trf.lab.location}</p>
               </div>
+              {trf.linkedReportNumber && (
+                <div className="col-span-2">
+                  <label className="text-sm text-muted-foreground">Linked SMART Report</label>
+                  <p className="font-medium text-primary">{trf.linkedReportNumber}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {trf.isAmendment ? "This is an amendment to a previous test" : "Linked for reference"}
+                  </p>
+                </div>
+              )}
             </div>
           </Section>
 
@@ -411,6 +453,48 @@ const TRFDetail = () => {
                 </div>
               )}
             </div>
+          </Section>
+
+          <Section id="linked-reports" title="Linked Reports" icon={FileText}>
+            {trf.linkedReportNumber ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <FileText className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-primary">{trf.linkedReportNumber}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {trf.isAmendment ? "Amendment Source" : "Linked SMART Report"}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm">View Report</Button>
+                    <Button variant="outline" size="sm">Request Amend</Button>
+                  </div>
+                </div>
+                {trf.isAmendment && trf.parentTrfId && (
+                  <div className="p-3 border border-dashed rounded-lg">
+                    <p className="text-sm text-muted-foreground mb-1">Previous TRF</p>
+                    <p className="font-medium">{trf.parentTrfId}</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      This TRF amends results from a previous test
+                    </p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-muted-foreground">
+                <FileText className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                <p>No linked reports</p>
+                <p className="text-xs mt-1 mb-3">Link an existing SMART report to avoid retesting</p>
+                <Button variant="outline" size="sm">
+                  Link Existing Report
+                </Button>
+              </div>
+            )}
           </Section>
 
           <Section id="attachments" title="Attachments" icon={Paperclip}>

@@ -22,11 +22,13 @@ const defaultFilters: TRFFilter = {
   search: "",
   status: [],
   priority: [],
+  testingLevel: [],
   testTypes: [],
   supplier: [],
   lab: [],
   dateRange: {},
   slaStatus: [],
+  showArchived: false,
 };
 
 const Tests = () => {
@@ -37,13 +39,18 @@ const Tests = () => {
 
   const filteredData = useMemo(() => {
     return mockTRFs.filter((trf) => {
+      // Archive filter - exclude archived unless explicitly shown
+      if (!filters.showArchived && trf.isArchived) {
+        return false;
+      }
+
       // Search filter
       if (filters.search) {
         const search = filters.search.toLowerCase();
         const matchesSearch =
           trf.trfNumber.toLowerCase().includes(search) ||
-          trf.productName.toLowerCase().includes(search) ||
-          trf.productCode.toLowerCase().includes(search) ||
+          trf.styleName.toLowerCase().includes(search) ||
+          trf.styleNumber.toLowerCase().includes(search) ||
           trf.supplier.name.toLowerCase().includes(search);
         if (!matchesSearch) return false;
       }
@@ -55,6 +62,11 @@ const Tests = () => {
 
       // Priority filter
       if (filters.priority.length > 0 && !filters.priority.includes(trf.priority)) {
+        return false;
+      }
+
+      // Testing level filter
+      if (filters.testingLevel.length > 0 && !filters.testingLevel.includes(trf.testingLevel)) {
         return false;
       }
 
