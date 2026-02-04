@@ -1,7 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { mockTRFs } from "@/data/mockTRFs";
-import { TRFStatusBadge } from "@/components/trf/TRFStatusBadge";
+import { TRFStatus, statusConfig } from "@/types/trf";
 import { TRFPriorityBadge } from "@/components/trf/TRFPriorityBadge";
 import { SLAIndicator } from "@/components/trf/SLAIndicator";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { StatusWorkflow } from "@/components/ui/status-workflow";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
   Edit,
@@ -32,15 +35,27 @@ import {
   CheckCircle2,
   XCircle,
   AlertTriangle,
+  Sparkles,
 } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+
+const availableTRFStatuses: { value: TRFStatus; label: string; description: string }[] = [
+  { value: "draft", label: "Draft", description: "Initial form state" },
+  { value: "submitted", label: "Submitted", description: "Awaiting review" },
+  { value: "in_review", label: "In Review", description: "Being evaluated" },
+  { value: "approved", label: "Approved", description: "Ready for testing" },
+  { value: "testing", label: "Testing", description: "Lab analysis in progress" },
+  { value: "completed", label: "Completed", description: "Results ready" },
+  { value: "rejected", label: "Rejected", description: "Not approved" },
+  { value: "on_hold", label: "On Hold", description: "Temporarily paused" },
+];
 
 const TRFDetail = () => {
   const { id } = useParams();
@@ -50,6 +65,7 @@ const TRFDetail = () => {
     "product",
     "testing",
   ]);
+  const [currentStatus, setCurrentStatus] = useState<TRFStatus | null>(null);
 
   const trf = mockTRFs.find((t) => t.id === id);
 
@@ -66,6 +82,13 @@ const TRFDetail = () => {
       </DashboardLayout>
     );
   }
+
+  const status = currentStatus || trf.status;
+
+  const handleStatusChange = (newStatus: TRFStatus) => {
+    setCurrentStatus(newStatus);
+    toast.success(`Status updated to ${statusConfig[newStatus].label}`);
+  };
 
   const toggleSection = (section: string) => {
     setExpandedSections((prev) =>
@@ -93,13 +116,18 @@ const TRFDetail = () => {
     return (
       <Collapsible open={isExpanded} onOpenChange={() => toggleSection(id)}>
         <CollapsibleTrigger className="w-full">
-          <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
+          <motion.div 
+            className="flex items-center justify-between p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors"
+            whileHover={{ scale: 1.005 }}
+            whileTap={{ scale: 0.995 }}
+          >
             <div className="flex items-center gap-3">
-              {isExpanded ? (
-                <ChevronDown className="h-4 w-4 text-muted-foreground" />
-              ) : (
+              <motion.div
+                animate={{ rotate: isExpanded ? 90 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
                 <ChevronRight className="h-4 w-4 text-muted-foreground" />
-              )}
+              </motion.div>
               <Icon className="h-5 w-5 text-primary" />
               <span className="font-medium">{title}</span>
             </div>
@@ -116,10 +144,17 @@ const TRFDetail = () => {
                 )}
               </div>
             )}
-          </div>
+          </motion.div>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <div className="p-4 border-l-2 border-muted ml-6 mt-2">{children}</div>
+          <motion.div 
+            className="p-4 border-l-2 border-muted ml-6 mt-2"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {children}
+          </motion.div>
         </CollapsibleContent>
       </Collapsible>
     );
@@ -167,7 +202,12 @@ const TRFDetail = () => {
   return (
     <DashboardLayout>
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4 mb-6">
+      <motion.div 
+        className="flex flex-col lg:flex-row lg:items-start justify-between gap-4 mb-6"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
         <div className="flex items-start gap-4">
           <Button
             variant="ghost"
@@ -178,9 +218,14 @@ const TRFDetail = () => {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-3 mb-2 flex-wrap">
               <h1 className="text-2xl font-bold">{trf.trfNumber}</h1>
-              <TRFStatusBadge status={trf.status} size="md" />
+              <StatusBadge 
+                status={status}
+                size="md"
+                onChange={handleStatusChange}
+                availableStatuses={availableTRFStatuses}
+              />
               <TRFPriorityBadge priority={trf.priority} />
             </div>
             <p className="text-lg">{trf.productName}</p>
@@ -206,47 +251,91 @@ const TRFDetail = () => {
             Edit
           </Button>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Status Workflow */}
-      <Card className="mb-6">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-sm font-medium">Workflow Progress</span>
-            <SLAIndicator status={trf.slaStatus} dueDate={trf.dueDate} />
-          </div>
-          <StatusWorkflow
-            steps={[
-              { status: "draft", label: "Draft", description: "Form created" },
-              { status: "submitted", label: "Submitted", description: "Awaiting review" },
-              { status: "in_review", label: "In Review", description: "Under evaluation" },
-              { status: "approved", label: "Approved", description: "Ready for testing" },
-              { status: "testing", label: "Testing", description: "Lab analysis" },
-              { status: "completed", label: "Completed", description: "Results ready" },
-            ]}
-            currentStatus={trf.status}
-            size="md"
-            className="mb-4"
-          />
-          <div className="flex items-center justify-between pt-4 border-t">
-            <div>
-              <span className="text-sm text-muted-foreground">Overall Progress</span>
-              <div className="flex items-center gap-2 mt-1">
-                <Progress value={trf.progress} className="h-2 w-32" />
-                <span className="text-sm font-medium">{trf.progress}%</span>
+      {/* Status Workflow Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.1 }}
+      >
+        <Card className="mb-6 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] to-transparent pointer-events-none" />
+          <CardContent className="p-6 relative">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <motion.div 
+                  className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center"
+                  whileHover={{ scale: 1.05, rotate: 5 }}
+                >
+                  <Sparkles className="h-4 w-4 text-primary" />
+                </motion.div>
+                <span className="font-semibold">Workflow Progress</span>
+              </div>
+              <SLAIndicator status={trf.slaStatus} dueDate={trf.dueDate} />
+            </div>
+            
+            <StatusWorkflow
+              steps={[
+                { status: "draft", label: "Draft", description: "Form created" },
+                { status: "submitted", label: "Submitted", description: "Awaiting review" },
+                { status: "in_review", label: "In Review", description: "Under evaluation" },
+                { status: "approved", label: "Approved", description: "Ready for testing" },
+                { status: "testing", label: "Testing", description: "Lab analysis" },
+                { status: "completed", label: "Completed", description: "Results ready" },
+              ]}
+              currentStatus={status}
+              size="md"
+              variant="detailed"
+              onStepClick={(clickedStatus) => {
+                const stepIndex = availableTRFStatuses.findIndex(s => s.value === clickedStatus);
+                const currentIndex = availableTRFStatuses.findIndex(s => s.value === status);
+                if (stepIndex <= currentIndex) {
+                  handleStatusChange(clickedStatus as TRFStatus);
+                }
+              }}
+              className="mb-6"
+            />
+            
+            <div className="flex items-center justify-between pt-4 border-t">
+              <div>
+                <span className="text-sm text-muted-foreground">Overall Progress</span>
+                <div className="flex items-center gap-3 mt-1.5">
+                  <Progress value={trf.progress} className="h-2 w-40" />
+                  <span className={cn(
+                    "text-sm font-semibold",
+                    trf.progress >= 75 ? "text-success" : 
+                    trf.progress >= 50 ? "text-warning" : 
+                    "text-muted-foreground"
+                  )}>
+                    {trf.progress}%
+                  </span>
+                </div>
+              </div>
+              <div className="text-right">
+                <span className="text-sm text-muted-foreground">Due Date</span>
+                <p className="font-medium mt-0.5">
+                  {new Date(trf.dueDate).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric"
+                  })}
+                </p>
               </div>
             </div>
-            <span className="text-sm text-muted-foreground">
-              Due: {new Date(trf.dueDate).toLocaleDateString()}
-            </span>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </motion.div>
 
       {/* Main Content */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Left Column - Form Sections */}
-        <div className="xl:col-span-2 space-y-4">
+        <motion.div 
+          className="xl:col-span-2 space-y-4"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+        >
           <Section id="basic" title="Basic Information" icon={FileText} status="complete">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -333,10 +422,15 @@ const TRFDetail = () => {
               </Button>
             </div>
           </Section>
-        </div>
+        </motion.div>
 
         {/* Right Column - Activity & Actions */}
-        <div className="space-y-6">
+        <motion.div 
+          className="space-y-6"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: 0.3 }}
+        >
           {/* Quick Info Card */}
           <Card>
             <CardHeader className="pb-3">
@@ -403,36 +497,44 @@ const TRFDetail = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {activities.map((activity, index) => (
-                  <div key={activity.id} className="flex gap-3">
-                    <div className="relative">
-                      <div
-                        className={cn(
-                          "w-2 h-2 rounded-full mt-2",
-                          activity.type === "status" && "bg-primary",
-                          activity.type === "comment" && "bg-info",
-                          activity.type === "assignment" && "bg-warning",
-                          activity.type === "approval" && "bg-success",
-                          activity.type === "submit" && "bg-muted-foreground"
+                <AnimatePresence>
+                  {activities.map((activity, index) => (
+                    <motion.div 
+                      key={activity.id} 
+                      className="flex gap-3"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                    >
+                      <div className="relative">
+                        <div
+                          className={cn(
+                            "w-2 h-2 rounded-full mt-2",
+                            activity.type === "status" && "bg-primary",
+                            activity.type === "comment" && "bg-info",
+                            activity.type === "assignment" && "bg-warning",
+                            activity.type === "approval" && "bg-success",
+                            activity.type === "submit" && "bg-muted-foreground"
+                          )}
+                        />
+                        {index < activities.length - 1 && (
+                          <div className="absolute left-0.5 top-4 w-0.5 h-full bg-border" />
                         )}
-                      />
-                      {index < activities.length - 1 && (
-                        <div className="absolute left-0.5 top-4 w-0.5 h-full bg-border" />
-                      )}
-                    </div>
-                    <div className="flex-1 pb-4">
-                      <p className="text-sm font-medium">{activity.action}</p>
-                      {activity.details && (
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {activity.details}
+                      </div>
+                      <div className="flex-1 pb-4">
+                        <p className="text-sm font-medium">{activity.action}</p>
+                        {activity.details && (
+                          <p className="text-sm text-muted-foreground mt-1">
+                            {activity.details}
+                          </p>
+                        )}
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {activity.user} • {activity.time}
                         </p>
-                      )}
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {activity.user} • {activity.time}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                      </div>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
             </CardContent>
           </Card>
@@ -456,7 +558,7 @@ const TRFDetail = () => {
               </Button>
             </CardContent>
           </Card>
-        </div>
+        </motion.div>
       </div>
     </DashboardLayout>
   );
