@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,7 @@ import {
   ChevronRight,
   Eye,
   Building2,
+  ExternalLink,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -49,8 +51,17 @@ const riskColors: Record<RiskLevel, string> = {
 };
 
 export function RiskSummaryDashboard() {
+  const navigate = useNavigate();
   const [selectedRiskLevel, setSelectedRiskLevel] = useState<RiskLevel | "all">("all");
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
+
+  const handleItemClick = (item: RiskItem) => {
+    if (item.type === "factory") {
+      navigate("/risk-assessment");
+    } else if (item.type === "inspection") {
+      navigate(`/inspections/${item.id}`);
+    }
+  };
 
   // Calculate risk metrics
   const riskMetrics = useMemo(() => {
@@ -532,17 +543,21 @@ export function RiskSummaryDashboard() {
                           exit={{ height: 0, opacity: 0 }}
                           className="border-t bg-background"
                         >
-                          <div className="p-4 flex items-center justify-between">
-                            <div className="text-sm text-muted-foreground">
-                              {item.type === "factory"
-                                ? "Review factory performance and schedule re-inspection"
-                                : "Review inspection results and initiate corrective action"}
+                            <div className="p-4 flex items-center justify-between">
+                              <div className="text-sm text-muted-foreground">
+                                {item.type === "factory"
+                                  ? "Review factory performance and schedule re-inspection"
+                                  : "Review inspection results and initiate corrective action"}
+                              </div>
+                              <Button 
+                                size="sm" 
+                                className="gap-2"
+                                onClick={() => handleItemClick(item)}
+                              >
+                                {item.action}
+                                <ExternalLink className="h-4 w-4" />
+                              </Button>
                             </div>
-                            <Button size="sm" className="gap-2">
-                              {item.action}
-                              <ChevronRight className="h-4 w-4" />
-                            </Button>
-                          </div>
                         </motion.div>
                       )}
                     </AnimatePresence>
