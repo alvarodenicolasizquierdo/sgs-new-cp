@@ -112,8 +112,7 @@ export function AppSidebar() {
           />
           {!collapsed && (
             <div className="flex flex-col">
-              <span className="font-semibold text-sidebar-foreground text-sm">Testing Portal</span>
-              <span className="text-xs text-sidebar-muted">Quality Assurance</span>
+              <span className="font-semibold text-sidebar-foreground text-sm">SMART Advanced</span>
             </div>
           )}
         </div>
