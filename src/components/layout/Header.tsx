@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { ContextualHelpTooltip } from "@/components/support/ContextualHelpTooltip";
 
 export function Header() {
   return (
@@ -24,29 +25,40 @@ export function Header() {
           alt="SGS Logo" 
           className="h-8 w-auto object-contain flex-shrink-0"
         />
-        <div className="relative w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search tests, inspections, suppliers..."
-            className="pl-10 bg-secondary/50 border-transparent focus:border-primary focus:bg-background"
-          />
-        </div>
+        <ContextualHelpTooltip helpKey="search-input" side="bottom">
+          <div className="relative w-full" data-help="search-input">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search tests, inspections, suppliers..."
+              className="pl-10 bg-secondary/50 border-transparent focus:border-primary focus:bg-background"
+            />
+          </div>
+        </ContextualHelpTooltip>
       </div>
 
       {/* Actions */}
       <div className="flex items-center gap-3">
-        <Button variant="default" size="sm" className="gap-2 bg-accent hover:bg-accent/90 text-accent-foreground">
-          <Plus className="h-4 w-4" />
-          New Test
-        </Button>
+        <ContextualHelpTooltip helpKey="new-test-btn" side="bottom">
+          <Button 
+            variant="default" 
+            size="sm" 
+            className="gap-2 bg-accent hover:bg-accent/90 text-accent-foreground"
+            data-help="new-test-btn"
+          >
+            <Plus className="h-4 w-4" />
+            New Test
+          </Button>
+        </ContextualHelpTooltip>
 
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-5 w-5" />
-          <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-destructive">
-            3
-          </Badge>
-        </Button>
+        <ContextualHelpTooltip helpKey="notifications" side="bottom">
+          <Button variant="ghost" size="icon" className="relative" data-help="notifications">
+            <Bell className="h-5 w-5" />
+            <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-destructive">
+              3
+            </Badge>
+          </Button>
+        </ContextualHelpTooltip>
 
         {/* User Menu */}
         <DropdownMenu>

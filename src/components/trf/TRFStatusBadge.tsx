@@ -39,6 +39,7 @@ export function TRFStatusBadge({
         config.color,
         sizeClasses[size]
       )}
+      data-help="trf-status"
     >
       {showIndicator && (
         <StatusIndicator 
