@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { StatusWorkflow } from "@/components/ui/status-workflow";
@@ -444,6 +444,7 @@ const TRFDetail = () => {
                   {trf.assignedTo ? (
                     <div className="flex items-center gap-2 mt-1">
                       <Avatar className="h-6 w-6">
+                        <AvatarImage src={trf.assignedTo.avatar} />
                         <AvatarFallback className="text-xs bg-primary/10 text-primary">
                           {trf.assignedTo.name
                             .split(" ")

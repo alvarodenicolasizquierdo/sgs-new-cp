@@ -1,5 +1,11 @@
 import { Inspection } from "@/types/inspection";
 
+// Profile images
+import karukaAvatar from "@/assets/profiles/karuka.jpg";
+import alvaroAvatar from "@/assets/profiles/alvaro.jpg";
+import ammAvatar from "@/assets/profiles/amm.jpg";
+import saritaAvatar from "@/assets/profiles/sarita.jpg";
+
 export const mockInspections: Inspection[] = [
   {
     id: "1",
@@ -9,7 +15,7 @@ export const mockInspections: Inspection[] = [
     productCode: "PRD-CT-001",
     supplier: { id: "s1", name: "TextilePro Inc", logo: undefined },
     factory: { id: "f1", name: "TextilePro Factory A", location: "Ho Chi Minh City", country: "Vietnam" },
-    inspector: { id: "i1", name: "John Smith", avatar: undefined },
+    inspector: { id: "i1", name: "John Smith", avatar: alvaroAvatar },
     status: "completed",
     inspectionType: "final_random",
     result: "pass",
@@ -35,7 +41,7 @@ export const mockInspections: Inspection[] = [
     productCode: "PRD-DJ-089",
     supplier: { id: "s2", name: "BlueThread Textiles", logo: undefined },
     factory: { id: "f2", name: "BlueThread Manufacturing", location: "Dhaka", country: "Bangladesh" },
-    inspector: { id: "i2", name: "Sarah Chen", avatar: undefined },
+    inspector: { id: "i2", name: "Sarah Chen", avatar: karukaAvatar },
     status: "in_progress",
     inspectionType: "during_production",
     result: undefined,
@@ -60,7 +66,7 @@ export const mockInspections: Inspection[] = [
     productCode: "PRD-PJ-042",
     supplier: { id: "s3", name: "SafeGuard Manufacturing", logo: undefined },
     factory: { id: "f3", name: "SafeGuard Plant 1", location: "Shenzhen", country: "China" },
-    inspector: { id: "i3", name: "Mike Johnson", avatar: undefined },
+    inspector: { id: "i3", name: "Mike Johnson", avatar: ammAvatar },
     status: "pending_review",
     inspectionType: "final_random",
     result: "conditional",
@@ -86,7 +92,7 @@ export const mockInspections: Inspection[] = [
     productCode: "PRD-WC-023",
     supplier: { id: "s4", name: "LuxeLeather Co", logo: undefined },
     factory: { id: "f4", name: "LuxeLeather Facility", location: "Istanbul", country: "Turkey" },
-    inspector: { id: "i1", name: "John Smith", avatar: undefined },
+    inspector: { id: "i1", name: "John Smith", avatar: alvaroAvatar },
     status: "scheduled",
     inspectionType: "pre_production",
     result: undefined,
@@ -111,7 +117,7 @@ export const mockInspections: Inspection[] = [
     productCode: "PRD-BY-078",
     supplier: { id: "s5", name: "TinyTots Apparel", logo: undefined },
     factory: { id: "f5", name: "TinyTots Production", location: "Mumbai", country: "India" },
-    inspector: { id: "i4", name: "Lisa Wang", avatar: undefined },
+    inspector: { id: "i4", name: "Lisa Wang", avatar: saritaAvatar },
     status: "completed",
     inspectionType: "final_random",
     result: "fail",
@@ -137,7 +143,7 @@ export const mockInspections: Inspection[] = [
     productCode: "PRD-AS-056",
     supplier: { id: "s6", name: "SportFlex Industries", logo: undefined },
     factory: { id: "f6", name: "SportFlex Plant", location: "Jakarta", country: "Indonesia" },
-    inspector: { id: "i2", name: "Sarah Chen", avatar: undefined },
+    inspector: { id: "i2", name: "Sarah Chen", avatar: karukaAvatar },
     status: "scheduled",
     inspectionType: "container_loading",
     result: undefined,
@@ -162,7 +168,7 @@ export const mockInspections: Inspection[] = [
     productCode: "PRD-SB-012",
     supplier: { id: "s7", name: "SilkRoad Textiles", logo: undefined },
     factory: { id: "f7", name: "SilkRoad Weaving Mill", location: "Hangzhou", country: "China" },
-    inspector: { id: "i3", name: "Mike Johnson", avatar: undefined },
+    inspector: { id: "i3", name: "Mike Johnson", avatar: ammAvatar },
     status: "completed",
     inspectionType: "final_random",
     result: "pass",
@@ -187,7 +193,7 @@ export const mockInspections: Inspection[] = [
     productCode: "PRD-LB-034",
     supplier: { id: "s4", name: "LuxeLeather Co", logo: undefined },
     factory: { id: "f4", name: "LuxeLeather Facility", location: "Istanbul", country: "Turkey" },
-    inspector: { id: "i4", name: "Lisa Wang", avatar: undefined },
+    inspector: { id: "i4", name: "Lisa Wang", avatar: saritaAvatar },
     status: "on_hold",
     inspectionType: "factory_audit",
     result: undefined,
@@ -213,7 +219,7 @@ export const mockInspections: Inspection[] = [
     productCode: "PRD-TB-067",
     supplier: { id: "s8", name: "EcoBags Global", logo: undefined },
     factory: { id: "f8", name: "EcoBags Production Center", location: "Manila", country: "Philippines" },
-    inspector: { id: "i1", name: "John Smith", avatar: undefined },
+    inspector: { id: "i1", name: "John Smith", avatar: alvaroAvatar },
     status: "completed",
     inspectionType: "final_random",
     result: "pass",
@@ -238,7 +244,7 @@ export const mockInspections: Inspection[] = [
     productCode: "PRD-RS-089",
     supplier: { id: "s6", name: "SportFlex Industries", logo: undefined },
     factory: { id: "f9", name: "SportFlex Footwear", location: "Putian", country: "China" },
-    inspector: { id: "i2", name: "Sarah Chen", avatar: undefined },
+    inspector: { id: "i2", name: "Sarah Chen", avatar: karukaAvatar },
     status: "in_progress",
     inspectionType: "during_production",
     result: undefined,
