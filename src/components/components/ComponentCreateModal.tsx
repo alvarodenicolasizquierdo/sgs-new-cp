@@ -36,6 +36,7 @@ import {
   constructionConfig,
   dyeMethodConfig,
 } from "@/types/component";
+import { addComponent } from "@/data/mockComponents";
 
 type WizardStep = "type" | "details" | "composition" | "sustainability" | "review";
 
@@ -210,6 +211,53 @@ export function ComponentCreateModal({
 
   const handleSubmit = () => {
     const newComponentId = crypto.randomUUID();
+    const now = new Date().toISOString().split("T")[0];
+    
+    // Create the component object based on type
+    if (formData.componentType === "fabric") {
+      const newFabric = {
+        id: newComponentId,
+        componentType: "fabric" as const,
+        mill: formData.mill,
+        tuReference: formData.tuReference,
+        countryOfOrigin: formData.countryOfOrigin,
+        isSustainable: formData.isSustainable,
+        isRegenerative: formData.isRegenerative,
+        reachCompliant: formData.reachCompliant,
+        status: "pending" as const,
+        composition: formData.composition,
+        construction: formData.construction as FabricConstruction,
+        weight: formData.weight,
+        width: formData.width,
+        dyeMethod: formData.dyeMethod as DyeMethod,
+        colour: formData.colour,
+        createdAt: now,
+        updatedAt: now,
+        createdBy: "current-user",
+      };
+      addComponent(newFabric);
+    } else {
+      const newTrim = {
+        id: newComponentId,
+        componentType: "trim" as const,
+        mill: formData.mill,
+        tuReference: formData.tuReference,
+        countryOfOrigin: formData.countryOfOrigin,
+        isSustainable: formData.isSustainable,
+        isRegenerative: formData.isRegenerative,
+        reachCompliant: formData.reachCompliant,
+        status: "pending" as const,
+        trimType: formData.trimType,
+        colour: formData.trimColour,
+        size: formData.trimSize,
+        material: formData.trimMaterial,
+        createdAt: now,
+        updatedAt: now,
+        createdBy: "current-user",
+      };
+      addComponent(newTrim);
+    }
+    
     toast.success("Component created successfully!", {
       description: `${formData.componentType === "fabric" ? "Fabric" : "Trim"} ${formData.tuReference} has been added.`,
     });
