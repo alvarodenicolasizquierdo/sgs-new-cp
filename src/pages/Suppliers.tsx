@@ -64,6 +64,8 @@ import {
   Calendar,
   BarChart3,
   List,
+  ExternalLink,
+  ClipboardList,
 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -383,6 +385,18 @@ export default function Suppliers() {
                               <DropdownMenuItem>View Details</DropdownMenuItem>
                               <DropdownMenuItem>View Styles</DropdownMenuItem>
                               <DropdownMenuItem>View Tests</DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  window.open("https://suppllier-uki-questionnaire.manus.space/", "_blank");
+                                }}
+                                className="gap-2"
+                              >
+                                <ClipboardList className="h-4 w-4" />
+                                Send Questionnaire
+                                <ExternalLink className="h-3 w-3 ml-auto text-muted-foreground" />
+                              </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem>Schedule Audit</DropdownMenuItem>
                               <DropdownMenuItem>Edit Supplier</DropdownMenuItem>
