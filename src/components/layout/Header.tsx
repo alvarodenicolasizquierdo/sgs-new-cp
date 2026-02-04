@@ -2,6 +2,7 @@ import { Bell, Search, ChevronDown, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import sgsLogo from "@/assets/sgs-logo.png";
+import markAvatar from "@/assets/profiles/mark.png";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -52,11 +53,11 @@ export function Header() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="gap-2 pl-2 pr-3">
               <Avatar className="h-8 w-8">
-                <AvatarImage src="" />
-                <AvatarFallback className="bg-primary text-primary-foreground text-sm">JD</AvatarFallback>
+                <AvatarImage src={markAvatar} />
+                <AvatarFallback className="bg-primary text-primary-foreground text-sm">MT</AvatarFallback>
               </Avatar>
               <div className="text-left hidden sm:block">
-                <p className="text-sm font-medium">John Doe</p>
+                <p className="text-sm font-medium">Mark Thompson</p>
                 <p className="text-xs text-muted-foreground">Admin</p>
               </div>
               <ChevronDown className="h-4 w-4 text-muted-foreground" />

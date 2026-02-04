@@ -40,6 +40,8 @@ import {
   Webhook,
 } from "lucide-react";
 
+import markAvatar from "@/assets/profiles/mark.png";
+
 export default function Settings() {
   const [theme, setTheme] = useState("system");
   const [emailNotifications, setEmailNotifications] = useState(true);
@@ -101,9 +103,9 @@ export default function Settings() {
               <CardContent className="space-y-6">
                 <div className="flex items-center gap-6">
                   <Avatar className="h-20 w-20">
-                    <AvatarImage src="" />
+                    <AvatarImage src={markAvatar} />
                     <AvatarFallback className="bg-primary text-primary-foreground text-xl">
-                      JD
+                      MT
                     </AvatarFallback>
                   </Avatar>
                   <div className="space-y-2">
@@ -122,15 +124,15 @@ export default function Settings() {
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="firstName">First Name</Label>
-                    <Input id="firstName" defaultValue="John" />
+                    <Input id="firstName" defaultValue="Mark" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="lastName">Last Name</Label>
-                    <Input id="lastName" defaultValue="Doe" />
+                    <Input id="lastName" defaultValue="Thompson" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email">Email Address</Label>
-                    <Input id="email" type="email" defaultValue="john.doe@sgs.com" />
+                    <Input id="email" type="email" defaultValue="mark.thompson@sgs.com" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="phone">Phone Number</Label>
