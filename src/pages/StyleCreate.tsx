@@ -56,6 +56,7 @@ export default function StyleCreate() {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState<WizardStep>("header");
   const [showComponentModal, setShowComponentModal] = useState(false);
+  const [showValidationErrors, setShowValidationErrors] = useState(false);
   const [formData, setFormData] = useState({
     // Header
     supplierId: "",
@@ -146,9 +147,11 @@ export default function StyleCreate() {
 
   const goNext = () => {
     if (!canProceed) {
+      setShowValidationErrors(true);
       toast.error(currentStepValidation.errors[0] || "Please fill in all required fields");
       return;
     }
+    setShowValidationErrors(false);
     const nextIndex = currentStepIndex + 1;
     if (nextIndex < STEPS.length) {
       setCurrentStep(STEPS[nextIndex].id);
@@ -235,9 +238,13 @@ export default function StyleCreate() {
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="supplier">Supplier *</Label>
+                    <Label htmlFor="supplier" className="flex items-center gap-1">
+                      Supplier <span className="text-destructive">*</span>
+                    </Label>
                     <Select value={formData.supplierId} onValueChange={(v) => updateFormData({ supplierId: v, factoryId: "" })}>
-                      <SelectTrigger>
+                      <SelectTrigger className={cn(
+                        showValidationErrors && !formData.supplierId && "border-destructive ring-1 ring-destructive"
+                      )}>
                         <SelectValue placeholder="Select supplier" />
                       </SelectTrigger>
                       <SelectContent>
@@ -248,15 +255,22 @@ export default function StyleCreate() {
                         ))}
                       </SelectContent>
                     </Select>
+                    {showValidationErrors && !formData.supplierId && (
+                      <p className="text-xs text-destructive">Supplier is required</p>
+                    )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="factory">Factory *</Label>
+                    <Label htmlFor="factory" className="flex items-center gap-1">
+                      Factory <span className="text-destructive">*</span>
+                    </Label>
                     <Select 
                       value={formData.factoryId} 
                       onValueChange={(v) => updateFormData({ factoryId: v })}
                       disabled={!formData.supplierId}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className={cn(
+                        showValidationErrors && !formData.factoryId && "border-destructive ring-1 ring-destructive"
+                      )}>
                         <SelectValue placeholder="Select factory" />
                       </SelectTrigger>
                       <SelectContent>
@@ -267,20 +281,39 @@ export default function StyleCreate() {
                         ))}
                       </SelectContent>
                     </Select>
+                    {showValidationErrors && !formData.factoryId && (
+                      <p className="text-xs text-destructive">Factory is required</p>
+                    )}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="tuStyleNo">TU Style No *</Label>
+                    <Label htmlFor="tuStyleNo" className="flex items-center gap-1">
+                      TU Style No <span className="text-destructive">*</span>
+                    </Label>
                     <Input
                       id="tuStyleNo"
                       placeholder="9-digit style number"
                       maxLength={9}
                       value={formData.tuStyleNo}
                       onChange={(e) => updateFormData({ tuStyleNo: e.target.value.replace(/\D/g, '') })}
+                      className={cn(
+                        showValidationErrors && (!formData.tuStyleNo || formData.tuStyleNo.length !== 9) && "border-destructive ring-1 ring-destructive"
+                      )}
                     />
-                    <p className="text-xs text-muted-foreground">Must be exactly 9 digits</p>
+                    <p className={cn(
+                      "text-xs",
+                      showValidationErrors && (!formData.tuStyleNo || formData.tuStyleNo.length !== 9) 
+                        ? "text-destructive" 
+                        : "text-muted-foreground"
+                    )}>
+                      {showValidationErrors && !formData.tuStyleNo 
+                        ? "TU Style No is required" 
+                        : showValidationErrors && formData.tuStyleNo.length !== 9 
+                          ? "Must be exactly 9 digits" 
+                          : "Must be exactly 9 digits"}
+                    </p>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="designStyleRef">Design Style Reference</Label>
@@ -294,13 +327,21 @@ export default function StyleCreate() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description *</Label>
+                  <Label htmlFor="description" className="flex items-center gap-1">
+                    Description <span className="text-destructive">*</span>
+                  </Label>
                   <Input
                     id="description"
                     placeholder="Product description"
                     value={formData.description}
                     onChange={(e) => updateFormData({ description: e.target.value })}
+                    className={cn(
+                      showValidationErrors && !formData.description && "border-destructive ring-1 ring-destructive"
+                    )}
                   />
+                  {showValidationErrors && !formData.description && (
+                    <p className="text-xs text-destructive">Description is required</p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -320,9 +361,13 @@ export default function StyleCreate() {
               <div className="space-y-6">
                 <div className="grid grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <Label>Division *</Label>
+                    <Label className="flex items-center gap-1">
+                      Division <span className="text-destructive">*</span>
+                    </Label>
                     <Select value={formData.division} onValueChange={(v) => updateFormData({ division: v as Division, department: "" })}>
-                      <SelectTrigger>
+                      <SelectTrigger className={cn(
+                        showValidationErrors && !formData.division && "border-destructive ring-1 ring-destructive"
+                      )}>
                         <SelectValue placeholder="Select division" />
                       </SelectTrigger>
                       <SelectContent>
@@ -331,15 +376,22 @@ export default function StyleCreate() {
                         ))}
                       </SelectContent>
                     </Select>
+                    {showValidationErrors && !formData.division && (
+                      <p className="text-xs text-destructive">Division is required</p>
+                    )}
                   </div>
                   <div className="space-y-2">
-                    <Label>Department *</Label>
+                    <Label className="flex items-center gap-1">
+                      Department <span className="text-destructive">*</span>
+                    </Label>
                     <Select 
                       value={formData.department} 
                       onValueChange={(v) => updateFormData({ department: v })}
                       disabled={!formData.division}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className={cn(
+                        showValidationErrors && !formData.department && "border-destructive ring-1 ring-destructive"
+                      )}>
                         <SelectValue placeholder="Select department" />
                       </SelectTrigger>
                       <SelectContent>
@@ -348,11 +400,18 @@ export default function StyleCreate() {
                         ))}
                       </SelectContent>
                     </Select>
+                    {showValidationErrors && !formData.department && (
+                      <p className="text-xs text-destructive">Department is required</p>
+                    )}
                   </div>
                   <div className="space-y-2">
-                    <Label>Season *</Label>
+                    <Label className="flex items-center gap-1">
+                      Season <span className="text-destructive">*</span>
+                    </Label>
                     <Select value={formData.season} onValueChange={(v) => updateFormData({ season: v as Season })}>
-                      <SelectTrigger>
+                      <SelectTrigger className={cn(
+                        showValidationErrors && !formData.season && "border-destructive ring-1 ring-destructive"
+                      )}>
                         <SelectValue placeholder="Select season" />
                       </SelectTrigger>
                       <SelectContent>
@@ -363,6 +422,9 @@ export default function StyleCreate() {
                         <SelectItem value="SS26">SS26</SelectItem>
                       </SelectContent>
                     </Select>
+                    {showValidationErrors && !formData.season && (
+                      <p className="text-xs text-destructive">Season is required</p>
+                    )}
                   </div>
                 </div>
 
@@ -406,10 +468,18 @@ export default function StyleCreate() {
                     </Popover>
                   </div>
                   <div className="space-y-2">
-                    <Label>Gold Seal Date *</Label>
+                    <Label className="flex items-center gap-1">
+                      Gold Seal Date <span className="text-destructive">*</span>
+                    </Label>
                     <Popover>
                       <PopoverTrigger asChild>
-                        <Button variant="outline" className="w-full justify-start text-left font-normal">
+                        <Button 
+                          variant="outline" 
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            showValidationErrors && !formData.goldSealDate && "border-destructive ring-1 ring-destructive"
+                          )}
+                        >
                           <CalendarIcon className="mr-2 h-4 w-4" />
                           {formData.goldSealDate ? format(formData.goldSealDate, "PPP") : "Pick a date"}
                         </Button>
@@ -422,6 +492,9 @@ export default function StyleCreate() {
                         />
                       </PopoverContent>
                     </Popover>
+                    {showValidationErrors && !formData.goldSealDate && (
+                      <p className="text-xs text-destructive">Gold Seal Date is required</p>
+                    )}
                   </div>
                 </div>
 
@@ -492,8 +565,13 @@ export default function StyleCreate() {
                 
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-4">
-                    <Label className="text-base font-medium">Fabric Technologist *</Label>
-                    <div className="space-y-2">
+                    <Label className="text-base font-medium flex items-center gap-1">
+                      Fabric Technologist <span className="text-destructive">*</span>
+                    </Label>
+                    <div className={cn(
+                      "space-y-2 rounded-lg p-1",
+                      showValidationErrors && !formData.fabricTechId && "ring-2 ring-destructive"
+                    )}>
                       {mockTechnologists.filter(t => t.type === "fabric").map(tech => (
                         <div
                           key={tech.id}
@@ -519,11 +597,19 @@ export default function StyleCreate() {
                         </div>
                       ))}
                     </div>
+                    {showValidationErrors && !formData.fabricTechId && (
+                      <p className="text-xs text-destructive">Fabric Technologist is required</p>
+                    )}
                   </div>
 
                   <div className="space-y-4">
-                    <Label className="text-base font-medium">Garment Technologist *</Label>
-                    <div className="space-y-2">
+                    <Label className="text-base font-medium flex items-center gap-1">
+                      Garment Technologist <span className="text-destructive">*</span>
+                    </Label>
+                    <div className={cn(
+                      "space-y-2 rounded-lg p-1",
+                      showValidationErrors && !formData.garmentTechId && "ring-2 ring-destructive"
+                    )}>
                       {mockTechnologists.filter(t => t.type === "garment").map(tech => (
                         <div
                           key={tech.id}
@@ -549,6 +635,9 @@ export default function StyleCreate() {
                         </div>
                       ))}
                     </div>
+                    {showValidationErrors && !formData.garmentTechId && (
+                      <p className="text-xs text-destructive">Garment Technologist is required</p>
+                    )}
                   </div>
                 </div>
               </div>
