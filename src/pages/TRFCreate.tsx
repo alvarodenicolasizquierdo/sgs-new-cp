@@ -30,6 +30,8 @@ import {
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TestingLevel, testingLevelConfig } from "@/types/trf";
+import { TRFTestingLevelBadge } from "@/components/trf/TRFTestingLevelBadge";
 
 interface WizardStep {
   id: string;
@@ -100,6 +102,7 @@ const TRFCreate = () => {
   const [formData, setFormData] = useState({
     // Basic Info
     priority: "normal",
+    testingLevel: "" as TestingLevel | "",
     dueDate: "",
     notes: "",
     // Product
@@ -134,7 +137,7 @@ const TRFCreate = () => {
   const canProceed = () => {
     switch (currentStep) {
       case 0:
-        return formData.priority && formData.dueDate;
+        return formData.priority && formData.testingLevel && formData.dueDate;
       case 1:
         return formData.productName && formData.productCode;
       case 2:
@@ -170,7 +173,7 @@ const TRFCreate = () => {
       case 0:
         return (
           <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="priority">Priority *</Label>
                 <Select
@@ -187,6 +190,32 @@ const TRFCreate = () => {
                     <SelectItem value="low">Low</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="testingLevel">Testing Level *</Label>
+                <Select
+                  value={formData.testingLevel}
+                  onValueChange={(value) => updateFormData("testingLevel", value as TestingLevel)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select testing level" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {(Object.keys(testingLevelConfig) as TestingLevel[]).map((level) => (
+                      <SelectItem key={level} value={level}>
+                        <div className="flex items-center gap-2">
+                          <span className={cn("w-2 h-2 rounded-full", testingLevelConfig[level].bgColor)} />
+                          <span>{testingLevelConfig[level].label}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {formData.testingLevel && (
+                  <p className="text-xs text-muted-foreground">
+                    {testingLevelConfig[formData.testingLevel].description}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="dueDate">Target Due Date *</Label>
@@ -385,10 +414,18 @@ const TRFCreate = () => {
               <CardHeader>
                 <CardTitle className="text-base">Basic Information</CardTitle>
               </CardHeader>
-              <CardContent className="grid grid-cols-2 gap-4">
+              <CardContent className="grid grid-cols-3 gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground">Priority</p>
                   <p className="font-medium capitalize">{formData.priority}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Testing Level</p>
+                  {formData.testingLevel ? (
+                    <TRFTestingLevelBadge level={formData.testingLevel} size="md" />
+                  ) : (
+                    <p className="font-medium">-</p>
+                  )}
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Due Date</p>
