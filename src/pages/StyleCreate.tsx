@@ -94,7 +94,50 @@ export default function StyleCreate() {
     setFormData(prev => ({ ...prev, ...updates }));
   };
 
+  // Step validation
+  const getStepValidation = (step: WizardStep): { isValid: boolean; errors: string[] } => {
+    const errors: string[] = [];
+    
+    switch (step) {
+      case "header":
+        if (!formData.supplierId) errors.push("Supplier is required");
+        if (!formData.factoryId) errors.push("Factory is required");
+        if (!formData.tuStyleNo) errors.push("TU Style No is required");
+        if (formData.tuStyleNo && formData.tuStyleNo.length !== 9) errors.push("TU Style No must be exactly 9 digits");
+        if (!formData.description) errors.push("Description is required");
+        break;
+      case "product":
+        if (!formData.division) errors.push("Division is required");
+        if (!formData.department) errors.push("Department is required");
+        if (!formData.season) errors.push("Season is required");
+        if (!formData.goldSealDate) errors.push("Gold Seal Date is required");
+        break;
+      case "technologists":
+        if (!formData.fabricTechId) errors.push("Fabric Technologist is required");
+        if (!formData.garmentTechId) errors.push("Garment Technologist is required");
+        break;
+      case "care":
+        // Care symbols are optional but recommended
+        break;
+      case "components":
+        // Components are optional
+        break;
+      case "images":
+        // Images are optional
+        break;
+    }
+    
+    return { isValid: errors.length === 0, errors };
+  };
+
+  const currentStepValidation = getStepValidation(currentStep);
+  const canProceed = currentStepValidation.isValid;
+
   const goNext = () => {
+    if (!canProceed) {
+      toast.error(currentStepValidation.errors[0] || "Please fill in all required fields");
+      return;
+    }
     const nextIndex = currentStepIndex + 1;
     if (nextIndex < STEPS.length) {
       setCurrentStep(STEPS[nextIndex].id);
@@ -720,10 +763,17 @@ export default function StyleCreate() {
               Create Style
             </Button>
           ) : (
-            <Button onClick={goNext}>
-              Next
-              <ArrowRight className="h-4 w-4 ml-2" />
-            </Button>
+            <div className="flex items-center gap-3">
+              {!canProceed && currentStepValidation.errors.length > 0 && (
+                <span className="text-sm text-muted-foreground">
+                  {currentStepValidation.errors.length} required field{currentStepValidation.errors.length > 1 ? 's' : ''} remaining
+                </span>
+              )}
+              <Button onClick={goNext} disabled={!canProceed}>
+                Next
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            </div>
           )}
         </div>
       </div>
