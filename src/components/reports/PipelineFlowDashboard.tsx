@@ -5,6 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
+  Tooltip as UITooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   ArrowRight,
   Clock,
   AlertCircle,
@@ -30,7 +36,7 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
+  Tooltip as ChartTooltip,
   ResponsiveContainer,
   LineChart,
   Line,
@@ -481,7 +487,7 @@ export function PipelineFlowDashboard() {
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="week" tick={{ fontSize: 12 }} />
                     <YAxis tick={{ fontSize: 12 }} />
-                    <Tooltip
+                    <ChartTooltip
                       contentStyle={{
                         backgroundColor: "hsl(var(--card))",
                         borderColor: "hsl(var(--border))",
@@ -523,54 +529,75 @@ export function PipelineFlowDashboard() {
             <CardContent>
               <div className="space-y-3">
                 {bottleneckItems.slice(0, 6).map((item, index) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between p-3 rounded-lg border bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group"
-                    onClick={() => handleItemClick(item)}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={cn(
-                          "h-8 w-8 rounded-full flex items-center justify-center",
-                          item.type === "trf" ? "bg-primary/10" : "bg-info/10"
-                        )}
-                      >
-                        {item.type === "trf" ? (
-                          <FileText className="h-4 w-4 text-primary" />
-                        ) : (
-                          <ClipboardCheck className="h-4 w-4 text-info" />
-                        )}
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">{item.name}</p>
-                        <p className="text-xs text-muted-foreground capitalize">
-                          {item.stage.replace("_", " ")}
+                  <TooltipProvider key={item.id}>
+                    <UITooltip>
+                      <TooltipTrigger asChild>
+                        <div
+                          className="flex items-center justify-between p-3 rounded-lg border bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group"
+                          onClick={() => handleItemClick(item)}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div
+                              className={cn(
+                                "h-8 w-8 rounded-full flex items-center justify-center",
+                                item.type === "trf" ? "bg-primary/10" : "bg-info/10"
+                              )}
+                            >
+                              {item.type === "trf" ? (
+                                <FileText className="h-4 w-4 text-primary" />
+                              ) : (
+                                <ClipboardCheck className="h-4 w-4 text-info" />
+                              )}
+                            </div>
+                            <div>
+                              <p className="font-medium text-sm">{item.name}</p>
+                              <p className="text-xs text-muted-foreground capitalize">
+                                {item.stage.replace("_", " ")}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge
+                              variant={item.sla === "overdue" ? "destructive" : "outline"}
+                              className={cn(
+                                item.sla === "at_risk" && "border-warning text-warning"
+                              )}
+                            >
+                              {item.daysInStage}d in stage
+                            </Badge>
+                            <ExternalLink className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </div>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>
+                          {item.type === "trf" 
+                            ? `View Test Request ${item.name} details` 
+                            : `View Inspection ${item.name} details`}
                         </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge
-                        variant={item.sla === "overdue" ? "destructive" : "outline"}
-                        className={cn(
-                          item.sla === "at_risk" && "border-warning text-warning"
-                        )}
-                      >
-                        {item.daysInStage}d in stage
-                      </Badge>
-                      <ExternalLink className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-                  </div>
+                      </TooltipContent>
+                    </UITooltip>
+                  </TooltipProvider>
                 ))}
               </div>
               {bottleneckItems.length > 6 && (
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="w-full mt-4"
-                  onClick={() => navigate(selectedPipeline === "inspection" ? "/inspections" : "/tests")}
-                >
-                  View All {bottleneckItems.length} Items
-                </Button>
+                <TooltipProvider>
+                  <UITooltip>
+                    <TooltipTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="w-full mt-4"
+                        onClick={() => navigate(selectedPipeline === "inspection" ? "/inspections" : "/tests")}
+                      >
+                        View All {bottleneckItems.length} Items
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Navigate to {selectedPipeline === "inspection" ? "Inspections" : "Tests"} list</p>
+                    </TooltipContent>
+                  </UITooltip>
+                </TooltipProvider>
               )}
             </CardContent>
           </Card>

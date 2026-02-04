@@ -5,6 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
+  Tooltip as UITooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   ShieldAlert,
   ShieldCheck,
   ShieldX,
@@ -29,7 +35,7 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
+  Tooltip as ChartTooltip,
   ResponsiveContainer,
   Cell,
 } from "recharts";
@@ -337,7 +343,7 @@ export function RiskSummaryDashboard() {
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} />
                     <XAxis type="number" domain={[0, 100]} />
                     <YAxis dataKey="country" type="category" width={80} tick={{ fontSize: 12 }} />
-                    <Tooltip
+                    <ChartTooltip
                       formatter={(value: number) => [`Score: ${value}`, "Risk"]}
                       contentStyle={{
                         backgroundColor: "hsl(var(--card))",
@@ -549,14 +555,27 @@ export function RiskSummaryDashboard() {
                                   ? "Review factory performance and schedule re-inspection"
                                   : "Review inspection results and initiate corrective action"}
                               </div>
-                              <Button 
-                                size="sm" 
-                                className="gap-2"
-                                onClick={() => handleItemClick(item)}
-                              >
-                                {item.action}
-                                <ExternalLink className="h-4 w-4" />
-                              </Button>
+                              <TooltipProvider>
+                                <UITooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button 
+                                      size="sm" 
+                                      className="gap-2"
+                                      onClick={() => handleItemClick(item)}
+                                    >
+                                      {item.action}
+                                      <ExternalLink className="h-4 w-4" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>
+                                      {item.type === "factory" 
+                                        ? "Navigate to Risk Assessment" 
+                                        : `View Inspection ${item.name} details`}
+                                    </p>
+                                  </TooltipContent>
+                                </UITooltip>
+                              </TooltipProvider>
                             </div>
                         </motion.div>
                       )}
