@@ -16,6 +16,7 @@ import StyleCreate from "./pages/StyleCreate";
 import Components from "./pages/Components";
 import ComponentCreate from "./pages/ComponentCreate";
 import SupplierInbox from "./pages/SupplierInbox";
+import Suppliers from "./pages/Suppliers";
 import Insight from "./pages/Insight";
 import NotFound from "./pages/NotFound";
 
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/components" element={<Components />} />
           <Route path="/components/new" element={<ComponentCreate />} />
           <Route path="/inbox" element={<SupplierInbox />} />
+          <Route path="/suppliers" element={<Suppliers />} />
           <Route path="/risk-assessment" element={<RiskAssessment />} />
           <Route path="/analytics" element={<Insight />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
