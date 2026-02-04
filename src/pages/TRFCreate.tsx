@@ -36,6 +36,14 @@ import { cn } from "@/lib/utils";
 import { TestingLevel, testingLevelConfig } from "@/types/trf";
 import { TRFTestingLevelBadge } from "@/components/trf/TRFTestingLevelBadge";
 import { mockStyles } from "@/data/mockStyles";
+import { toast } from "sonner";
+import {
+  validateBasicInfo,
+  validateStyleManual,
+  validateStyleLinked,
+  validateSupplierLab,
+  validateTesting,
+} from "@/lib/validations/trf";
 
 interface WizardStep {
   id: string;
@@ -103,6 +111,7 @@ const labs = [
 const TRFCreate = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
     // Basic Info
     priority: "normal",
@@ -135,6 +144,14 @@ const TRFCreate = () => {
 
   const updateFormData = (field: string, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    // Clear validation error for this field when user updates it
+    if (validationErrors[field]) {
+      setValidationErrors((prev) => {
+        const updated = { ...prev };
+        delete updated[field];
+        return updated;
+      });
+    }
   };
 
   const toggleTestType = (testId: string) => {
@@ -144,14 +161,89 @@ const TRFCreate = () => {
         ? prev.testTypes.filter((t) => t !== testId)
         : [...prev.testTypes, testId],
     }));
+    // Clear testTypes validation error when user selects
+    if (validationErrors.testTypes) {
+      setValidationErrors((prev) => {
+        const updated = { ...prev };
+        delete updated.testTypes;
+        return updated;
+      });
+    }
   };
 
+  // Validate the current step using Zod schemas
+  const validateCurrentStep = (): boolean => {
+    let result;
+    
+    switch (currentStep) {
+      case 0:
+        result = validateBasicInfo({
+          priority: formData.priority,
+          testingLevel: formData.testingLevel,
+          dueDate: formData.dueDate,
+          notes: formData.notes,
+        });
+        break;
+      case 1:
+        if (formData.styleMode === "link") {
+          result = validateStyleLinked({
+            linkedStyleId: formData.linkedStyleId,
+          });
+        } else {
+          result = validateStyleManual({
+            styleName: formData.styleName,
+            styleNumber: formData.styleNumber,
+            designStyleRef: formData.designStyleRef,
+            category: formData.category,
+          });
+        }
+        break;
+      case 2:
+        result = validateSupplierLab({
+          supplierId: formData.supplierId,
+          labId: formData.labId,
+        });
+        break;
+      case 3:
+        result = validateTesting({
+          testTypes: formData.testTypes,
+          specialInstructions: formData.specialInstructions,
+        });
+        break;
+      case 4:
+        return true; // Review step - no validation needed
+      default:
+        return true;
+    }
+
+    if (!result.success) {
+      const errors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        const path = err.path.join(".");
+        errors[path] = err.message;
+      });
+      setValidationErrors(errors);
+      
+      // Show toast with first error
+      const firstError = result.error.errors[0];
+      if (firstError) {
+        toast.error("Validation Error", {
+          description: firstError.message,
+        });
+      }
+      return false;
+    }
+
+    setValidationErrors({});
+    return true;
+  };
+
+  // Simple presence check for enabling the Next button
   const canProceed = () => {
     switch (currentStep) {
       case 0:
         return formData.priority && formData.testingLevel && formData.dueDate;
       case 1:
-        // Either linked style OR manual entry
         if (formData.styleMode === "link") {
           return !!formData.linkedStyleId;
         }
@@ -168,6 +260,11 @@ const TRFCreate = () => {
   };
 
   const handleNext = () => {
+    // Validate current step before proceeding
+    if (!validateCurrentStep()) {
+      return;
+    }
+    
     if (currentStep < steps.length - 1) {
       setCurrentStep((prev) => prev + 1);
     }
@@ -175,12 +272,20 @@ const TRFCreate = () => {
 
   const handleBack = () => {
     if (currentStep > 0) {
+      setValidationErrors({}); // Clear errors when going back
       setCurrentStep((prev) => prev - 1);
     }
   };
 
   const handleSubmit = () => {
-    console.log("Submitting TRF:", formData);
+    // Final validation before submit
+    if (!validateCurrentStep()) {
+      return;
+    }
+    
+    toast.success("TRF Created", {
+      description: "Your test request form has been submitted successfully.",
+    });
     navigate("/tests");
   };
 
@@ -196,7 +301,7 @@ const TRFCreate = () => {
                   value={formData.priority}
                   onValueChange={(value) => updateFormData("priority", value)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className={validationErrors.priority ? "border-destructive" : ""}>
                     <SelectValue placeholder="Select priority" />
                   </SelectTrigger>
                   <SelectContent>
@@ -206,6 +311,9 @@ const TRFCreate = () => {
                     <SelectItem value="low">Low</SelectItem>
                   </SelectContent>
                 </Select>
+                {validationErrors.priority && (
+                  <p className="text-xs text-destructive">{validationErrors.priority}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="testingLevel">Testing Level *</Label>
@@ -213,7 +321,7 @@ const TRFCreate = () => {
                   value={formData.testingLevel}
                   onValueChange={(value) => updateFormData("testingLevel", value as TestingLevel)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className={validationErrors.testingLevel ? "border-destructive" : ""}>
                     <SelectValue placeholder="Select testing level" />
                   </SelectTrigger>
                   <SelectContent>
@@ -227,7 +335,10 @@ const TRFCreate = () => {
                     ))}
                   </SelectContent>
                 </Select>
-                {formData.testingLevel && (
+                {validationErrors.testingLevel && (
+                  <p className="text-xs text-destructive">{validationErrors.testingLevel}</p>
+                )}
+                {formData.testingLevel && !validationErrors.testingLevel && (
                   <p className="text-xs text-muted-foreground">
                     {testingLevelConfig[formData.testingLevel].description}
                   </p>
@@ -240,7 +351,11 @@ const TRFCreate = () => {
                   type="date"
                   value={formData.dueDate}
                   onChange={(e) => updateFormData("dueDate", e.target.value)}
+                  className={validationErrors.dueDate ? "border-destructive" : ""}
                 />
+                {validationErrors.dueDate && (
+                  <p className="text-xs text-destructive">{validationErrors.dueDate}</p>
+                )}
               </div>
             </div>
             <div className="space-y-2">
@@ -251,7 +366,13 @@ const TRFCreate = () => {
                 value={formData.notes}
                 onChange={(e) => updateFormData("notes", e.target.value)}
                 rows={4}
+                maxLength={1000}
+                className={validationErrors.notes ? "border-destructive" : ""}
               />
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>{validationErrors.notes && <span className="text-destructive">{validationErrors.notes}</span>}</span>
+                <span>{formData.notes.length}/1000</span>
+              </div>
             </div>
           </div>
         );
@@ -303,7 +424,7 @@ const TRFCreate = () => {
                     value={formData.linkedStyleId}
                     onValueChange={(value) => updateFormData("linkedStyleId", value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className={validationErrors.linkedStyleId ? "border-destructive" : ""}>
                       <SelectValue placeholder="Search and select a style..." />
                     </SelectTrigger>
                     <SelectContent>
@@ -321,6 +442,9 @@ const TRFCreate = () => {
                       ))}
                     </SelectContent>
                   </Select>
+                  {validationErrors.linkedStyleId && (
+                    <p className="text-xs text-destructive">{validationErrors.linkedStyleId}</p>
+                  )}
                 </div>
 
                 {linkedStyle && (
@@ -382,7 +506,12 @@ const TRFCreate = () => {
                       placeholder="e.g., Men's Cotton Crew T-Shirt"
                       value={formData.styleName}
                       onChange={(e) => updateFormData("styleName", e.target.value)}
+                      maxLength={100}
+                      className={validationErrors.styleName ? "border-destructive" : ""}
                     />
+                    {validationErrors.styleName && (
+                      <p className="text-xs text-destructive">{validationErrors.styleName}</p>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="styleNumber">Style Number *</Label>
@@ -392,8 +521,13 @@ const TRFCreate = () => {
                       value={formData.styleNumber}
                       onChange={(e) => updateFormData("styleNumber", e.target.value)}
                       maxLength={9}
+                      className={validationErrors.styleNumber ? "border-destructive" : ""}
                     />
-                    <p className="text-xs text-muted-foreground">9-digit TU Style Number</p>
+                    {validationErrors.styleNumber ? (
+                      <p className="text-xs text-destructive">{validationErrors.styleNumber}</p>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">9-digit TU Style Number</p>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="designStyleRef">Design Style Ref</Label>
@@ -402,7 +536,12 @@ const TRFCreate = () => {
                       placeholder="e.g., SS25-CREW-001"
                       value={formData.designStyleRef}
                       onChange={(e) => updateFormData("designStyleRef", e.target.value)}
+                      maxLength={50}
+                      className={validationErrors.designStyleRef ? "border-destructive" : ""}
                     />
+                    {validationErrors.designStyleRef && (
+                      <p className="text-xs text-destructive">{validationErrors.designStyleRef}</p>
+                    )}
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -434,7 +573,11 @@ const TRFCreate = () => {
                 value={formData.sampleDescription}
                 onChange={(e) => updateFormData("sampleDescription", e.target.value)}
                 rows={3}
+                maxLength={500}
               />
+              <div className="flex justify-end text-xs text-muted-foreground">
+                <span>{formData.sampleDescription.length}/500</span>
+              </div>
             </div>
             <div className="border-2 border-dashed rounded-lg p-8 text-center">
               <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
@@ -458,7 +601,7 @@ const TRFCreate = () => {
                 value={formData.supplierId}
                 onValueChange={(value) => updateFormData("supplierId", value)}
               >
-                <SelectTrigger>
+                <SelectTrigger className={validationErrors.supplierId ? "border-destructive" : ""}>
                   <SelectValue placeholder="Select supplier" />
                 </SelectTrigger>
                 <SelectContent>
@@ -469,6 +612,9 @@ const TRFCreate = () => {
                   ))}
                 </SelectContent>
               </Select>
+              {validationErrors.supplierId && (
+                <p className="text-xs text-destructive">{validationErrors.supplierId}</p>
+              )}
             </div>
             <div className="space-y-2">
               <Label>Testing Laboratory *</Label>
@@ -480,6 +626,8 @@ const TRFCreate = () => {
                       "cursor-pointer transition-all",
                       formData.labId === lab.id
                         ? "border-primary ring-2 ring-primary/20"
+                        : validationErrors.labId
+                        ? "border-destructive/50"
                         : "hover:border-muted-foreground"
                     )}
                     onClick={() => updateFormData("labId", lab.id)}
@@ -498,6 +646,9 @@ const TRFCreate = () => {
                   </Card>
                 ))}
               </div>
+              {validationErrors.labId && (
+                <p className="text-xs text-destructive">{validationErrors.labId}</p>
+              )}
             </div>
           </div>
         );
@@ -507,6 +658,9 @@ const TRFCreate = () => {
           <div className="space-y-6">
             <div>
               <Label className="mb-4 block">Select Required Tests *</Label>
+              {validationErrors.testTypes && (
+                <p className="text-xs text-destructive mb-2">{validationErrors.testTypes}</p>
+              )}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {testTypes.map((test) => (
                   <Card
@@ -515,6 +669,8 @@ const TRFCreate = () => {
                       "cursor-pointer transition-all",
                       formData.testTypes.includes(test.id)
                         ? "border-primary ring-2 ring-primary/20"
+                        : validationErrors.testTypes
+                        ? "border-destructive/30"
                         : "hover:border-muted-foreground"
                     )}
                     onClick={() => toggleTestType(test.id)}
@@ -543,7 +699,13 @@ const TRFCreate = () => {
                 value={formData.specialInstructions}
                 onChange={(e) => updateFormData("specialInstructions", e.target.value)}
                 rows={3}
+                maxLength={2000}
+                className={validationErrors.specialInstructions ? "border-destructive" : ""}
               />
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>{validationErrors.specialInstructions && <span className="text-destructive">{validationErrors.specialInstructions}</span>}</span>
+                <span>{formData.specialInstructions.length}/2000</span>
+              </div>
             </div>
           </div>
         );
