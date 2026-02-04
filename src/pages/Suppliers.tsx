@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import {
   mockSuppliers,
@@ -42,8 +43,8 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Building2,
   Search,
@@ -59,18 +60,25 @@ import {
   CheckCircle2,
   Clock,
   XCircle,
-  ExternalLink,
   Award,
   Calendar,
+  BarChart3,
+  List,
 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
+import {
+  SupplierPerformanceChart,
+  MultiSupplierPerformanceChart,
+} from "@/components/suppliers/SupplierPerformanceChart";
 
 export default function Suppliers() {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [complianceFilter, setComplianceFilter] = useState<string>("all");
   const [tierFilter, setTierFilter] = useState<string>("all");
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
+  const [viewMode, setViewMode] = useState<"list" | "charts">("list");
 
   const stats = useMemo(() => getSupplierStats(), []);
 
@@ -136,10 +144,26 @@ export default function Suppliers() {
               Manage supplier directory and performance
             </p>
           </div>
-          <Button className="gap-2">
+          <Button className="gap-2" onClick={() => navigate("/suppliers/new")}>
             <Plus className="h-4 w-4" />
             Add Supplier
           </Button>
+        </div>
+
+        {/* View Toggle */}
+        <div className="flex items-center gap-2">
+          <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as "list" | "charts")} className="w-auto">
+            <TabsList className="grid grid-cols-2 w-[200px]">
+              <TabsTrigger value="list" className="gap-2">
+                <List className="h-4 w-4" />
+                List
+              </TabsTrigger>
+              <TabsTrigger value="charts" className="gap-2">
+                <BarChart3 className="h-4 w-4" />
+                Trends
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
 
         {/* Stats Cards */}
@@ -252,134 +276,180 @@ export default function Suppliers() {
           {filteredSuppliers.length} suppliers
         </div>
 
-        {/* Suppliers Table */}
-        <Card>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Supplier</TableHead>
-                <TableHead>Location</TableHead>
-                <TableHead>Contact</TableHead>
-                <TableHead className="text-center">Score</TableHead>
-                <TableHead className="text-center">Compliance</TableHead>
-                <TableHead className="text-center">Tier</TableHead>
-                <TableHead className="text-center">Styles</TableHead>
-                <TableHead className="text-center">Pass Rate</TableHead>
-                <TableHead></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredSuppliers.map((supplier) => {
-                const complianceConfig = complianceStatusConfig[supplier.complianceStatus];
-                const supplierTierConfig = tierConfig[supplier.tier];
-
-                return (
-                  <TableRow
-                    key={supplier.id}
-                    className="cursor-pointer hover:bg-muted/50"
-                    onClick={() => setSelectedSupplier(supplier)}
-                  >
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10">
-                          <AvatarFallback className="bg-primary/10 text-primary text-sm">
-                            {supplier.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")
-                              .slice(0, 2)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <div className="font-medium">{supplier.name}</div>
-                          <div className="text-xs text-muted-foreground font-mono">
-                            {supplier.code}
-                          </div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1 text-sm">
-                        <MapPin className="h-3 w-3 text-muted-foreground" />
-                        {supplier.city}, {supplier.country}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="text-sm">{supplier.contactName}</div>
-                      <div className="text-xs text-muted-foreground">{supplier.contactEmail}</div>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <div className={cn("text-lg font-bold", getScoreColor(supplier.performanceScore))}>
-                        {supplier.performanceScore}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Badge
-                        variant="outline"
-                        className={cn(complianceConfig.bgColor, complianceConfig.color, "gap-1")}
-                      >
-                        {getComplianceIcon(supplier.complianceStatus)}
-                        {complianceConfig.label}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Badge
-                        variant="outline"
-                        className={cn(supplierTierConfig.bgColor, supplierTierConfig.color)}
-                      >
-                        {supplierTierConfig.label}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <div className="font-medium">{supplier.activeStylesCount}</div>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <div className="flex items-center gap-2 justify-center">
-                        <Progress
-                          value={supplier.passRate}
-                          className="w-16 h-2"
-                        />
-                        <span className="text-sm text-muted-foreground">
-                          {supplier.passRate}%
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                          <Button variant="ghost" size="icon">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem>View Details</DropdownMenuItem>
-                          <DropdownMenuItem>View Styles</DropdownMenuItem>
-                          <DropdownMenuItem>View Tests</DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem>Schedule Audit</DropdownMenuItem>
-                          <DropdownMenuItem>Edit Supplier</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+        {/* List View - Suppliers Table */}
+        {viewMode === "list" && (
+          <>
+            <Card>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Supplier</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead>Contact</TableHead>
+                    <TableHead className="text-center">Score</TableHead>
+                    <TableHead className="text-center">Compliance</TableHead>
+                    <TableHead className="text-center">Tier</TableHead>
+                    <TableHead className="text-center">Styles</TableHead>
+                    <TableHead className="text-center">Pass Rate</TableHead>
+                    <TableHead></TableHead>
                   </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </Card>
+                </TableHeader>
+                <TableBody>
+                  {filteredSuppliers.map((supplier) => {
+                    const complianceConfig = complianceStatusConfig[supplier.complianceStatus];
+                    const supplierTierConfig = tierConfig[supplier.tier];
 
-        {filteredSuppliers.length === 0 && (
-          <Card className="p-12">
-            <div className="text-center">
-              <Building2 className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium">No suppliers found</h3>
-              <p className="text-muted-foreground mt-1">
-                Try adjusting your search or filters
-              </p>
+                    return (
+                      <TableRow
+                        key={supplier.id}
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => setSelectedSupplier(supplier)}
+                      >
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <Avatar className="h-10 w-10">
+                              <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                                {supplier.name
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")
+                                  .slice(0, 2)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="font-medium">{supplier.name}</div>
+                              <div className="text-xs text-muted-foreground font-mono">
+                                {supplier.code}
+                              </div>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-1 text-sm">
+                            <MapPin className="h-3 w-3 text-muted-foreground" />
+                            {supplier.city}, {supplier.country}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm">{supplier.contactName}</div>
+                          <div className="text-xs text-muted-foreground">{supplier.contactEmail}</div>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <div className={cn("text-lg font-bold", getScoreColor(supplier.performanceScore))}>
+                            {supplier.performanceScore}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <Badge
+                            variant="outline"
+                            className={cn(complianceConfig.bgColor, complianceConfig.color, "gap-1")}
+                          >
+                            {getComplianceIcon(supplier.complianceStatus)}
+                            {complianceConfig.label}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <Badge
+                            variant="outline"
+                            className={cn(supplierTierConfig.bgColor, supplierTierConfig.color)}
+                          >
+                            {supplierTierConfig.label}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <div className="font-medium">{supplier.activeStylesCount}</div>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <div className="flex items-center gap-2 justify-center">
+                            <Progress
+                              value={supplier.passRate}
+                              className="w-16 h-2"
+                            />
+                            <span className="text-sm text-muted-foreground">
+                              {supplier.passRate}%
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                              <Button variant="ghost" size="icon">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem>View Details</DropdownMenuItem>
+                              <DropdownMenuItem>View Styles</DropdownMenuItem>
+                              <DropdownMenuItem>View Tests</DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem>Schedule Audit</DropdownMenuItem>
+                              <DropdownMenuItem>Edit Supplier</DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </Card>
+
+            {filteredSuppliers.length === 0 && (
+              <Card className="p-12">
+                <div className="text-center">
+                  <Building2 className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-medium">No suppliers found</h3>
+                  <p className="text-muted-foreground mt-1">
+                    Try adjusting your search or filters
+                  </p>
+                </div>
+              </Card>
+            )}
+          </>
+        )}
+
+        {/* Charts View - Performance Trends */}
+        {viewMode === "charts" && (
+          <div className="space-y-6">
+            {/* Multi-supplier comparison */}
+            <MultiSupplierPerformanceChart
+              suppliers={[
+                { id: "sup-1", name: "Textile Excellence Ltd", currentScore: 92, color: "hsl(var(--primary))" },
+                { id: "sup-4", name: "Viet Garment Solutions", currentScore: 91, color: "hsl(var(--success))" },
+                { id: "sup-2", name: "Dragon Fabrics Co", currentScore: 88, color: "hsl(var(--info))" },
+                { id: "sup-7", name: "Euro Fashion Fabrics", currentScore: 96, color: "hsl(var(--accent))" },
+              ]}
+            />
+
+            {/* Individual supplier charts */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Individual Supplier Trends</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {filteredSuppliers.slice(0, 6).map((supplier) => (
+                  <SupplierPerformanceChart
+                    key={supplier.id}
+                    supplierId={supplier.id}
+                    supplierName={supplier.name}
+                    currentScore={supplier.performanceScore}
+                  />
+                ))}
+              </div>
             </div>
-          </Card>
+
+            {filteredSuppliers.length === 0 && (
+              <Card className="p-12">
+                <div className="text-center">
+                  <BarChart3 className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-medium">No suppliers found</h3>
+                  <p className="text-muted-foreground mt-1">
+                    Try adjusting your filters to see performance trends
+                  </p>
+                </div>
+              </Card>
+            )}
+          </div>
         )}
 
         {/* Supplier Detail Dialog */}
