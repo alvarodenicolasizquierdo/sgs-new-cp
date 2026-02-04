@@ -1,12 +1,20 @@
 import { Style, Supplier, Factory, Technologist, CareSymbol, CareWording } from "@/types/style";
 
+// Profile images
+import karukaAvatar from "@/assets/profiles/karuka.jpg";
+import alvaroAvatar from "@/assets/profiles/alvaro.jpg";
+import ammAvatar from "@/assets/profiles/amm.jpg";
+import saritaAvatar from "@/assets/profiles/sarita.jpg";
+import markAvatar from "@/assets/profiles/mark.png";
+import hajraAvatar from "@/assets/profiles/hajra.png";
+
 // Mock Technologists
 export const mockTechnologists: Technologist[] = [
-  { id: "tech-1", name: "Sarah Chen", email: "sarah.chen@sgs.com", type: "fabric", avatar: "/placeholder.svg" },
-  { id: "tech-2", name: "James Wilson", email: "james.wilson@sgs.com", type: "fabric", avatar: "/placeholder.svg" },
-  { id: "tech-3", name: "Maria Garcia", email: "maria.garcia@sgs.com", type: "garment", avatar: "/placeholder.svg" },
-  { id: "tech-4", name: "David Kim", email: "david.kim@sgs.com", type: "garment", avatar: "/placeholder.svg" },
-  { id: "tech-5", name: "Emma Thompson", email: "emma.thompson@sgs.com", type: "fabric", avatar: "/placeholder.svg" },
+  { id: "tech-1", name: "Sarah Chen", email: "sarah.chen@sgs.com", type: "fabric", avatar: karukaAvatar },
+  { id: "tech-2", name: "James Wilson", email: "james.wilson@sgs.com", type: "fabric", avatar: alvaroAvatar },
+  { id: "tech-3", name: "Maria Garcia", email: "maria.garcia@sgs.com", type: "garment", avatar: ammAvatar },
+  { id: "tech-4", name: "David Kim", email: "david.kim@sgs.com", type: "garment", avatar: markAvatar },
+  { id: "tech-5", name: "Emma Thompson", email: "emma.thompson@sgs.com", type: "fabric", avatar: hajraAvatar },
 ];
 
 // Mock Factories

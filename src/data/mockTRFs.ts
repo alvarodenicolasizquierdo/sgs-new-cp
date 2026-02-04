@@ -1,5 +1,10 @@
 import { TRF } from "@/types/trf";
 
+// Profile images
+import karukaAvatar from "@/assets/profiles/karuka.jpg";
+import alvaroAvatar from "@/assets/profiles/alvaro.jpg";
+import ammAvatar from "@/assets/profiles/amm.jpg";
+import markAvatar from "@/assets/profiles/mark.png";
 export const mockTRFs: TRF[] = [
   {
     id: "1",
@@ -13,7 +18,7 @@ export const mockTRFs: TRF[] = [
     testTypes: ["physical", "chemical", "colorfastness"],
     submittedDate: "2026-01-28",
     dueDate: "2026-02-10",
-    assignedTo: { id: "u1", name: "John Chen", avatar: undefined },
+    assignedTo: { id: "u1", name: "John Chen", avatar: markAvatar },
     progress: 65,
     slaStatus: "on_track",
     createdAt: "2026-01-28T08:00:00Z",
@@ -31,7 +36,7 @@ export const mockTRFs: TRF[] = [
     testTypes: ["flammability", "chemical"],
     submittedDate: "2026-01-30",
     dueDate: "2026-02-05",
-    assignedTo: { id: "u2", name: "Maria Santos", avatar: undefined },
+    assignedTo: { id: "u2", name: "Maria Santos", avatar: ammAvatar },
     progress: 30,
     slaStatus: "at_risk",
     createdAt: "2026-01-30T10:15:00Z",
@@ -49,7 +54,7 @@ export const mockTRFs: TRF[] = [
     testTypes: ["dimensional", "physical"],
     submittedDate: "2026-01-20",
     dueDate: "2026-02-01",
-    assignedTo: { id: "u3", name: "David Kim", avatar: undefined },
+    assignedTo: { id: "u3", name: "David Kim", avatar: alvaroAvatar },
     progress: 100,
     slaStatus: "on_track",
     createdAt: "2026-01-20T09:00:00Z",
@@ -84,7 +89,7 @@ export const mockTRFs: TRF[] = [
     testTypes: ["chemical", "physical", "dimensional"],
     submittedDate: "2026-01-25",
     dueDate: "2026-02-08",
-    assignedTo: { id: "u1", name: "John Chen", avatar: undefined },
+    assignedTo: { id: "u1", name: "John Chen", avatar: markAvatar },
     progress: 45,
     slaStatus: "on_track",
     createdAt: "2026-01-25T13:00:00Z",
@@ -102,7 +107,7 @@ export const mockTRFs: TRF[] = [
     testTypes: ["flammability", "chemical", "colorfastness"],
     submittedDate: "2026-01-22",
     dueDate: "2026-02-03",
-    assignedTo: { id: "u2", name: "Maria Santos", avatar: undefined },
+    assignedTo: { id: "u2", name: "Maria Santos", avatar: ammAvatar },
     progress: 0,
     slaStatus: "overdue",
     notes: "Failed chemical safety requirements. Requires reformulation.",
@@ -138,7 +143,7 @@ export const mockTRFs: TRF[] = [
     testTypes: ["colorfastness", "dimensional", "performance"],
     submittedDate: "2026-01-29",
     dueDate: "2026-02-12",
-    assignedTo: { id: "u3", name: "David Kim", avatar: undefined },
+    assignedTo: { id: "u3", name: "David Kim", avatar: alvaroAvatar },
     progress: 50,
     slaStatus: "on_track",
     createdAt: "2026-01-29T14:20:00Z",
@@ -156,7 +161,7 @@ export const mockTRFs: TRF[] = [
     testTypes: ["flammability", "physical", "performance"],
     submittedDate: "2026-01-26",
     dueDate: "2026-02-09",
-    assignedTo: { id: "u1", name: "John Chen", avatar: undefined },
+    assignedTo: { id: "u1", name: "John Chen", avatar: markAvatar },
     progress: 25,
     slaStatus: "at_risk",
     notes: "Awaiting additional material samples from supplier.",
