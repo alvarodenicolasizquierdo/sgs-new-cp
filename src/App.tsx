@@ -16,6 +16,7 @@ import StyleCreate from "./pages/StyleCreate";
 import Components from "./pages/Components";
 import ComponentCreate from "./pages/ComponentCreate";
 import SupplierInbox from "./pages/SupplierInbox";
+import Reports from "./pages/Reports";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/components/new" element={<ComponentCreate />} />
           <Route path="/inbox" element={<SupplierInbox />} />
           <Route path="/risk-assessment" element={<RiskAssessment />} />
+          <Route path="/reports" element={<Reports />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
