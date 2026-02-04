@@ -12,6 +12,7 @@ import InspectionDetail from "./pages/InspectionDetail";
 import RiskAssessment from "./pages/RiskAssessment";
 import Styles from "./pages/Styles";
 import StyleDetail from "./pages/StyleDetail";
+import StyleCreate from "./pages/StyleCreate";
 import Components from "./pages/Components";
 import SupplierInbox from "./pages/SupplierInbox";
 import NotFound from "./pages/NotFound";
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/inspections" element={<Inspections />} />
           <Route path="/inspections/:id" element={<InspectionDetail />} />
           <Route path="/styles" element={<Styles />} />
+          <Route path="/styles/new" element={<StyleCreate />} />
           <Route path="/styles/:id" element={<StyleDetail />} />
           <Route path="/components" element={<Components />} />
           <Route path="/inbox" element={<SupplierInbox />} />
