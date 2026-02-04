@@ -113,6 +113,7 @@ export function AppSidebar() {
           {!collapsed && (
             <div className="flex flex-col">
               <span className="font-semibold text-sidebar-foreground text-sm">SMART Advanced</span>
+              <span className="text-[10px] text-sidebar-muted">v2.0</span>
             </div>
           )}
         </div>
