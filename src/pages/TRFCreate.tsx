@@ -28,10 +28,14 @@ import {
   Save,
   Upload,
   X,
+  Link,
+  Unlink,
 } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 import { TestingLevel, testingLevelConfig } from "@/types/trf";
 import { TRFTestingLevelBadge } from "@/components/trf/TRFTestingLevelBadge";
+import { mockStyles } from "@/data/mockStyles";
 
 interface WizardStep {
   id: string;
@@ -106,8 +110,11 @@ const TRFCreate = () => {
     dueDate: "",
     notes: "",
     // Style (TU-Online terminology)
+    styleMode: "link" as "link" | "manual",
+    linkedStyleId: "",
     styleName: "",
     styleNumber: "",
+    designStyleRef: "",
     category: "",
     sampleDescription: "",
     // Supplier & Lab
@@ -117,6 +124,11 @@ const TRFCreate = () => {
     testTypes: [] as string[],
     specialInstructions: "",
   });
+
+  // Get linked style details
+  const linkedStyle = formData.linkedStyleId 
+    ? mockStyles.find(s => s.id === formData.linkedStyleId) 
+    : null;
 
   const currentStepData = steps[currentStep];
   const progress = ((currentStep + 1) / steps.length) * 100;
@@ -139,6 +151,10 @@ const TRFCreate = () => {
       case 0:
         return formData.priority && formData.testingLevel && formData.dueDate;
       case 1:
+        // Either linked style OR manual entry
+        if (formData.styleMode === "link") {
+          return !!formData.linkedStyleId;
+        }
         return formData.styleName && formData.styleNumber;
       case 2:
         return formData.supplierId && formData.labId;
@@ -243,46 +259,173 @@ const TRFCreate = () => {
       case 1:
         return (
           <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="styleName">Style Name *</Label>
-                <Input
-                  id="styleName"
-                  placeholder="e.g., Men's Cotton Crew T-Shirt"
-                  value={formData.styleName}
-                  onChange={(e) => updateFormData("styleName", e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="styleNumber">Style Number *</Label>
-                <Input
-                  id="styleNumber"
-                  placeholder="e.g., 123456789"
-                  value={formData.styleNumber}
-                  onChange={(e) => updateFormData("styleNumber", e.target.value)}
-                  maxLength={9}
-                />
-                <p className="text-xs text-muted-foreground">9-digit TU Style Number</p>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="category">Style Category</Label>
-              <Select
-                value={formData.category}
-                onValueChange={(value) => updateFormData("category", value)}
+            {/* Style Mode Toggle */}
+            <div className="space-y-3">
+              <Label>How would you like to specify the style?</Label>
+              <RadioGroup
+                value={formData.styleMode}
+                onValueChange={(value) => {
+                  updateFormData("styleMode", value);
+                  // Clear the other mode's data
+                  if (value === "link") {
+                    updateFormData("styleName", "");
+                    updateFormData("styleNumber", "");
+                    updateFormData("designStyleRef", "");
+                  } else {
+                    updateFormData("linkedStyleId", "");
+                  }
+                }}
+                className="flex gap-4"
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="apparel">Apparel</SelectItem>
-                  <SelectItem value="footwear">Footwear</SelectItem>
-                  <SelectItem value="accessories">Accessories</SelectItem>
-                  <SelectItem value="home-textiles">Home Textiles</SelectItem>
-                  <SelectItem value="outdoor">Outdoor Equipment</SelectItem>
-                </SelectContent>
-              </Select>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="link" id="mode-link" />
+                  <Label htmlFor="mode-link" className="flex items-center gap-2 cursor-pointer font-normal">
+                    <Link className="h-4 w-4" />
+                    Link to existing Style
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="manual" id="mode-manual" />
+                  <Label htmlFor="mode-manual" className="flex items-center gap-2 cursor-pointer font-normal">
+                    <Unlink className="h-4 w-4" />
+                    Enter manually
+                  </Label>
+                </div>
+              </RadioGroup>
             </div>
+
+            {formData.styleMode === "link" ? (
+              /* Link to Existing Style */
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Select Style *</Label>
+                  <Select
+                    value={formData.linkedStyleId}
+                    onValueChange={(value) => updateFormData("linkedStyleId", value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Search and select a style..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {mockStyles.map((style) => (
+                        <SelectItem key={style.id} value={style.id}>
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-xs">{style.tuStyleNo}</span>
+                            <span className="text-muted-foreground">•</span>
+                            <span>{style.description}</span>
+                            <Badge variant="outline" className="ml-2 text-xs">
+                              {style.productColour}
+                            </Badge>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {linkedStyle && (
+                  <Card className="border-primary/20 bg-primary/5">
+                    <CardContent className="p-4">
+                      <div className="flex items-start justify-between">
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <Link className="h-4 w-4 text-primary" />
+                            <span className="font-medium">Linked Style</span>
+                          </div>
+                          <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
+                            <div>
+                              <span className="text-muted-foreground">Style Number: </span>
+                              <span className="font-mono">{linkedStyle.tuStyleNo}</span>
+                            </div>
+                            <div>
+                              <span className="text-muted-foreground">Design Ref: </span>
+                              <span className="font-mono">{linkedStyle.designStyleRef}</span>
+                            </div>
+                            <div>
+                              <span className="text-muted-foreground">Name: </span>
+                              <span>{linkedStyle.description}</span>
+                            </div>
+                            <div>
+                              <span className="text-muted-foreground">Colour: </span>
+                              <span>{linkedStyle.productColour}</span>
+                            </div>
+                            <div>
+                              <span className="text-muted-foreground">Supplier: </span>
+                              <span>{linkedStyle.supplier?.name}</span>
+                            </div>
+                            <div>
+                              <span className="text-muted-foreground">Season: </span>
+                              <span>{linkedStyle.season}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => updateFormData("linkedStyleId", "")}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            ) : (
+              /* Manual Entry */
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="styleName">Style Name *</Label>
+                    <Input
+                      id="styleName"
+                      placeholder="e.g., Men's Cotton Crew T-Shirt"
+                      value={formData.styleName}
+                      onChange={(e) => updateFormData("styleName", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="styleNumber">Style Number *</Label>
+                    <Input
+                      id="styleNumber"
+                      placeholder="e.g., 123456789"
+                      value={formData.styleNumber}
+                      onChange={(e) => updateFormData("styleNumber", e.target.value)}
+                      maxLength={9}
+                    />
+                    <p className="text-xs text-muted-foreground">9-digit TU Style Number</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="designStyleRef">Design Style Ref</Label>
+                    <Input
+                      id="designStyleRef"
+                      placeholder="e.g., SS25-CREW-001"
+                      value={formData.designStyleRef}
+                      onChange={(e) => updateFormData("designStyleRef", e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="category">Style Category</Label>
+                  <Select
+                    value={formData.category}
+                    onValueChange={(value) => updateFormData("category", value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="apparel">Apparel</SelectItem>
+                      <SelectItem value="footwear">Footwear</SelectItem>
+                      <SelectItem value="accessories">Accessories</SelectItem>
+                      <SelectItem value="home-textiles">Home Textiles</SelectItem>
+                      <SelectItem value="outdoor">Outdoor Equipment</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </>
+            )}
+
             <div className="space-y-2">
               <Label htmlFor="sampleDescription">Sample Description</Label>
               <Textarea
@@ -442,16 +585,40 @@ const TRFCreate = () => {
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Style Details</CardTitle>
+                <CardTitle className="text-base flex items-center gap-2">
+                  Style Details
+                  {formData.styleMode === "link" && linkedStyle && (
+                    <Badge variant="outline" className="text-xs font-normal">
+                      <Link className="h-3 w-3 mr-1" />
+                      Linked
+                    </Badge>
+                  )}
+                </CardTitle>
               </CardHeader>
-              <CardContent className="grid grid-cols-2 gap-4">
+              <CardContent className="grid grid-cols-3 gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground">Style Name</p>
-                  <p className="font-medium">{formData.styleName || "-"}</p>
+                  <p className="font-medium">
+                    {formData.styleMode === "link" && linkedStyle 
+                      ? linkedStyle.description 
+                      : formData.styleName || "-"}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Style Number</p>
-                  <p className="font-medium font-mono">{formData.styleNumber || "-"}</p>
+                  <p className="font-medium font-mono">
+                    {formData.styleMode === "link" && linkedStyle 
+                      ? linkedStyle.tuStyleNo 
+                      : formData.styleNumber || "-"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Design Style Ref</p>
+                  <p className="font-medium font-mono">
+                    {formData.styleMode === "link" && linkedStyle 
+                      ? linkedStyle.designStyleRef 
+                      : formData.designStyleRef || "-"}
+                  </p>
                 </div>
               </CardContent>
             </Card>
