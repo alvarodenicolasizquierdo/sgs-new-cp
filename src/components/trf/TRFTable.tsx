@@ -21,6 +21,7 @@ import {
 import { TRF } from "@/types/trf";
 import { TRFStatusBadge } from "./TRFStatusBadge";
 import { TRFPriorityBadge } from "./TRFPriorityBadge";
+import { TRFTestingLevelBadge } from "./TRFTestingLevelBadge";
 import { SLAIndicator } from "./SLAIndicator";
 import {
   MoreHorizontal,
@@ -41,7 +42,7 @@ interface TRFTableProps {
   onSelectionChange: (ids: string[]) => void;
 }
 
-type SortField = "trfNumber" | "productName" | "supplier" | "status" | "dueDate" | "priority";
+type SortField = "trfNumber" | "styleName" | "supplier" | "status" | "dueDate" | "priority" | "testingLevel";
 type SortDirection = "asc" | "desc";
 
 export function TRFTable({ data, selectedIds, onSelectionChange }: TRFTableProps) {
@@ -64,11 +65,16 @@ export function TRFTable({ data, selectedIds, onSelectionChange }: TRFTableProps
       case "trfNumber":
         comparison = a.trfNumber.localeCompare(b.trfNumber);
         break;
-      case "productName":
-        comparison = a.productName.localeCompare(b.productName);
+      case "styleName":
+        comparison = a.styleName.localeCompare(b.styleName);
         break;
       case "supplier":
         comparison = a.supplier.name.localeCompare(b.supplier.name);
+        break;
+      case "testingLevel":
+        const levelOrder = { base: 0, bulk: 1, garment: 2 };
+        comparison = levelOrder[a.testingLevel] - levelOrder[b.testingLevel];
+        break;
         break;
       case "status":
         comparison = a.status.localeCompare(b.status);
@@ -148,8 +154,9 @@ export function TRFTable({ data, selectedIds, onSelectionChange }: TRFTableProps
               />
             </TableHead>
             <SortableHeader field="trfNumber">TRF ID</SortableHeader>
-            <SortableHeader field="productName">Product</SortableHeader>
+            <SortableHeader field="styleName">Style</SortableHeader>
             <SortableHeader field="supplier">Supplier</SortableHeader>
+            <SortableHeader field="testingLevel">Level</SortableHeader>
             <SortableHeader field="status">Status</SortableHeader>
             <SortableHeader field="priority">Priority</SortableHeader>
             <TableHead>Progress</TableHead>
@@ -177,8 +184,8 @@ export function TRFTable({ data, selectedIds, onSelectionChange }: TRFTableProps
               <TableCell className="font-medium text-primary">{trf.trfNumber}</TableCell>
               <TableCell>
                 <div>
-                  <p className="font-medium">{trf.productName}</p>
-                  <p className="text-xs text-muted-foreground">{trf.productCode}</p>
+                  <p className="font-medium">{trf.styleName}</p>
+                  <p className="text-xs text-muted-foreground">{trf.styleNumber}</p>
                 </div>
               </TableCell>
               <TableCell>
@@ -190,6 +197,9 @@ export function TRFTable({ data, selectedIds, onSelectionChange }: TRFTableProps
                   </Avatar>
                   <span className="text-sm">{trf.supplier.name}</span>
                 </div>
+              </TableCell>
+              <TableCell>
+                <TRFTestingLevelBadge level={trf.testingLevel} />
               </TableCell>
               <TableCell>
                 <TRFStatusBadge status={trf.status} />

@@ -18,11 +18,48 @@ export type TestType =
   | "dimensional" 
   | "performance";
 
+// Testing level in the sequential approval workflow
+export type TestingLevel = "base" | "bulk" | "garment";
+
+export const testingLevelConfig: Record<TestingLevel, { 
+  label: string; 
+  description: string;
+  color: string; 
+  bgColor: string;
+  order: number;
+}> = {
+  base: { 
+    label: "Base", 
+    description: "Initial component testing phase",
+    color: "text-amber-600", 
+    bgColor: "bg-amber-100",
+    order: 1
+  },
+  bulk: { 
+    label: "Bulk", 
+    description: "Production batch testing",
+    color: "text-blue-600", 
+    bgColor: "bg-blue-100",
+    order: 2
+  },
+  garment: { 
+    label: "Garment", 
+    description: "Finished product testing",
+    color: "text-purple-600", 
+    bgColor: "bg-purple-100",
+    order: 3
+  },
+};
+
 export interface TRF {
   id: string;
   trfNumber: string;
-  productName: string;
-  productCode: string;
+  // Style-based terminology (aligns with TU-Online)
+  styleName: string;
+  styleNumber: string;
+  designStyleRef?: string;
+  // Linked Style ID for N:M relationship
+  linkedStyleId?: string;
   supplier: {
     id: string;
     name: string;
@@ -35,6 +72,8 @@ export interface TRF {
   };
   status: TRFStatus;
   priority: TRFPriority;
+  // Testing level in sequential workflow: Base → Bulk → Garment
+  testingLevel: TestingLevel;
   testTypes: TestType[];
   submittedDate: string;
   dueDate: string;
@@ -46,6 +85,15 @@ export interface TRF {
   progress: number;
   slaStatus: "on_track" | "at_risk" | "overdue";
   notes?: string;
+  // Archive functionality
+  isArchived: boolean;
+  archivedAt?: string;
+  archivedReason?: string;
+  // Link-and-amend workflow
+  linkedReportId?: string;
+  linkedReportNumber?: string;
+  isAmendment: boolean;
+  parentTrfId?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -54,11 +102,13 @@ export interface TRFFilter {
   search: string;
   status: TRFStatus[];
   priority: TRFPriority[];
+  testingLevel: TestingLevel[];
   testTypes: TestType[];
   supplier: string[];
   lab: string[];
   dateRange: { from?: Date; to?: Date };
   slaStatus: ("on_track" | "at_risk" | "overdue")[];
+  showArchived: boolean;
 }
 
 export const statusConfig: Record<TRFStatus, { label: string; color: string; bgColor: string }> = {
