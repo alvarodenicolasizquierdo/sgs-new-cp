@@ -25,6 +25,7 @@ export function TRFPriorityBadge({ priority, showLabel = true }: TRFPriorityBadg
         config.color,
         config.bgColor
       )}
+      data-help="priority-badge"
     >
       <Icon className="h-3 w-3" />
       {showLabel && config.label}

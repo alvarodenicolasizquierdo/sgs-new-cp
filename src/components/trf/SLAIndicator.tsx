@@ -27,7 +27,7 @@ export function SLAIndicator({ status, dueDate }: SLAIndicatorProps) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" data-help="sla-indicator">
           <span className={cn("w-2 h-2 rounded-full", config.color)} />
           <span className="text-xs text-muted-foreground">{getDaysLabel()}</span>
         </div>

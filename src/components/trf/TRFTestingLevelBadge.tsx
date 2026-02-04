@@ -23,6 +23,7 @@ export function TRFTestingLevelBadge({ level, size = "sm" }: TRFTestingLevelBadg
         config.color,
         sizeClasses[size]
       )}
+      data-help="testing-level"
     >
       {config.label}
     </span>
