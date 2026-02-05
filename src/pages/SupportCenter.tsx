@@ -42,12 +42,15 @@ import { SupportCenterKnowledge } from '@/components/support/SupportCenterKnowle
 import { SupportCenterTickets } from '@/components/support/SupportCenterTickets';
 import { SupportCenterAdmin } from '@/components/support/SupportCenterAdmin';
 import { useAISupportContext } from '@/contexts/AISupportContext';
+import { useSearchParams } from 'react-router-dom';
 
 // Mock current user role - in production this would come from auth context
 const CURRENT_USER_ROLE = 'admin'; // 'user' | 'admin'
 
 export default function SupportCenter() {
-  const [activeTab, setActiveTab] = useState('chat');
+  const [searchParams] = useSearchParams();
+  const initialTab = searchParams.get('tab') || 'chat';
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [showNewTicketDialog, setShowNewTicketDialog] = useState(false);
   const [showEscalationDialog, setShowEscalationDialog] = useState(false);
   const [escalationType, setEscalationType] = useState<'email' | 'form' | null>(null);
@@ -59,7 +62,15 @@ export default function SupportCenter() {
     description: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { contextHelp } = useAISupportContext();
+  const { contextHelp, sendMessage } = useAISupportContext();
+
+  // Handle switching to chat and sending a query
+  const handleAskAI = (query: string) => {
+    setActiveTab('chat');
+    if (query) {
+      sendMessage(query);
+    }
+  };
 
   const isAdmin = CURRENT_USER_ROLE === 'admin';
 
@@ -197,7 +208,7 @@ export default function SupportCenter() {
                     exit={{ opacity: 0 }}
                     className="h-full"
                   >
-                    <SupportCenterKnowledge />
+                    <SupportCenterKnowledge onAskAI={handleAskAI} />
                   </motion.div>
                 )}
                 

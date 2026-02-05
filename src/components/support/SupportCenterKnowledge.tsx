@@ -1,22 +1,19 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Search, 
   Book, 
   FileText, 
-  Video, 
   Lightbulb,
   ChevronRight,
-  ChevronLeft,
-  ExternalLink,
   Star,
   Clock,
   BookOpen,
   GraduationCap,
   TrendingUp,
-  X
+  ThumbsUp,
+  ThumbsDown,
+  ExternalLink
 } from 'lucide-react';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -25,6 +22,8 @@ import { Separator } from '@/components/ui/separator';
 import { helpDatabase, HelpItem, searchHelp } from '@/data/helpContent';
 import { cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
+import { InstantSearchDropdown } from './InstantSearchDropdown';
+import { ArticleBreadcrumbs } from './ArticleBreadcrumbs';
 
 // Notion-style categories with icons and colors
 const categories = [
@@ -45,10 +44,14 @@ const featuredArticles = [
   { id: 'st-1', readTime: '4 min' },
 ];
 
-export function SupportCenterKnowledge() {
-  const [searchQuery, setSearchQuery] = useState('');
+interface SupportCenterKnowledgeProps {
+  onAskAI?: (query: string) => void;
+}
+
+export function SupportCenterKnowledge({ onAskAI }: SupportCenterKnowledgeProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<HelpItem | null>(null);
+  const [feedbackGiven, setFeedbackGiven] = useState<'yes' | 'no' | null>(null);
 
   // Group articles by category
   const groupedArticles = useMemo(() => {
@@ -62,21 +65,15 @@ export function SupportCenterKnowledge() {
     return groups;
   }, []);
 
-  // Search results
-  const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) return [];
-    return searchHelp(searchQuery);
-  }, [searchQuery]);
-
   // Current articles to display
   const currentArticles = useMemo(() => {
-    if (searchQuery.trim()) return searchResults;
     if (selectedCategory) return groupedArticles[selectedCategory] || [];
     return [];
-  }, [searchQuery, selectedCategory, searchResults, groupedArticles]);
+  }, [selectedCategory, groupedArticles]);
 
   const handleArticleClick = (article: HelpItem) => {
     setSelectedArticle(article);
+    setFeedbackGiven(null);
   };
 
   const getFeaturedInfo = (id: string) => {
@@ -87,29 +84,54 @@ export function SupportCenterKnowledge() {
     return categories.find(c => c.id === categoryId);
   };
 
+  // Get related articles from same category
+  const relatedArticles = useMemo(() => {
+    if (!selectedArticle) return [];
+    return helpDatabase
+      .filter(a => a.category === selectedArticle.category && a.id !== selectedArticle.id)
+      .slice(0, 3);
+  }, [selectedArticle]);
+
+  // Build breadcrumb items
+  const breadcrumbs = useMemo(() => {
+    const items: { label: string; emoji?: string; onClick?: () => void }[] = [
+      { label: 'Help Center', onClick: () => { setSelectedArticle(null); setSelectedCategory(null); } }
+    ];
+
+    if (selectedCategory) {
+      const cat = getCategoryInfo(selectedCategory);
+      items.push({
+        label: cat?.name || selectedCategory,
+        emoji: cat?.emoji,
+        onClick: selectedArticle ? () => setSelectedArticle(null) : undefined
+      });
+    }
+
+    if (selectedArticle) {
+      items.push({
+        label: selectedArticle.question.length > 40 
+          ? selectedArticle.question.substring(0, 40) + '...' 
+          : selectedArticle.question
+      });
+    }
+
+    return items;
+  }, [selectedCategory, selectedArticle]);
+
+  const handleFeedback = (type: 'yes' | 'no') => {
+    setFeedbackGiven(type);
+    // In production, send analytics
+  };
+
   return (
     <div className="flex flex-col h-full">
-      {/* Search Header */}
+      {/* Search Header with Instant Search */}
       <div className="p-4 border-b border-border bg-gradient-to-r from-primary/5 to-accent/5">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            placeholder="Search for articles, guides, tutorials..."
-            className="pl-10 pr-10 rounded-xl"
-          />
-          {searchQuery && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
-              onClick={() => setSearchQuery('')}
-            >
-              <X className="h-3 w-3" />
-            </Button>
-          )}
-        </div>
+        <InstantSearchDropdown
+          onSelectArticle={handleArticleClick}
+          onAskAI={onAskAI}
+          placeholder="Search for articles, guides, tutorials..."
+        />
       </div>
 
       {/* Content */}
@@ -117,7 +139,7 @@ export function SupportCenterKnowledge() {
         <div className="p-4">
           <AnimatePresence mode="wait">
             {selectedArticle ? (
-              /* Article View */
+              /* Article View with Breadcrumbs */
               <motion.div
                 key="article"
                 initial={{ opacity: 0, x: 20 }}
@@ -125,15 +147,8 @@ export function SupportCenterKnowledge() {
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-4"
               >
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSelectedArticle(null)}
-                  className="mb-2 -ml-2"
-                >
-                  <ChevronLeft className="h-4 w-4 mr-1" />
-                  Back
-                </Button>
+                {/* Breadcrumbs */}
+                <ArticleBreadcrumbs items={breadcrumbs} className="mb-4" />
                 
                 <div className="space-y-4">
                   <div className="flex items-start justify-between gap-4">
@@ -151,53 +166,108 @@ export function SupportCenterKnowledge() {
                     </Button>
                   </div>
                   
+                  {/* Article Content */}
                   <div className="prose prose-sm dark:prose-invert max-w-none bg-secondary/30 rounded-xl p-6">
                     <ReactMarkdown>{selectedArticle.answer}</ReactMarkdown>
                   </div>
                   
                   <Separator />
                   
-                  <div className="flex items-center justify-between py-2">
-                    <p className="text-sm text-muted-foreground">
-                      Was this article helpful?
-                    </p>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" className="rounded-full">
-                        👍 Yes
-                      </Button>
-                      <Button variant="outline" size="sm" className="rounded-full">
-                        👎 No
-                      </Button>
-                    </div>
+                  {/* Feedback Section */}
+                  <div className="bg-muted/30 rounded-xl p-4">
+                    {feedbackGiven ? (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="text-center py-2"
+                      >
+                        <p className="text-sm text-muted-foreground">
+                          {feedbackGiven === 'yes' 
+                            ? '🎉 Thanks for your feedback!' 
+                            : '📝 Thank you! We\'ll work on improving this article.'}
+                        </p>
+                      </motion.div>
+                    ) : (
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm text-muted-foreground">
+                          Was this article helpful?
+                        </p>
+                        <div className="flex gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="rounded-full gap-2"
+                            onClick={() => handleFeedback('yes')}
+                          >
+                            <ThumbsUp className="h-4 w-4" /> Yes
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="rounded-full gap-2"
+                            onClick={() => handleFeedback('no')}
+                          >
+                            <ThumbsDown className="h-4 w-4" /> No
+                          </Button>
+                        </div>
+                      </div>
+                    )}
                   </div>
+
+                  {/* Related Articles */}
+                  {relatedArticles.length > 0 && (
+                    <div>
+                      <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                        <BookOpen className="h-4 w-4 text-muted-foreground" />
+                        Related Articles
+                      </h3>
+                      <div className="grid gap-2">
+                        {relatedArticles.map(article => (
+                          <Card 
+                            key={article.id}
+                            className="cursor-pointer hover:border-primary/50 hover:shadow-sm transition-all group"
+                            onClick={() => handleArticleClick(article)}
+                          >
+                            <CardContent className="p-3">
+                              <div className="flex items-center gap-3">
+                                <FileText className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                <span className="text-sm line-clamp-1 flex-1">{article.question}</span>
+                                <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </motion.div>
-            ) : searchQuery || selectedCategory ? (
-              /* Search/Category Results */
+            ) : selectedCategory ? (
+              /* Category Results with Breadcrumbs */
               <motion.div
-                key="results"
+                key="category"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 className="space-y-4"
               >
-                {selectedCategory && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setSelectedCategory(null)}
-                    className="-ml-2"
-                  >
-                    <ChevronLeft className="h-4 w-4 mr-1" />
-                    All Topics
-                  </Button>
-                )}
-                
-                {searchQuery && (
-                  <p className="text-sm text-muted-foreground">
-                    {currentArticles.length} result{currentArticles.length !== 1 ? 's' : ''} for "{searchQuery}"
-                  </p>
-                )}
+                {/* Breadcrumbs */}
+                <ArticleBreadcrumbs items={breadcrumbs} className="mb-4" />
+
+                <div className="flex items-center gap-3 mb-4">
+                  <div className={cn(
+                    "h-10 w-10 rounded-xl flex items-center justify-center border",
+                    getCategoryInfo(selectedCategory)?.color
+                  )}>
+                    <span className="text-xl">{getCategoryInfo(selectedCategory)?.emoji}</span>
+                  </div>
+                  <div>
+                    <h2 className="font-semibold">{getCategoryInfo(selectedCategory)?.name}</h2>
+                    <p className="text-xs text-muted-foreground">
+                      {currentArticles.length} article{currentArticles.length !== 1 ? 's' : ''}
+                    </p>
+                  </div>
+                </div>
                 
                 <div className="grid gap-3">
                   {currentArticles.map((article, i) => (
@@ -214,29 +284,16 @@ export function SupportCenterKnowledge() {
                         <CardContent className="p-4">
                           <div className="flex items-start justify-between gap-3">
                             <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 mb-1">
-                                <span className="text-lg flex-shrink-0">
-                                  {getCategoryInfo(article.category)?.emoji}
-                                </span>
-                                <h3 className="font-medium text-sm line-clamp-1">{article.question}</h3>
-                              </div>
+                              <h3 className="font-medium text-sm line-clamp-1 mb-1">{article.question}</h3>
                               <p className="text-xs text-muted-foreground line-clamp-2">
                                 {article.answer.replace(/\*\*/g, '').replace(/\n/g, ' ').substring(0, 120)}...
                               </p>
-                              <div className="flex items-center gap-2 mt-2">
-                                <Badge 
-                                  variant="outline" 
-                                  className={cn("text-[10px]", getCategoryInfo(article.category)?.color)}
-                                >
-                                  {getCategoryInfo(article.category)?.name}
-                                </Badge>
-                                {getFeaturedInfo(article.id) && (
-                                  <span className="text-[10px] text-muted-foreground flex items-center gap-1">
-                                    <Clock className="h-3 w-3" />
-                                    {getFeaturedInfo(article.id)?.readTime}
-                                  </span>
-                                )}
-                              </div>
+                              {getFeaturedInfo(article.id) && (
+                                <span className="text-[10px] text-muted-foreground flex items-center gap-1 mt-2">
+                                  <Clock className="h-3 w-3" />
+                                  {getFeaturedInfo(article.id)?.readTime}
+                                </span>
+                              )}
                             </div>
                             <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all flex-shrink-0 mt-0.5" />
                           </div>
@@ -244,14 +301,6 @@ export function SupportCenterKnowledge() {
                       </Card>
                     </motion.div>
                   ))}
-                  
-                  {currentArticles.length === 0 && (
-                    <Card className="p-8 text-center">
-                      <p className="text-muted-foreground">
-                        No articles found for your search.
-                      </p>
-                    </Card>
-                  )}
                 </div>
               </motion.div>
             ) : (
@@ -268,7 +317,6 @@ export function SupportCenterKnowledge() {
                   <h3 className="text-sm font-semibold mb-3">Browse by Topic</h3>
                   <div className="grid grid-cols-2 gap-3">
                     {categories.map((category, i) => {
-                      const Icon = category.icon;
                       const count = groupedArticles[category.id]?.length || 0;
                       if (count === 0) return null;
                       
@@ -308,7 +356,7 @@ export function SupportCenterKnowledge() {
                     Popular Articles
                   </h3>
                   <div className="grid gap-3">
-                    {featuredArticles.map((featured, i) => {
+                    {featuredArticles.map((featured) => {
                       const article = helpDatabase.find(a => a.id === featured.id);
                       if (!article) return null;
                       
