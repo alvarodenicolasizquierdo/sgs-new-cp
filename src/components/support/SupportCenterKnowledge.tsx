@@ -14,6 +14,7 @@ import {
   ThumbsDown,
   ExternalLink
 } from 'lucide-react';
+import { ArticleRating } from './ArticleRating';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -173,46 +174,14 @@ export function SupportCenterKnowledge({ onAskAI }: SupportCenterKnowledgeProps)
                   
                   <Separator />
                   
-                  {/* Feedback Section */}
-                  <div className="bg-muted/30 rounded-xl p-4">
-                    {feedbackGiven ? (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="text-center py-2"
-                      >
-                        <p className="text-sm text-muted-foreground">
-                          {feedbackGiven === 'yes' 
-                            ? '🎉 Thanks for your feedback!' 
-                            : '📝 Thank you! We\'ll work on improving this article.'}
-                        </p>
-                      </motion.div>
-                    ) : (
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm text-muted-foreground">
-                          Was this article helpful?
-                        </p>
-                        <div className="flex gap-2">
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            className="rounded-full gap-2"
-                            onClick={() => handleFeedback('yes')}
-                          >
-                            <ThumbsUp className="h-4 w-4" /> Yes
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            className="rounded-full gap-2"
-                            onClick={() => handleFeedback('no')}
-                          >
-                            <ThumbsDown className="h-4 w-4" /> No
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  {/* Feedback Section - Slack-style rating */}
+                  <ArticleRating 
+                    articleId={selectedArticle.id}
+                    onSubmit={async (rating, feedback) => {
+                      console.log('Article rating:', { articleId: selectedArticle.id, rating, feedback });
+                      // In production, send to analytics
+                    }}
+                  />
 
                   {/* Related Articles */}
                   {relatedArticles.length > 0 && (
