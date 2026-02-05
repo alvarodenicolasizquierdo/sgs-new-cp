@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, 
   Clock, 
@@ -7,19 +7,21 @@ import {
   AlertCircle, 
   MessageCircle,
   ChevronRight,
-  ArrowUpRight,
-  Filter,
-  Search
+  Search,
+  LayoutDashboard,
+  List
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import { TicketDashboard } from './TicketDashboard';
 
 interface Ticket {
   id: string;
@@ -81,6 +83,16 @@ const mockTickets: Ticket[] = [
   },
 ];
 
+// Mock stats
+const mockStats = {
+  open: 2,
+  inProgress: 1,
+  resolved: 5,
+  avgResponseTime: '4h',
+  satisfactionRate: 92,
+  totalThisMonth: 8
+};
+
 interface SupportCenterTicketsProps {
   onCreateTicket?: () => void;
 }
@@ -88,6 +100,7 @@ interface SupportCenterTicketsProps {
 export function SupportCenterTickets({ onCreateTicket }: SupportCenterTicketsProps) {
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState<'dashboard' | 'list'>('dashboard');
 
   const filteredTickets = mockTickets.filter(ticket => {
     const matchesSearch = ticket.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -138,46 +151,40 @@ export function SupportCenterTickets({ onCreateTicket }: SupportCenterTicketsPro
     );
   };
 
-  const openCount = mockTickets.filter(t => t.status === 'open' || t.status === 'in_progress').length;
-  const resolvedCount = mockTickets.filter(t => t.status === 'resolved' || t.status === 'closed').length;
-
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
       <div className="p-4 border-b border-border bg-gradient-to-r from-primary/5 to-accent/5">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold">My Support Tickets</h3>
+          <div className="flex items-center gap-3">
+            <h3 className="font-semibold">My Support Tickets</h3>
+            <ToggleGroup type="single" value={viewMode} onValueChange={(v) => v && setViewMode(v as 'dashboard' | 'list')}>
+              <ToggleGroupItem value="dashboard" size="sm" aria-label="Dashboard view">
+                <LayoutDashboard className="h-4 w-4" />
+              </ToggleGroupItem>
+              <ToggleGroupItem value="list" size="sm" aria-label="List view">
+                <List className="h-4 w-4" />
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </div>
           <Button size="sm" onClick={onCreateTicket}>
             <Plus className="h-4 w-4 mr-1" />
             New Ticket
           </Button>
         </div>
         
-        {/* Stats */}
-        <div className="grid grid-cols-2 gap-3">
-          <Card className="bg-amber-500/5 border-amber-500/20">
-            <CardContent className="p-3 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-amber-500/10 flex items-center justify-center">
-                <Clock className="h-5 w-5 text-amber-500" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{openCount}</p>
-                <p className="text-xs text-muted-foreground">Open</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-green-500/5 border-green-500/20">
-            <CardContent className="p-3 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-green-500/10 flex items-center justify-center">
-                <CheckCircle className="h-5 w-5 text-green-500" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{resolvedCount}</p>
-                <p className="text-xs text-muted-foreground">Resolved</p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Dashboard Stats - Zendesk style */}
+        <AnimatePresence mode="wait">
+          {viewMode === 'dashboard' && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+            >
+              <TicketDashboard stats={mockStats} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Search and Filter */}

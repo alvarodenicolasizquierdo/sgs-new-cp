@@ -41,6 +41,7 @@ import { SupportCenterChat } from '@/components/support/SupportCenterChat';
 import { SupportCenterKnowledge } from '@/components/support/SupportCenterKnowledge';
 import { SupportCenterTickets } from '@/components/support/SupportCenterTickets';
 import { SupportCenterAdmin } from '@/components/support/SupportCenterAdmin';
+import { TicketCreateWizard } from '@/components/support/TicketCreateWizard';
 import { useAISupportContext } from '@/contexts/AISupportContext';
 import { useSearchParams } from 'react-router-dom';
 
@@ -240,103 +241,17 @@ export default function SupportCenter() {
           </Card>
         </motion.div>
 
-        {/* New Ticket Dialog */}
+        {/* New Ticket Dialog - Now uses Zendesk-style wizard */}
         <Dialog open={showNewTicketDialog} onOpenChange={setShowNewTicketDialog}>
-          <DialogContent className="sm:max-w-lg">
-            <DialogHeader>
-              <DialogTitle>Create Support Ticket</DialogTitle>
-              <DialogDescription>
-                Submit a request and our team will respond within 24 hours.
-              </DialogDescription>
-            </DialogHeader>
-            
-            <form onSubmit={handleSubmitTicket} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    value={ticketFormData.name}
-                    onChange={e => setTicketFormData(prev => ({ ...prev, name: e.target.value }))}
-                    placeholder="Your name"
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={ticketFormData.email}
-                    onChange={e => setTicketFormData(prev => ({ ...prev, email: e.target.value }))}
-                    placeholder="you@company.com"
-                    required
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
-                <Select
-                  value={ticketFormData.category}
-                  onValueChange={value => setTicketFormData(prev => ({ ...prev, category: value }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="testing">Testing & TRFs</SelectItem>
-                    <SelectItem value="inspections">Inspections</SelectItem>
-                    <SelectItem value="suppliers">Suppliers</SelectItem>
-                    <SelectItem value="reports">Reports & Analytics</SelectItem>
-                    <SelectItem value="account">Account & Settings</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="subject">Subject</Label>
-                <Input
-                  id="subject"
-                  value={ticketFormData.subject}
-                  onChange={e => setTicketFormData(prev => ({ ...prev, subject: e.target.value }))}
-                  placeholder="Brief summary of your issue"
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  value={ticketFormData.description}
-                  onChange={e => setTicketFormData(prev => ({ ...prev, description: e.target.value }))}
-                  placeholder="Describe your issue in detail..."
-                  required
-                  rows={4}
-                />
-              </div>
-              
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setShowNewTicketDialog(false)}>
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? (
-                    <>
-                      <span className="animate-spin mr-2">⏳</span>
-                      Submitting...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="h-4 w-4 mr-2" />
-                      Submit Ticket
-                    </>
-                  )}
-                </Button>
-              </DialogFooter>
-            </form>
+          <DialogContent className="sm:max-w-2xl max-h-[90vh] p-0 overflow-hidden">
+            <TicketCreateWizard
+              onSubmit={async (data) => {
+                console.log('Ticket submitted:', data);
+                setShowNewTicketDialog(false);
+                setActiveTab('tickets');
+              }}
+              onCancel={() => setShowNewTicketDialog(false)}
+            />
           </DialogContent>
         </Dialog>
 
