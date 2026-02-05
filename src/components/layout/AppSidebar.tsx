@@ -47,8 +47,7 @@ const managementNavItems = [
 
 const bottomNavItems = [
   { title: "Settings", url: "/settings", icon: Settings },
-  { title: "Help Center", url: "/help", icon: HelpCircle },
-  { title: "Support Admin", url: "/support-admin", icon: BarChart3 },
+  { title: "Support Center", url: "/support", icon: HelpCircle },
 ];
 
 interface SidebarNavItemProps {
