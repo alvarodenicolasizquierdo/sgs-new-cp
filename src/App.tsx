@@ -25,6 +25,7 @@ import Users from "./pages/Users";
 import Settings from "./pages/Settings";
 import KnowledgeHub from "./pages/KnowledgeHub";
 import SupportAdmin from "./pages/SupportAdmin";
+import SupportCenter from "./pages/SupportCenter";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -56,6 +57,7 @@ const App = () => (
             <Route path="/users" element={<Users />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/help" element={<KnowledgeHub />} />
+            <Route path="/support" element={<SupportCenter />} />
             <Route path="/support-admin" element={<SupportAdmin />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
