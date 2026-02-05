@@ -11,6 +11,7 @@ export { InstantSearchDropdown } from './InstantSearchDropdown';
 export { ArticleBreadcrumbs } from './ArticleBreadcrumbs';
 export { TicketCreateWizard } from './TicketCreateWizard';
 export { TicketDashboard } from './TicketDashboard';
+export { TicketDetailView, mockTicketDetail } from './TicketDetailView';
 export { ArticleRating } from './ArticleRating';
 export { 
   DisabledButtonHelp, 
