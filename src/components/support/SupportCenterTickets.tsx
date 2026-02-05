@@ -22,6 +22,8 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { TicketDashboard } from './TicketDashboard';
+import { TicketDetailView, mockTicketDetail } from './TicketDetailView';
+import { toast } from 'sonner';
 
 interface Ticket {
   id: string;
@@ -101,6 +103,7 @@ export function SupportCenterTickets({ onCreateTicket }: SupportCenterTicketsPro
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'dashboard' | 'list'>('dashboard');
+  const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
 
   const filteredTickets = mockTickets.filter(ticket => {
     const matchesSearch = ticket.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -150,6 +153,23 @@ export function SupportCenterTickets({ onCreateTicket }: SupportCenterTicketsPro
       </Badge>
     );
   };
+
+  const handleSendReply = async (message: string) => {
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 500));
+    toast.success('Reply sent', { description: 'Your message has been sent to the support team.' });
+  };
+
+  // Show ticket detail view
+  if (selectedTicketId) {
+    return (
+      <TicketDetailView 
+        ticket={mockTicketDetail}
+        onBack={() => setSelectedTicketId(null)}
+        onSendReply={handleSendReply}
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col h-full">
@@ -233,7 +253,10 @@ export function SupportCenterTickets({ onCreateTicket }: SupportCenterTicketsPro
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
               >
-                <Card className="cursor-pointer hover:border-primary/50 hover:shadow-sm transition-all group">
+                <Card 
+                  className="cursor-pointer hover:border-primary/50 hover:shadow-sm transition-all group"
+                  onClick={() => setSelectedTicketId(ticket.id)}
+                >
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-start gap-3 flex-1 min-w-0">
