@@ -7,6 +7,8 @@ export { SupportCenterChat } from './SupportCenterChat';
 export { SupportCenterKnowledge } from './SupportCenterKnowledge';
 export { SupportCenterTickets } from './SupportCenterTickets';
 export { SupportCenterAdmin } from './SupportCenterAdmin';
+export { InstantSearchDropdown } from './InstantSearchDropdown';
+export { ArticleBreadcrumbs } from './ArticleBreadcrumbs';
 export { 
   DisabledButtonHelp, 
   ErrorStateHelp, 

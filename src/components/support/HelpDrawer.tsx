@@ -1,28 +1,29 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Search, 
   X, 
   Book, 
   FileText, 
-  Video, 
   HelpCircle,
   ChevronRight,
   ExternalLink,
   Lightbulb,
   Sparkles,
-  MessageCircle
+  MessageCircle,
+  Ticket,
+  ArrowRight
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent } from '@/components/ui/card';
 import { helpDatabase, HelpItem, getContextHelp } from '@/data/helpContent';
 import { useAISupportContext } from '@/contexts/AISupportContext';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
+import { InstantSearchDropdown } from './InstantSearchDropdown';
 
 interface HelpDrawerProps {
   open: boolean;
@@ -47,49 +48,38 @@ const categoryLabels: Record<string, string> = {
   'general': 'General',
 };
 
-// Simulated resources (webinars, guides, videos)
-const resources = [
-  {
-    id: 'r1',
-    title: 'Getting Started with SMART Advanced',
-    type: 'video',
-    duration: '5 min',
-    thumbnail: '🎬'
+// Quick actions for the drawer
+const quickActions = [
+  { 
+    id: 'ask', 
+    title: 'Ask Carlos', 
+    description: 'Get instant AI-powered help', 
+    icon: Sparkles, 
+    color: 'bg-primary/10 text-primary border-primary/20',
+    action: 'chat' 
   },
-  {
-    id: 'r2',
-    title: 'TRF Workflow Complete Guide',
-    type: 'guide',
-    pages: 12,
-    thumbnail: '📖'
+  { 
+    id: 'browse', 
+    title: 'Knowledge Base', 
+    description: 'Browse help articles', 
+    icon: Book, 
+    color: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
+    action: 'knowledge' 
   },
-  {
-    id: 'r3',
-    title: 'Supplier Risk Assessment Webinar',
-    type: 'webinar',
-    duration: '45 min',
-    thumbnail: '🎥'
-  },
-  {
-    id: 'r4',
-    title: 'Inspection Scheduling Best Practices',
-    type: 'guide',
-    pages: 8,
-    thumbnail: '📋'
-  },
-  {
-    id: 'r5',
-    title: 'Custom Reports Tutorial',
-    type: 'video',
-    duration: '8 min',
-    thumbnail: '📊'
+  { 
+    id: 'ticket', 
+    title: 'Support Tickets', 
+    description: 'View or create tickets', 
+    icon: Ticket, 
+    color: 'bg-amber-500/10 text-amber-600 border-amber-500/20',
+    action: 'tickets' 
   },
 ];
 
 export function HelpDrawer({ open, onOpenChange }: HelpDrawerProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedArticle, setSelectedArticle] = useState<HelpItem | null>(null);
   const { open: openAIPanel, sendMessage, contextHelp } = useAISupportContext();
+  const navigate = useNavigate();
 
   // Group help items by category
   const groupedHelp = useMemo(() => {
@@ -103,24 +93,11 @@ export function HelpDrawer({ open, onOpenChange }: HelpDrawerProps) {
     return groups;
   }, []);
 
-  // Filter items based on search
-  const filteredItems = useMemo(() => {
-    if (!searchQuery.trim()) {
-      return selectedCategory ? groupedHelp[selectedCategory] || [] : [];
-    }
-    const query = searchQuery.toLowerCase();
-    return helpDatabase.filter(item => 
-      item.question.toLowerCase().includes(query) ||
-      item.answer.toLowerCase().includes(query) ||
-      item.keywords.some(k => k.includes(query))
-    );
-  }, [searchQuery, selectedCategory, groupedHelp]);
-
-  const handleAskAI = () => {
+  const handleAskAI = (query?: string) => {
     onOpenChange(false);
     openAIPanel();
-    if (searchQuery.trim()) {
-      sendMessage(searchQuery);
+    if (query) {
+      sendMessage(query);
     }
   };
 
@@ -130,205 +107,176 @@ export function HelpDrawer({ open, onOpenChange }: HelpDrawerProps) {
     sendMessage(question);
   };
 
+  const handleArticleSelect = (article: HelpItem) => {
+    setSelectedArticle(article);
+  };
+
+  const handleQuickAction = (action: string) => {
+    onOpenChange(false);
+    navigate(`/support?tab=${action}`);
+  };
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full sm:w-[480px] p-0">
+      <SheetContent side="right" className="w-full sm:w-[420px] p-0">
         <div className="flex flex-col h-full">
-          {/* Header */}
-          <SheetHeader className="p-4 pb-0">
-            <SheetTitle className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                <Book className="h-4 w-4 text-primary" />
-              </div>
-              Help Center
-            </SheetTitle>
+          {/* Header - Slack style */}
+          <SheetHeader className="p-4 pb-0 border-b-0">
+            <div className="flex items-center justify-between">
+              <SheetTitle className="flex items-center gap-2">
+                <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                  <HelpCircle className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <span className="block">Help</span>
+                  <span className="text-xs font-normal text-muted-foreground">How can we help?</span>
+                </div>
+              </SheetTitle>
+            </div>
           </SheetHeader>
 
-          {/* Search */}
-          <div className="p-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                placeholder="Search help articles..."
-                className="pl-10 pr-10"
-              />
-              {searchQuery && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
-                  onClick={() => setSearchQuery('')}
-                >
-                  <X className="h-3 w-3" />
-                </Button>
-              )}
-            </div>
-
-            {/* Ask AI button */}
-            <Button
-              variant="outline"
-              className="w-full mt-3 justify-between group"
-              onClick={handleAskAI}
-            >
-              <span className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-primary" />
-                {searchQuery ? `Ask AI: "${searchQuery}"` : 'Ask AI Assistant'}
-              </span>
-              <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
-            </Button>
+          {/* Search with Instant Results */}
+          <div className="px-4 py-3">
+            <InstantSearchDropdown
+              onSelectArticle={handleArticleSelect}
+              onAskAI={handleAskAI}
+              placeholder="Search for help..."
+            />
           </div>
 
           <Separator />
 
           {/* Content */}
-          <Tabs defaultValue="browse" className="flex-1 flex flex-col">
-            <TabsList className="mx-4 mt-2 grid grid-cols-2">
-              <TabsTrigger value="browse">Browse Topics</TabsTrigger>
-              <TabsTrigger value="resources">Resources</TabsTrigger>
-            </TabsList>
+          <ScrollArea className="flex-1">
+            <div className="p-4 space-y-5">
+              {/* Selected Article View */}
+              {selectedArticle ? (
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="space-y-4"
+                >
+                  <button
+                    onClick={() => setSelectedArticle(null)}
+                    className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <ChevronRight className="h-4 w-4 rotate-180" />
+                    Back
+                  </button>
+                  
+                  <div>
+                    <Badge variant="secondary" className="mb-2">
+                      {categoryLabels[selectedArticle.category]}
+                    </Badge>
+                    <h3 className="font-semibold text-lg">{selectedArticle.question}</h3>
+                  </div>
+                  
+                  <div className="prose prose-sm dark:prose-invert bg-secondary/30 rounded-xl p-4">
+                    {selectedArticle.answer}
+                  </div>
+                  
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => handleQuestionClick(selectedArticle.question)}
+                  >
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    Ask Carlos for more details
+                  </Button>
+                </motion.div>
+              ) : (
+                <>
+                  {/* Quick Actions */}
+                  <div className="grid gap-2">
+                    {quickActions.map((action, i) => {
+                      const Icon = action.icon;
+                      return (
+                        <motion.div
+                          key={action.id}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.05 }}
+                        >
+                          <Card 
+                            className="cursor-pointer hover:border-primary/50 hover:shadow-sm transition-all group"
+                            onClick={() => action.action === 'chat' ? handleAskAI() : handleQuickAction(action.action)}
+                          >
+                            <CardContent className="p-3 flex items-center gap-3">
+                              <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center border", action.color)}>
+                                <Icon className="h-5 w-5" />
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-medium text-sm">{action.title}</p>
+                                <p className="text-xs text-muted-foreground">{action.description}</p>
+                              </div>
+                              <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
 
-            <TabsContent value="browse" className="flex-1 m-0">
-              <ScrollArea className="h-[calc(100vh-280px)]">
-                <div className="p-4 space-y-4">
+                  <Separator />
+
                   {/* Context-aware suggestions */}
-                  {contextHelp && !searchQuery && !selectedCategory && (
-                    <div className="bg-gradient-to-br from-primary/5 to-accent/5 rounded-lg p-4 border border-primary/10">
-                      <div className="flex items-center gap-2 mb-2">
+                  {contextHelp && (
+                    <div className="bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl p-4 border border-primary/10">
+                      <div className="flex items-center gap-2 mb-3">
                         <Lightbulb className="h-4 w-4 text-amber-500" />
-                        <span className="text-sm font-medium">For this page: {contextHelp.title}</span>
+                        <span className="text-sm font-medium">Help for: {contextHelp.title}</span>
                       </div>
                       <div className="space-y-2">
                         {contextHelp.commonQuestions.slice(0, 3).map(q => (
                           <button
                             key={q.id}
                             onClick={() => handleQuestionClick(q.question)}
-                            className="w-full text-left text-sm p-2 rounded-md hover:bg-background/80 transition-colors flex items-center justify-between group"
+                            className="w-full text-left text-sm p-2.5 rounded-lg bg-background/50 hover:bg-background transition-colors flex items-center justify-between group"
                           >
                             <span className="text-muted-foreground line-clamp-1">{q.question}</span>
-                            <ChevronRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <ChevronRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
                           </button>
                         ))}
                       </div>
                     </div>
                   )}
 
-                  {/* Search results */}
-                  {searchQuery && (
-                    <div>
-                      <p className="text-xs text-muted-foreground mb-2">
-                        {filteredItems.length} result{filteredItems.length !== 1 ? 's' : ''} found
-                      </p>
-                      <div className="space-y-2">
-                        {filteredItems.map(item => (
-                          <button
-                            key={item.id}
-                            onClick={() => handleQuestionClick(item.question)}
-                            className="w-full text-left p-3 rounded-lg border border-border hover:border-primary/50 hover:bg-accent/30 transition-all group"
-                          >
-                            <div className="flex items-start justify-between gap-2">
-                              <div>
-                                <p className="text-sm font-medium">{item.question}</p>
-                                <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{item.answer}</p>
-                              </div>
-                              <ChevronRight className="h-4 w-4 mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
-                            </div>
-                            <Badge variant="secondary" className="mt-2 text-[10px]">
-                              {categoryLabels[item.category]}
-                            </Badge>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Category grid (when no search) */}
-                  {!searchQuery && !selectedCategory && (
-                    <div className="grid grid-cols-2 gap-3">
-                      {Object.entries(groupedHelp).map(([category, items]) => {
+                  {/* Popular Topics */}
+                  <div>
+                    <h4 className="text-sm font-medium mb-3 text-muted-foreground">Popular Topics</h4>
+                    <div className="grid grid-cols-2 gap-2">
+                      {Object.entries(groupedHelp).slice(0, 4).map(([category, items]) => {
                         const Icon = categoryIcons[category] || HelpCircle;
                         return (
                           <button
                             key={category}
-                            onClick={() => setSelectedCategory(category)}
-                            className="p-4 rounded-lg border border-border hover:border-primary/50 hover:bg-accent/30 transition-all text-left group"
+                            onClick={() => handleQuickAction('knowledge')}
+                            className="p-3 rounded-xl border border-border hover:border-primary/50 hover:bg-secondary/50 transition-all text-left group"
                           >
-                            <Icon className="h-5 w-5 text-primary mb-2" />
+                            <Icon className="h-4 w-4 text-muted-foreground group-hover:text-primary mb-1.5 transition-colors" />
                             <p className="font-medium text-sm">{categoryLabels[category]}</p>
-                            <p className="text-xs text-muted-foreground">{items.length} articles</p>
+                            <p className="text-[10px] text-muted-foreground">{items.length} articles</p>
                           </button>
                         );
                       })}
                     </div>
-                  )}
-
-                  {/* Category items */}
-                  {selectedCategory && !searchQuery && (
-                    <div>
-                      <button
-                        onClick={() => setSelectedCategory(null)}
-                        className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4"
-                      >
-                        <ChevronRight className="h-3 w-3 rotate-180" />
-                        Back to topics
-                      </button>
-                      <h3 className="font-semibold mb-3">{categoryLabels[selectedCategory]}</h3>
-                      <div className="space-y-2">
-                        {(groupedHelp[selectedCategory] || []).map(item => (
-                          <button
-                            key={item.id}
-                            onClick={() => handleQuestionClick(item.question)}
-                            className="w-full text-left p-3 rounded-lg border border-border hover:border-primary/50 hover:bg-accent/30 transition-all group"
-                          >
-                            <div className="flex items-center justify-between">
-                              <p className="text-sm">{item.question}</p>
-                              <ChevronRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </ScrollArea>
-            </TabsContent>
-
-            <TabsContent value="resources" className="flex-1 m-0">
-              <ScrollArea className="h-[calc(100vh-280px)]">
-                <div className="p-4 space-y-3">
-                  {resources.map(resource => (
-                    <div
-                      key={resource.id}
-                      className="p-4 rounded-lg border border-border hover:border-primary/50 hover:bg-accent/30 transition-all cursor-pointer group"
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="text-2xl">{resource.thumbnail}</div>
-                        <div className="flex-1">
-                          <p className="font-medium text-sm">{resource.title}</p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <Badge variant="outline" className="text-[10px] capitalize">
-                              {resource.type}
-                            </Badge>
-                            <span className="text-xs text-muted-foreground">
-                              {resource.type === 'guide' ? `${resource.pages} pages` : resource.duration}
-                            </span>
-                          </div>
-                        </div>
-                        <ExternalLink className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </ScrollArea>
-            </TabsContent>
-          </Tabs>
+                  </div>
+                </>
+              )}
+            </div>
+          </ScrollArea>
 
           {/* Footer */}
-          <div className="p-4 border-t border-border">
-            <Button variant="outline" className="w-full" onClick={handleAskAI}>
-              <MessageCircle className="h-4 w-4 mr-2" />
-              Chat with AI Assistant
+          <div className="p-4 border-t border-border bg-muted/30">
+            <Button 
+              className="w-full" 
+              onClick={() => {
+                onOpenChange(false);
+                navigate('/support');
+              }}
+            >
+              Open Support Center
+              <ExternalLink className="h-4 w-4 ml-2" />
             </Button>
           </div>
         </div>
