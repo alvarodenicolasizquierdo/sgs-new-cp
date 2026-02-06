@@ -28,8 +28,45 @@ interface InstantSearchDropdownProps {
   className?: string;
 }
 
-// Recent searches (would be persisted in localStorage in production)
-const recentSearches = ['TRF status', 'supplier approval', 'inspection types'];
+// LocalStorage key for recent searches
+const RECENT_SEARCHES_KEY = 'support-recent-searches';
+const MAX_RECENT_SEARCHES = 5;
+
+// Helper to get recent searches from localStorage
+const getRecentSearches = (): string[] => {
+  try {
+    const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
+  }
+};
+
+// Helper to save recent search to localStorage
+const saveRecentSearch = (query: string): string[] => {
+  try {
+    const existing = getRecentSearches();
+    // Remove duplicate if exists, add to front
+    const filtered = existing.filter(s => s.toLowerCase() !== query.toLowerCase());
+    const updated = [query, ...filtered].slice(0, MAX_RECENT_SEARCHES);
+    localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
+    return updated;
+  } catch {
+    return [];
+  }
+};
+
+// Helper to clear a specific recent search
+const removeRecentSearch = (query: string): string[] => {
+  try {
+    const existing = getRecentSearches();
+    const updated = existing.filter(s => s.toLowerCase() !== query.toLowerCase());
+    localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
+    return updated;
+  } catch {
+    return [];
+  }
+};
 
 // Trending topics
 const trendingTopics = ['Testing workflow', 'New supplier setup', 'Generate reports'];
@@ -51,8 +88,14 @@ export function InstantSearchDropdown({
   const [isOpen, setIsOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Load recent searches from localStorage on mount
+  useEffect(() => {
+    setRecentSearches(getRecentSearches());
+  }, []);
 
   // Instant search results with grouping
   const searchResults = useMemo(() => {
@@ -114,11 +157,16 @@ export function InstantSearchDropdown({
   };
 
   const handleSelect = useCallback((article: HelpItem) => {
+    // Save search to recent searches before clearing
+    if (query.trim()) {
+      const updated = saveRecentSearch(query.trim());
+      setRecentSearches(updated);
+    }
     setQuery('');
     setIsOpen(false);
     setSelectedIndex(-1);
     onSelectArticle(article);
-  }, [onSelectArticle]);
+  }, [onSelectArticle, query]);
 
   const handleRecentSearch = (search: string) => {
     setQuery(search);
@@ -126,12 +174,21 @@ export function InstantSearchDropdown({
 
   const handleAskAI = useCallback(() => {
     if (onAskAI && query.trim()) {
+      // Save search to recent searches before clearing
+      const updated = saveRecentSearch(query.trim());
+      setRecentSearches(updated);
       onAskAI(query);
       setQuery('');
       setIsOpen(false);
       setSelectedIndex(-1);
     }
   }, [onAskAI, query]);
+
+  const handleRemoveRecentSearch = (search: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const updated = removeRecentSearch(search);
+    setRecentSearches(updated);
+  };
 
   // Keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -229,9 +286,13 @@ export function InstantSearchDropdown({
                         <button
                           key={i}
                           onClick={() => handleRecentSearch(search)}
-                          className="px-3 py-1.5 text-xs rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
+                          className="group/chip px-3 py-1.5 text-xs rounded-full bg-secondary hover:bg-secondary/80 transition-colors flex items-center gap-1.5"
                         >
                           {search}
+                          <X 
+                            className="h-3 w-3 opacity-0 group-hover/chip:opacity-70 hover:!opacity-100 transition-opacity" 
+                            onClick={(e) => handleRemoveRecentSearch(search, e)}
+                          />
                         </button>
                       ))}
                     </div>
