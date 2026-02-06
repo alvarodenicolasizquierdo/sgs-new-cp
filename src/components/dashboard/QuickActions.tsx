@@ -1,16 +1,19 @@
 import { FlaskConical, CalendarCheck, Microscope, FileBarChart, ListChecks, TrendingUp } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const actions = [
-  { icon: FlaskConical, label: "New Test", variant: "default" as const },
-  { icon: CalendarCheck, label: "Schedule", variant: "outline" as const },
-  { icon: Microscope, label: "Sample", variant: "outline" as const },
-  { icon: FileBarChart, label: "Report", variant: "outline" as const },
-  { icon: ListChecks, label: "Pending", variant: "outline" as const },
-  { icon: TrendingUp, label: "Analytics", variant: "outline" as const },
+  { icon: FlaskConical, label: "New Test", variant: "default" as const, path: "/tests/new" },
+  { icon: CalendarCheck, label: "Schedule", variant: "outline" as const, path: "/inspections" },
+  { icon: Microscope, label: "Sample", variant: "outline" as const, path: "/components/new" },
+  { icon: FileBarChart, label: "Report", variant: "outline" as const, path: "/analytics" },
+  { icon: ListChecks, label: "Pending", variant: "outline" as const, path: "/tests" },
+  { icon: TrendingUp, label: "Analytics", variant: "outline" as const, path: "/analytics" },
 ];
 
 export function QuickActions() {
+  const navigate = useNavigate();
+  
   return (
     <div className="bg-card rounded-xl border border-border p-6">
       <div className="mb-4">
@@ -22,6 +25,7 @@ export function QuickActions() {
           <Button
             key={action.label}
             variant={action.variant}
+            onClick={() => navigate(action.path)}
             className={`h-auto py-4 px-2 flex-col gap-2 group transition-all duration-200 ${
               action.variant === "default" 
                 ? "bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30" 
