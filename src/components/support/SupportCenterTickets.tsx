@@ -104,6 +104,7 @@ export function SupportCenterTickets({ onCreateTicket }: SupportCenterTicketsPro
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'dashboard' | 'list'>('dashboard');
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
+  const [isAgentTyping, setIsAgentTyping] = useState(false);
 
   const filteredTickets = mockTickets.filter(ticket => {
     const matchesSearch = ticket.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -158,6 +159,12 @@ export function SupportCenterTickets({ onCreateTicket }: SupportCenterTicketsPro
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 500));
     toast.success('Reply sent', { description: 'Your message has been sent to the support team.' });
+    
+    // Simulate agent typing after user sends a message
+    setIsAgentTyping(true);
+    setTimeout(() => {
+      setIsAgentTyping(false);
+    }, 3000); // Agent "types" for 3 seconds
   };
 
   // Show ticket detail view
@@ -167,6 +174,7 @@ export function SupportCenterTickets({ onCreateTicket }: SupportCenterTicketsPro
         ticket={mockTicketDetail}
         onBack={() => setSelectedTicketId(null)}
         onSendReply={handleSendReply}
+        isAgentTyping={isAgentTyping}
       />
     );
   }

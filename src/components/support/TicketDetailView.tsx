@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowLeft, 
   Clock, 
@@ -49,6 +49,7 @@ interface TicketDetailViewProps {
   ticket: TicketDetail;
   onBack: () => void;
   onSendReply: (message: string) => Promise<void>;
+  isAgentTyping?: boolean;
 }
 
 // Mock ticket with conversation thread
@@ -95,9 +96,21 @@ export const mockTicketDetail: TicketDetail = {
   ]
 };
 
-export function TicketDetailView({ ticket, onBack, onSendReply }: TicketDetailViewProps) {
+export function TicketDetailView({ ticket, onBack, onSendReply, isAgentTyping = false }: TicketDetailViewProps) {
   const [replyText, setReplyText] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [showTypingIndicator, setShowTypingIndicator] = useState(false);
+
+  // Simulate agent typing after user sends a message (for demo purposes)
+  useEffect(() => {
+    if (isAgentTyping) {
+      setShowTypingIndicator(true);
+    } else {
+      // Small delay before hiding to feel more natural
+      const timer = setTimeout(() => setShowTypingIndicator(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isAgentTyping]);
 
   const handleSendReply = async () => {
     if (!replyText.trim()) return;
@@ -239,6 +252,53 @@ export function TicketDetailView({ ticket, onBack, onSendReply }: TicketDetailVi
                 </div>
               </motion.div>
             ))}
+
+            {/* Typing Indicator */}
+            <AnimatePresence>
+              {showTypingIndicator && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -5, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex gap-3"
+                >
+                  <Avatar className="h-8 w-8 flex-shrink-0">
+                    <AvatarFallback className="bg-primary/10 text-primary">
+                      <Bot className="h-4 w-4" />
+                    </AvatarFallback>
+                  </Avatar>
+                  
+                  <div className="flex-1 max-w-[85%]">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-xs font-medium">Support Agent</span>
+                      <span className="text-[10px] text-muted-foreground">typing...</span>
+                    </div>
+                    <Card className="overflow-hidden bg-muted/50 w-fit">
+                      <CardContent className="p-3">
+                        <div className="flex items-center gap-1.5">
+                          <motion.div
+                            className="h-2 w-2 rounded-full bg-muted-foreground/50"
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
+                          />
+                          <motion.div
+                            className="h-2 w-2 rounded-full bg-muted-foreground/50"
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 0.6, repeat: Infinity, delay: 0.15 }}
+                          />
+                          <motion.div
+                            className="h-2 w-2 rounded-full bg-muted-foreground/50"
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 0.6, repeat: Infinity, delay: 0.3 }}
+                          />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </ScrollArea>
