@@ -1,13 +1,13 @@
-import { Plus, FileText, Calendar, Upload, ClipboardList, BarChart3 } from "lucide-react";
+import { FlaskConical, CalendarCheck, Microscope, FileBarChart, ListChecks, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const actions = [
-  { icon: Plus, label: "New Test Request", variant: "default" as const },
-  { icon: Calendar, label: "Schedule Inspection", variant: "outline" as const },
-  { icon: Upload, label: "Upload Sample", variant: "outline" as const },
-  { icon: FileText, label: "Generate Report", variant: "outline" as const },
-  { icon: ClipboardList, label: "View Pending", variant: "outline" as const },
-  { icon: BarChart3, label: "Analytics", variant: "outline" as const },
+  { icon: FlaskConical, label: "New Test", variant: "default" as const },
+  { icon: CalendarCheck, label: "Schedule", variant: "outline" as const },
+  { icon: Microscope, label: "Sample", variant: "outline" as const },
+  { icon: FileBarChart, label: "Report", variant: "outline" as const },
+  { icon: ListChecks, label: "Pending", variant: "outline" as const },
+  { icon: TrendingUp, label: "Analytics", variant: "outline" as const },
 ];
 
 export function QuickActions() {
@@ -17,15 +17,27 @@ export function QuickActions() {
         <h3 className="text-lg font-semibold">Quick Actions</h3>
         <p className="text-sm text-muted-foreground">Common tasks and shortcuts</p>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         {actions.map((action) => (
           <Button
             key={action.label}
             variant={action.variant}
-            className={`h-auto py-4 flex-col gap-2 ${action.variant === "default" ? "bg-accent hover:bg-accent/90 text-accent-foreground" : ""}`}
+            className={`h-auto py-4 px-2 flex-col gap-2 group transition-all duration-200 ${
+              action.variant === "default" 
+                ? "bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30" 
+                : "hover:border-primary/50 hover:bg-primary/5"
+            }`}
           >
-            <action.icon className="h-5 w-5" />
-            <span className="text-xs font-medium">{action.label}</span>
+            <div className={`p-2 rounded-lg transition-all ${
+              action.variant === "default" 
+                ? "bg-primary-foreground/10" 
+                : "bg-muted group-hover:bg-primary/10"
+            }`}>
+              <action.icon className={`h-5 w-5 transition-transform group-hover:scale-110 ${
+                action.variant === "default" ? "" : "group-hover:text-primary"
+              }`} />
+            </div>
+            <span className="text-xs font-medium text-center leading-tight">{action.label}</span>
           </Button>
         ))}
       </div>
