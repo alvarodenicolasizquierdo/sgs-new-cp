@@ -62,6 +62,7 @@ const App = () => (
             <Route path="/support" element={<SupportCenter />} />
             <Route path="/support-admin" element={<SupportAdmin />} />
             <Route path="/competitive-matrix" element={<CompetitiveMatrix />} />
+            <Route path="/feature-spec" element={<FeatureSpec />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
