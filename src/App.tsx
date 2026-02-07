@@ -27,6 +27,7 @@ import KnowledgeHub from "./pages/KnowledgeHub";
 import SupportAdmin from "./pages/SupportAdmin";
 import SupportCenter from "./pages/SupportCenter";
 import CompetitiveMatrix from "./pages/CompetitiveMatrix";
+import FeatureSpec from "./pages/FeatureSpec";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
