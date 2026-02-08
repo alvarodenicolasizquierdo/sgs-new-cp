@@ -106,13 +106,13 @@ export function RecentTestsTable() {
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
-            <TableRow className="bg-muted/30">
-              <TableHead className="font-semibold">Test ID</TableHead>
-              <TableHead className="font-semibold">Product</TableHead>
-              <TableHead className="font-semibold">Supplier</TableHead>
-              <TableHead className="font-semibold">Test Type</TableHead>
-              <TableHead className="font-semibold">Status</TableHead>
-              <TableHead className="font-semibold">Date</TableHead>
+            <TableRow className="bg-muted/20 border-b-0">
+              <TableHead className="text-xs font-medium uppercase tracking-wider text-muted-foreground/70">Test ID</TableHead>
+              <TableHead className="text-xs font-medium uppercase tracking-wider text-muted-foreground/70">Product</TableHead>
+              <TableHead className="text-xs font-medium uppercase tracking-wider text-muted-foreground/70">Supplier</TableHead>
+              <TableHead className="text-xs font-medium uppercase tracking-wider text-muted-foreground/70">Test Type</TableHead>
+              <TableHead className="text-xs font-medium uppercase tracking-wider text-muted-foreground/70">Status</TableHead>
+              <TableHead className="text-xs font-medium uppercase tracking-wider text-muted-foreground/70">Date</TableHead>
               <TableHead className="w-12"></TableHead>
             </TableRow>
           </TableHeader>
@@ -125,14 +125,14 @@ export function RecentTestsTable() {
                 <TableCell>
                   <span className="line-clamp-1 max-w-[200px]">{test.productName}</span>
                 </TableCell>
-                <TableCell className="text-muted-foreground">
+                <TableCell className="text-muted-foreground/70">
                   {test.supplier}
                 </TableCell>
                 <TableCell>{test.testType}</TableCell>
                 <TableCell>
                   <StatusBadge status={test.status} size="sm" />
                 </TableCell>
-                <TableCell className="text-muted-foreground">
+                <TableCell className="text-muted-foreground/60 text-sm">
                   {test.completedDate || test.scheduledDate}
                 </TableCell>
                 <TableCell>

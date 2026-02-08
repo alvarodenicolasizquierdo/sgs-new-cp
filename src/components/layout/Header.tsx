@@ -24,7 +24,7 @@ export function Header() {
 
   return (
     <>
-      <header className="h-16 border-b border-border bg-card flex items-center justify-between px-6">
+      <header className="h-16 border-b border-border/60 bg-card flex items-center justify-between px-6">
         {/* Logo and Search */}
         <div className="flex items-center gap-6 flex-1 max-w-lg">
           <img 
@@ -94,7 +94,7 @@ export function Header() {
                 </Avatar>
                 <div className="text-left hidden sm:block">
                   <p className="text-sm font-medium">Mark Thompson</p>
-                  <p className="text-xs text-muted-foreground">Admin</p>
+                  <p className="text-[11px] text-muted-foreground/60">Admin</p>
                 </div>
                 <ChevronDown className="h-4 w-4 text-muted-foreground" />
               </Button>

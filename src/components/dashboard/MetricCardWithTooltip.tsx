@@ -56,14 +56,14 @@ export function MetricCardWithTooltip({
       )}
     >
       <div className="flex items-start justify-between">
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           <div className="flex items-center gap-1.5">
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground/70">{title}</p>
             {methodology && (
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Info className="h-3.5 w-3.5 text-muted-foreground/50 cursor-help hover:text-muted-foreground transition-colors" />
+                    <Info className="h-3 w-3 text-muted-foreground/40 cursor-help hover:text-muted-foreground/70 transition-colors" />
                   </TooltipTrigger>
                   <TooltipContent side="bottom" className="max-w-xs text-xs leading-relaxed">
                     {methodology}
@@ -72,7 +72,7 @@ export function MetricCardWithTooltip({
               </TooltipProvider>
             )}
           </div>
-          <p className={cn("text-[1.75rem] font-bold tracking-tight animate-fade-in", variantStyles[variant])}>
+          <p className={cn("text-2xl font-semibold tracking-tight animate-fade-in", variantStyles[variant])}>
             {value}
           </p>
           <div className="space-y-1">
@@ -99,7 +99,7 @@ export function MetricCardWithTooltip({
             )}
           </div>
         </div>
-        <div className={cn("p-3 rounded-lg bg-muted/50", variantStyles[variant])}>
+        <div className={cn("p-2.5 rounded-xl bg-muted/40", variantStyles[variant])}>
           {icon}
         </div>
       </div>

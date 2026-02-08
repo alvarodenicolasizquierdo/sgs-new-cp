@@ -39,9 +39,11 @@ export function SupplierScorecard() {
           <h3 className="text-base font-semibold tracking-tight">Supplier Performance</h3>
           <p className="text-sm text-muted-foreground mt-0.5">Top suppliers by quality score</p>
         </div>
-        <Building2 className="h-5 w-5 text-muted-foreground" />
+        <div className={cn("p-2.5 rounded-xl bg-muted/40")}>
+          <Building2 className="h-5 w-5 text-muted-foreground/60" />
+        </div>
       </div>
-      <div className="space-y-4">
+      <div className="space-y-1">
         {topSuppliers.map((supplier, index) => (
           <div
             key={supplier.id}
@@ -71,10 +73,10 @@ export function SupplierScorecard() {
                 />
               </div>
               <div className="flex items-center justify-between mt-1">
-                <span className="text-xs text-muted-foreground">
+                <span className="text-[11px] text-muted-foreground/60">
                   {supplier.testsCompleted} tests
                 </span>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-[11px] text-muted-foreground/60">
                   {supplier.passRate}% pass rate
                 </span>
               </div>

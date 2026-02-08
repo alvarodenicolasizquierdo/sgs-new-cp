@@ -119,7 +119,7 @@ export function StyleCard({ style, className }: StyleCardProps) {
           )}
 
           {/* Technologists */}
-          <div className="flex items-center justify-between pt-2 border-t">
+          <div className="flex items-center justify-between pt-3 mt-1">
             <div className="flex items-center gap-2">
               <Avatar className="h-6 w-6">
                 <AvatarImage src={style.fabricTech.avatar} />
@@ -127,7 +127,7 @@ export function StyleCard({ style, className }: StyleCardProps) {
                   {style.fabricTech.name.split(' ').map(n => n[0]).join('')}
                 </AvatarFallback>
               </Avatar>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-[11px] text-muted-foreground/60">
                 {style.fabricTech.name}
               </span>
             </div>
