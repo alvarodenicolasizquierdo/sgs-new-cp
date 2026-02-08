@@ -36,7 +36,7 @@ export function StyleCard({ style, className }: StyleCardProps) {
     <Link to={`/styles/${style.id}`}>
       <Card 
         className={cn(
-          "hover:shadow-md transition-all cursor-pointer group",
+          "hover:shadow-card-hover transition-all duration-300 cursor-pointer group border-border/60",
           "border-l-4",
           style.status === "approved" && "border-l-success",
           style.status === "submitted" && "border-l-primary",

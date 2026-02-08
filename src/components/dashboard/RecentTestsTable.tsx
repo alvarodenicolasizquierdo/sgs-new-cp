@@ -89,12 +89,12 @@ const recentTests: Test[] = [
 
 export function RecentTestsTable() {
   return (
-    <div className="bg-card rounded-xl border border-border overflow-hidden">
-      <div className="p-6 border-b border-border">
+    <div className="bg-card rounded-xl border border-border/60 overflow-hidden shadow-card">
+      <div className="p-6 border-b border-border/60">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-semibold">Recent Tests</h3>
-            <p className="text-sm text-muted-foreground">
+            <h3 className="text-base font-semibold tracking-tight">Recent Tests</h3>
+            <p className="text-sm text-muted-foreground mt-0.5">
               Latest quality tests and inspections
             </p>
           </div>

@@ -125,9 +125,10 @@ export default {
         "count-up": "count-up 0.5s ease-out",
       },
       boxShadow: {
-        "card": "0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05)",
-        "card-hover": "0 10px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.05)",
-        "sidebar": "4px 0 20px -5px rgb(0 0 0 / 0.15)",
+        "card": "0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.03)",
+        "card-hover": "0 8px 24px -4px rgb(0 0 0 / 0.08), 0 4px 8px -4px rgb(0 0 0 / 0.04)",
+        "sidebar": "4px 0 20px -5px rgb(0 0 0 / 0.12)",
+        "soft": "0 2px 8px -2px rgb(0 0 0 / 0.06)",
       },
     },
   },

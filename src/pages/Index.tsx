@@ -26,8 +26,8 @@ const Index = () => {
     <DashboardLayout>
       {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground mt-1">
+        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+        <p className="text-sm text-muted-foreground mt-1">
           Welcome back! Here's an overview of your testing operations.
         </p>
       </div>
@@ -116,10 +116,10 @@ const Index = () => {
       {/* Supplier Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <SupplierScorecard />
-        <div className="bg-card rounded-xl border border-border p-6">
+        <div className="bg-card rounded-xl border border-border/60 p-6 shadow-card">
           <div className="mb-6">
-            <h3 className="text-lg font-semibold">Recent Activity</h3>
-            <p className="text-sm text-muted-foreground">Latest updates from your team</p>
+            <h3 className="text-base font-semibold tracking-tight">Recent Activity</h3>
+            <p className="text-sm text-muted-foreground mt-0.5">Latest updates from your team</p>
           </div>
           <div className="space-y-4">
             {[
@@ -161,7 +161,7 @@ const Index = () => {
             ].map((item, index) => (
               <div
                 key={index}
-                className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors"
+                className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted/40 transition-all duration-200"
               >
                 <Avatar className="h-8 w-8 flex-shrink-0">
                   <AvatarImage src={item.user.avatar} alt={item.user.name} width={32} height={32} loading="lazy" />

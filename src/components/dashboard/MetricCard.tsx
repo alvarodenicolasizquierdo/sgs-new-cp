@@ -34,14 +34,14 @@ export function MetricCard({ title, value, icon, trend, variant = "default", cla
   return (
     <div
       className={cn(
-        "bg-card rounded-xl border border-border p-6 card-hover",
+        "bg-card rounded-xl border border-border/60 p-6 shadow-card card-hover",
         className
       )}
     >
       <div className="flex items-start justify-between">
         <div className="space-y-3">
           <p className="text-sm font-medium text-muted-foreground">{title}</p>
-          <p className={cn("text-3xl font-bold animate-fade-in", variantStyles[variant])}>
+          <p className={cn("text-[1.75rem] font-bold tracking-tight animate-fade-in", variantStyles[variant])}>
             {value}
           </p>
           {trend && (

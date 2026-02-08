@@ -51,7 +51,7 @@ export function MetricCardWithTooltip({
   return (
     <div
       className={cn(
-        "bg-card rounded-xl border border-border p-6 card-hover",
+        "bg-card rounded-xl border border-border/60 p-6 shadow-card card-hover",
         className
       )}
     >
@@ -72,7 +72,7 @@ export function MetricCardWithTooltip({
               </TooltipProvider>
             )}
           </div>
-          <p className={cn("text-3xl font-bold animate-fade-in", variantStyles[variant])}>
+          <p className={cn("text-[1.75rem] font-bold tracking-tight animate-fade-in", variantStyles[variant])}>
             {value}
           </p>
           <div className="space-y-1">

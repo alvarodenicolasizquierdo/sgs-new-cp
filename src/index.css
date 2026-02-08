@@ -55,9 +55,9 @@
     --pending: 262 83% 58%;
     --pending-foreground: 0 0% 100%;
 
-    /* Borders and inputs */
-    --border: 210 25% 88%;
-    --input: 210 25% 88%;
+    /* Borders and inputs — softer */
+    --border: 210 18% 91%;
+    --input: 210 18% 91%;
     --ring: 210 100% 20%;
 
     --radius: 0.5rem;
@@ -155,9 +155,9 @@
 }
 
 @layer components {
-  /* Card hover effect */
+  /* Card hover effect — refined */
   .card-hover {
-    @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5;
+    @apply transition-all duration-300 ease-out hover:shadow-card-hover hover:-translate-y-0.5 hover:border-border/80;
   }
 
   /* Premium glass card effect */
