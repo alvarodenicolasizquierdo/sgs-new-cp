@@ -4,7 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AISupportProvider } from "@/contexts/AISupportContext";
+import { DemoWalkthroughProvider } from "@/contexts/DemoWalkthroughContext";
 import { FloatingHelpButton, AIHelpPanel } from "@/components/support";
+import { WalkthroughLayer } from "@/components/walkthrough/WalkthroughLayer";
 import Index from "./pages/Index";
 import Tests from "./pages/Tests";
 import TRFDetail from "./pages/TRFDetail";
@@ -39,36 +41,40 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AISupportProvider>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/tests" element={<Tests />} />
-            <Route path="/tests/new" element={<TRFCreate />} />
-            <Route path="/tests/:id" element={<TRFDetail />} />
-            <Route path="/inspections" element={<Inspections />} />
-            <Route path="/inspections/:id" element={<InspectionDetail />} />
-            <Route path="/styles" element={<Styles />} />
-            <Route path="/styles/new" element={<StyleCreate />} />
-            <Route path="/styles/:id" element={<StyleDetail />} />
-            <Route path="/components" element={<Components />} />
-            <Route path="/components/new" element={<ComponentCreate />} />
-            <Route path="/inbox" element={<SupplierInbox />} />
-            <Route path="/suppliers" element={<Suppliers />} />
-            <Route path="/suppliers/new" element={<SupplierCreate />} />
-            <Route path="/risk-assessment" element={<RiskAssessment />} />
-            <Route path="/analytics" element={<Insight />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/help" element={<KnowledgeHub />} />
-            <Route path="/support" element={<SupportCenter />} />
-            <Route path="/support-admin" element={<SupportAdmin />} />
-            <Route path="/competitive-matrix" element={<CompetitiveMatrix />} />
-            <Route path="/feature-spec" element={<FeatureSpec />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          {/* AI Support Layer */}
-          <FloatingHelpButton />
-          <AIHelpPanel />
+          <DemoWalkthroughProvider>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/tests" element={<Tests />} />
+              <Route path="/tests/new" element={<TRFCreate />} />
+              <Route path="/tests/:id" element={<TRFDetail />} />
+              <Route path="/inspections" element={<Inspections />} />
+              <Route path="/inspections/:id" element={<InspectionDetail />} />
+              <Route path="/styles" element={<Styles />} />
+              <Route path="/styles/new" element={<StyleCreate />} />
+              <Route path="/styles/:id" element={<StyleDetail />} />
+              <Route path="/components" element={<Components />} />
+              <Route path="/components/new" element={<ComponentCreate />} />
+              <Route path="/inbox" element={<SupplierInbox />} />
+              <Route path="/suppliers" element={<Suppliers />} />
+              <Route path="/suppliers/new" element={<SupplierCreate />} />
+              <Route path="/risk-assessment" element={<RiskAssessment />} />
+              <Route path="/analytics" element={<Insight />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/help" element={<KnowledgeHub />} />
+              <Route path="/support" element={<SupportCenter />} />
+              <Route path="/support-admin" element={<SupportAdmin />} />
+              <Route path="/competitive-matrix" element={<CompetitiveMatrix />} />
+              <Route path="/feature-spec" element={<FeatureSpec />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            {/* Walkthrough Layer */}
+            <WalkthroughLayer />
+            {/* AI Support Layer */}
+            <FloatingHelpButton />
+            <AIHelpPanel />
+          </DemoWalkthroughProvider>
         </AISupportProvider>
       </BrowserRouter>
     </TooltipProvider>
