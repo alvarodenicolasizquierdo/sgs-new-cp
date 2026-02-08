@@ -1,4 +1,5 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
+import { CareSymbolIcon } from "@/components/care-symbols/CareSymbolIcon";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { StyleStatusBadge } from "@/components/styles/StyleStatusBadge";
 import { StyleStageBadge } from "@/components/styles/StyleStageBadge";
@@ -544,9 +545,9 @@ export default function StyleDetail() {
                 <CardContent>
                   <div className="flex flex-wrap gap-3">
                     {style.careSymbols.map(symbol => (
-                      <div key={symbol.id} className="flex flex-col items-center p-3 border rounded-lg">
-                        <span className="text-2xl">{symbol.icon}</span>
-                        <span className="text-xs text-muted-foreground mt-1">{symbol.description}</span>
+                      <div key={symbol.id} className="flex flex-col items-center p-3 border rounded-lg min-w-[80px]">
+                        <CareSymbolIcon code={symbol.code} size={44} />
+                        <span className="text-xs text-muted-foreground mt-2 text-center">{symbol.description}</span>
                       </div>
                     ))}
                   </div>
