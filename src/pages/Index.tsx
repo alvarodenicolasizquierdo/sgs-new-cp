@@ -25,15 +25,15 @@ const Index = () => {
   return (
     <DashboardLayout>
       {/* Page Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-1">
+      <div className="mb-6">
+        <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
+        <p className="text-sm text-muted-foreground/70 mt-1">
           Welcome back! Here's an overview of your testing operations.
         </p>
       </div>
 
       {/* Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
         <MetricCardWithTooltip
           title="Total Tests"
           value="1,247"
@@ -69,7 +69,7 @@ const Index = () => {
       </div>
 
       {/* Secondary Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
         <MetricCardWithTooltip
           title="Active Inspections"
           value="24"
@@ -121,7 +121,7 @@ const Index = () => {
             <h3 className="text-base font-semibold tracking-tight">Recent Activity</h3>
             <p className="text-sm text-muted-foreground mt-0.5">Latest updates from your team</p>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-1">
             {[
               {
                 action: "Test completed",
@@ -182,8 +182,8 @@ const Index = () => {
                       }`}
                     />
                   </div>
-                  <p className="text-xs text-muted-foreground mt-0.5">{item.details}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{item.time} • {item.user.name}</p>
+                   <p className="text-xs text-muted-foreground/80 mt-0.5">{item.details}</p>
+                   <p className="text-[11px] text-muted-foreground/50 mt-1">{item.time} • {item.user.name}</p>
                 </div>
               </div>
             ))}

@@ -59,9 +59,11 @@ export function UpcomingSchedule() {
           <h3 className="text-base font-semibold tracking-tight">Today's Schedule</h3>
           <p className="text-sm text-muted-foreground mt-0.5">February 3, 2026</p>
         </div>
-        <Calendar className="h-5 w-5 text-muted-foreground" />
+        <div className="p-2.5 rounded-xl bg-muted/40">
+          <Calendar className="h-5 w-5 text-muted-foreground/60" />
+        </div>
       </div>
-      <div className="space-y-4">
+      <div className="space-y-1">
         {upcomingItems.map((item) => (
           <div
             key={item.id}
@@ -76,15 +78,15 @@ export function UpcomingSchedule() {
               >
                 {item.type}
               </span>
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1 text-[11px] text-muted-foreground/60">
                 <Clock className="h-3 w-3" />
                 {item.time}
               </div>
             </div>
             <div className="flex-1 min-w-0">
               <h4 className="font-medium text-sm">{item.title}</h4>
-              <p className="text-xs text-muted-foreground mt-1">{item.supplier}</p>
-              <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
+              <p className="text-[11px] text-muted-foreground/60 mt-1">{item.supplier}</p>
+              <div className="flex items-center gap-1 mt-1 text-[11px] text-muted-foreground/50">
                 <MapPin className="h-3 w-3" />
                 {item.location}
               </div>

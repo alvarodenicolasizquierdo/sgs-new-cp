@@ -181,9 +181,9 @@
     background: linear-gradient(135deg, currentColor 0%, transparent 60%);
   }
 
-  /* Table row hover */
+  /* Table row hover — Linear-style accent */
   .table-row-hover {
-    @apply transition-colors hover:bg-muted/50;
+    @apply transition-all duration-200 hover:bg-muted/40 border-l-2 border-l-transparent hover:border-l-primary;
   }
 
   /* Sidebar link active state */

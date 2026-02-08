@@ -39,9 +39,9 @@ export function MetricCard({ title, value, icon, trend, variant = "default", cla
       )}
     >
       <div className="flex items-start justify-between">
-        <div className="space-y-3">
-          <p className="text-sm font-medium text-muted-foreground">{title}</p>
-          <p className={cn("text-[1.75rem] font-bold tracking-tight animate-fade-in", variantStyles[variant])}>
+        <div className="space-y-2.5">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground/70">{title}</p>
+          <p className={cn("text-2xl font-semibold tracking-tight animate-fade-in", variantStyles[variant])}>
             {value}
           </p>
           {trend && (
@@ -61,7 +61,7 @@ export function MetricCard({ title, value, icon, trend, variant = "default", cla
             </div>
           )}
         </div>
-        <div className={cn("p-3 rounded-lg bg-muted/50", variantStyles[variant])}>
+        <div className={cn("p-2.5 rounded-xl bg-muted/40", variantStyles[variant])}>
           {icon}
         </div>
       </div>
