@@ -16,6 +16,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ContextualHelpTooltip } from "@/components/support/ContextualHelpTooltip";
 import { HelpDrawer } from "@/components/support/HelpDrawer";
+import { DemoModeToggle } from "@/components/DemoModeToggle";
+import { InternalOnly } from "@/components/InternalOnly";
 
 export function Header() {
   const [helpDrawerOpen, setHelpDrawerOpen] = useState(false);
@@ -43,6 +45,10 @@ export function Header() {
 
         {/* Actions */}
         <div className="flex items-center gap-3">
+          {/* Demo Mode Toggle */}
+          <DemoModeToggle />
+
+          <InternalOnly>
           <ContextualHelpTooltip helpKey="new-test-btn" side="bottom">
             <Button 
               variant="default" 
@@ -54,6 +60,7 @@ export function Header() {
               New Test
             </Button>
           </ContextualHelpTooltip>
+          </InternalOnly>
 
           {/* Help Center */}
           <Button 

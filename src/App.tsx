@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AISupportProvider } from "@/contexts/AISupportContext";
 import { DemoWalkthroughProvider } from "@/contexts/DemoWalkthroughContext";
+import { DemoModeProvider } from "@/contexts/DemoModeContext";
 import { FloatingHelpButton, AIHelpPanel } from "@/components/support";
 import { WalkthroughLayer } from "@/components/walkthrough/WalkthroughLayer";
 import Index from "./pages/Index";
@@ -41,6 +42,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AISupportProvider>
+          <DemoModeProvider>
           <DemoWalkthroughProvider>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -75,6 +77,7 @@ const App = () => (
             <FloatingHelpButton />
             <AIHelpPanel />
           </DemoWalkthroughProvider>
+          </DemoModeProvider>
         </AISupportProvider>
       </BrowserRouter>
     </TooltipProvider>
