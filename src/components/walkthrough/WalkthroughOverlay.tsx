@@ -44,7 +44,7 @@ export function WalkthroughOverlay() {
         className="fixed inset-0 z-[9999]"
       >
         {/* Backdrop */}
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={stop} />
+        <div className="absolute inset-0 bg-black/30" onClick={stop} />
 
         {/* Progress bar at top */}
         <div className="absolute top-0 left-0 right-0 z-10">
