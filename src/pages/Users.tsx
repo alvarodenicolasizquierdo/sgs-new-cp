@@ -48,6 +48,12 @@ import {
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Search,
   Plus,
   MoreHorizontal,
@@ -59,14 +65,19 @@ import {
   UserX,
   Key,
   Trash2,
+  Info,
 } from "lucide-react";
 import { format } from "date-fns";
+
+// Canonical SGS Entitlement Tiers
+type EntitlementTier = "none" | "bronze" | "silver" | "gold" | "buyer" | "garment_tech" | "fabric_tech";
 
 interface User {
   id: string;
   name: string;
   email: string;
   role: "admin" | "manager" | "inspector" | "viewer";
+  entitlementTier: EntitlementTier;
   department: string;
   status: "active" | "inactive" | "pending";
   lastLogin: string;
@@ -74,12 +85,66 @@ interface User {
   avatar?: string;
 }
 
+const entitlementTierConfig: Record<EntitlementTier, { 
+  label: string; 
+  color: string;
+  careCodes: boolean;
+  baseApproval: boolean;
+  bulkApproval: boolean;
+  productApproval: boolean;
+  description: string;
+}> = {
+  none: { 
+    label: "None", 
+    color: "bg-gray-100 text-gray-600 dark:bg-gray-900/30 dark:text-gray-400",
+    careCodes: false, baseApproval: false, bulkApproval: false, productApproval: false,
+    description: "No approval permissions"
+  },
+  buyer: { 
+    label: "Buyer", 
+    color: "bg-slate-100 text-slate-700 dark:bg-slate-900/30 dark:text-slate-400",
+    careCodes: false, baseApproval: false, bulkApproval: false, productApproval: false,
+    description: "Read-only access — no approval authority"
+  },
+  bronze: { 
+    label: "Bronze", 
+    color: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400",
+    careCodes: true, baseApproval: false, bulkApproval: false, productApproval: false,
+    description: "Care code access only"
+  },
+  fabric_tech: { 
+    label: "Fabric Tech", 
+    color: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+    careCodes: true, baseApproval: true, bulkApproval: false, productApproval: false,
+    description: "Base approval only"
+  },
+  silver: { 
+    label: "Silver", 
+    color: "bg-slate-200 text-slate-700 dark:bg-slate-800/50 dark:text-slate-300",
+    careCodes: true, baseApproval: true, bulkApproval: true, productApproval: false,
+    description: "Base + Bulk approval"
+  },
+  gold: { 
+    label: "Gold", 
+    color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
+    careCodes: true, baseApproval: true, bulkApproval: true, productApproval: true,
+    description: "Full approval authority"
+  },
+  garment_tech: { 
+    label: "Garment Tech", 
+    color: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400",
+    careCodes: true, baseApproval: true, bulkApproval: true, productApproval: true,
+    description: "Full approval + GSW authority"
+  },
+};
+
 const mockUsers: User[] = [
   {
     id: "1",
     name: "Mark Thompson",
     email: "mark.thompson@sgs.com",
     role: "admin",
+    entitlementTier: "gold",
     department: "Quality Assurance",
     status: "active",
     lastLogin: "2024-01-15T09:30:00Z",
@@ -91,6 +156,7 @@ const mockUsers: User[] = [
     name: "Karuka Yamamoto",
     email: "karuka.yamamoto@sgs.com",
     role: "manager",
+    entitlementTier: "gold",
     department: "Testing Lab",
     status: "active",
     lastLogin: "2024-01-14T14:20:00Z",
@@ -102,6 +168,7 @@ const mockUsers: User[] = [
     name: "Alvaro Mendez",
     email: "alvaro.mendez@sgs.com",
     role: "inspector",
+    entitlementTier: "silver",
     department: "Field Inspection",
     status: "active",
     lastLogin: "2024-01-15T08:00:00Z",
@@ -113,6 +180,7 @@ const mockUsers: User[] = [
     name: "Amm Rattanakorn",
     email: "amm.rattanakorn@sgs.com",
     role: "inspector",
+    entitlementTier: "fabric_tech",
     department: "Quality Assurance",
     status: "active",
     lastLogin: "2023-12-01T10:00:00Z",
@@ -124,6 +192,7 @@ const mockUsers: User[] = [
     name: "Sarita Kim",
     email: "sarita.kim@sgs.com",
     role: "viewer",
+    entitlementTier: "buyer",
     department: "Compliance",
     status: "pending",
     lastLogin: "",
@@ -135,6 +204,7 @@ const mockUsers: User[] = [
     name: "Hajra Begum",
     email: "hajra.begum@sgs.com",
     role: "manager",
+    entitlementTier: "garment_tech",
     department: "Compliance",
     status: "active",
     lastLogin: "2024-01-13T11:45:00Z",
@@ -238,6 +308,21 @@ export default function Users() {
                       <SelectItem value="manager">Manager</SelectItem>
                       <SelectItem value="inspector">Inspector</SelectItem>
                       <SelectItem value="viewer">Viewer</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="entitlement">Entitlement Tier</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select entitlement tier" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(entitlementTierConfig).map(([key, config]) => (
+                        <SelectItem key={key} value={key}>
+                          {config.label} — {config.description}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -363,6 +448,22 @@ export default function Users() {
                 </TableHead>
                 <TableHead>User</TableHead>
                 <TableHead>Role</TableHead>
+                <TableHead>
+                  <div className="flex items-center gap-1">
+                    Entitlement Tier
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info className="h-3.5 w-3.5 text-muted-foreground/50 cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom" className="max-w-sm text-xs">
+                          <p className="font-medium mb-1">SGS Authority Model</p>
+                          <p>Controls approval permissions: Care Codes, Base, Bulk, and Product/Garment approvals. Garment Tech can also approve GSW.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </TableHead>
                 <TableHead>Department</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Last Login</TableHead>
@@ -373,6 +474,7 @@ export default function Users() {
               {filteredUsers.map((user) => {
                 const role = roleConfig[user.role];
                 const status = statusConfig[user.status];
+                const tier = entitlementTierConfig[user.entitlementTier];
                 const isSelected = selectedUsers.has(user.id);
 
                 return (
@@ -405,6 +507,28 @@ export default function Users() {
                       <Badge variant="secondary" className={role.color}>
                         {role.label}
                       </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Badge variant="secondary" className={tier.color}>
+                              {tier.label}
+                            </Badge>
+                          </TooltipTrigger>
+                          <TooltipContent side="bottom" className="text-xs">
+                            <div className="space-y-1">
+                              <p className="font-medium">{tier.description}</p>
+                              <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-[10px]">
+                                <span>Care Codes:</span><span>{tier.careCodes ? "✓" : "✗"}</span>
+                                <span>Base Approval:</span><span>{tier.baseApproval ? "✓" : "✗"}</span>
+                                <span>Bulk Approval:</span><span>{tier.bulkApproval ? "✓" : "✗"}</span>
+                                <span>Product Approval:</span><span>{tier.productApproval ? "✓" : "✗"}</span>
+                              </div>
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       {user.department}
@@ -439,7 +563,7 @@ export default function Users() {
                           </DropdownMenuItem>
                           <DropdownMenuItem>
                             <Shield className="h-4 w-4 mr-2" />
-                            Change Role
+                            Change Entitlement Tier
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem className="text-destructive">

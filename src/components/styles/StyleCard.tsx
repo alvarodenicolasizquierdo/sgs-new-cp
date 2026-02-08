@@ -13,8 +13,9 @@ import {
   Leaf,
   AlertCircle,
   FileCheck,
+  Archive,
 } from "lucide-react";
-import { format, parseISO, isPast } from "date-fns";
+import { format, parseISO, isPast, differenceInDays } from "date-fns";
 import { Link } from "react-router-dom";
 
 interface StyleCardProps {
@@ -23,9 +24,14 @@ interface StyleCardProps {
 }
 
 export function StyleCard({ style, className }: StyleCardProps) {
-  const hasSustainableComponents = style.componentIds.length > 0; // Would check actual components
+  const hasSustainableComponents = style.componentIds.length > 0;
   const isGoldSealOverdue = isPast(parseISO(style.goldSealDate));
   
+  // Auto-archive countdown: 90-day threshold from updatedAt
+  const AUTO_ARCHIVE_DAYS = 90;
+  const daysSinceUpdate = differenceInDays(new Date(), parseISO(style.updatedAt));
+  const daysUntilArchive = AUTO_ARCHIVE_DAYS - daysSinceUpdate;
+  const showArchiveWarning = daysUntilArchive <= 30 && daysUntilArchive > 0 && style.status !== "cancelled";
   return (
     <Link to={`/styles/${style.id}`}>
       <Card 
@@ -99,6 +105,19 @@ export function StyleCard({ style, className }: StyleCardProps) {
             </div>
           </div>
           
+          {/* Auto-Archive Countdown [C-19] */}
+          {showArchiveWarning && (
+            <div className={cn(
+              "flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium",
+              daysUntilArchive <= 14 
+                ? "bg-destructive/10 text-destructive" 
+                : "bg-warning/10 text-warning"
+            )}>
+              <Archive className="h-3 w-3" />
+              Auto-archive in {daysUntilArchive} days
+            </div>
+          )}
+
           {/* Technologists */}
           <div className="flex items-center justify-between pt-2 border-t">
             <div className="flex items-center gap-2">

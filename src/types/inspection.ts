@@ -13,7 +13,11 @@ export type InspectionType =
   | "container_loading" 
   | "factory_audit";
 
-export type InspectionResult = "pass" | "fail" | "pending" | "conditional";
+// Final inspection outcomes are PASS or FAIL only (AQL-based).
+// "pending" and "requires_action" are workflow states, not outcomes.
+export type InspectionOutcome = "pass" | "fail";
+export type InspectionWorkflowResult = "pending" | "requires_action";
+export type InspectionResult = InspectionOutcome | InspectionWorkflowResult;
 
 export type RiskLevel = "low" | "medium" | "high";
 
@@ -86,11 +90,11 @@ export const inspectionTypeConfig: Record<InspectionType, { label: string; short
   factory_audit: { label: "Factory Audit", shortLabel: "FA" },
 };
 
-export const resultConfig: Record<InspectionResult, { label: string; color: string; bgColor: string }> = {
-  pass: { label: "Pass", color: "text-success", bgColor: "bg-success/10" },
-  fail: { label: "Fail", color: "text-destructive", bgColor: "bg-destructive/10" },
-  pending: { label: "Pending", color: "text-muted-foreground", bgColor: "bg-muted" },
-  conditional: { label: "Conditional", color: "text-warning", bgColor: "bg-warning/10" },
+export const resultConfig: Record<InspectionResult, { label: string; color: string; bgColor: string; isOutcome: boolean }> = {
+  pass: { label: "Pass", color: "text-success", bgColor: "bg-success/10", isOutcome: true },
+  fail: { label: "Fail", color: "text-destructive", bgColor: "bg-destructive/10", isOutcome: true },
+  pending: { label: "Pending", color: "text-muted-foreground", bgColor: "bg-muted", isOutcome: false },
+  requires_action: { label: "Requires Corrective Action", color: "text-warning", bgColor: "bg-warning/10", isOutcome: false },
 };
 
 export const riskLevelConfig: Record<RiskLevel, { label: string; color: string; bgColor: string }> = {

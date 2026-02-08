@@ -13,7 +13,7 @@ import alvaroAvatar from "@/assets/profiles/alvaro.jpg";
 import ammAvatar from "@/assets/profiles/amm.jpg";
 import saritaAvatar from "@/assets/profiles/sarita.jpg";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { MetricCard } from "@/components/dashboard/MetricCard";
+import { MetricCardWithTooltip } from "@/components/dashboard/MetricCardWithTooltip";
 import { RecentTestsTable } from "@/components/dashboard/RecentTestsTable";
 import { QualityTrendsChart } from "@/components/dashboard/QualityTrendsChart";
 import { SupplierScorecard } from "@/components/dashboard/SupplierScorecard";
@@ -34,57 +34,66 @@ const Index = () => {
 
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <MetricCard
+        <MetricCardWithTooltip
           title="Total Tests"
           value="1,247"
           icon={<FlaskConical className="h-6 w-6" />}
           trend={{ value: 12, direction: "up", label: "vs last month" }}
           variant="default"
+          lastUpdated="2 hours ago"
         />
-        <MetricCard
+        <MetricCardWithTooltip
           title="Tests Passed"
           value="1,089"
           icon={<CheckCircle2 className="h-6 w-6" />}
           trend={{ value: 8, direction: "up", label: "vs last month" }}
           variant="success"
+          lastUpdated="2 hours ago"
         />
-        <MetricCard
+        <MetricCardWithTooltip
           title="Tests Failed"
           value="87"
           icon={<XCircle className="h-6 w-6" />}
           trend={{ value: 3, direction: "down", label: "vs last month" }}
           variant="destructive"
+          lastUpdated="2 hours ago"
         />
-        <MetricCard
+        <MetricCardWithTooltip
           title="Pending Review"
           value="71"
           icon={<Clock className="h-6 w-6" />}
           trend={{ value: 5, direction: "up", label: "new today" }}
           variant="pending"
+          lastUpdated="35 min ago"
         />
       </div>
 
       {/* Secondary Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <MetricCard
+        <MetricCardWithTooltip
           title="Active Inspections"
           value="24"
           icon={<ClipboardCheck className="h-6 w-6" />}
           variant="info"
+          lastUpdated="1 hour ago"
         />
-        <MetricCard
-          title="Pass Rate"
-          value="93.2%"
+        <MetricCardWithTooltip
+          title="Compliance Rate"
+          value="94.5%"
           icon={<TrendingUp className="h-6 w-6" />}
           trend={{ value: 2.1, direction: "up", label: "vs last quarter" }}
           variant="success"
+          methodology="Compliance Rate = (Styles with all TRFs passed / Total styles with completed testing) × 100. Period: Last 90 days. Sample: 247 of 262 styles."
+          lastUpdated="Data as of: Feb 7, 2026 14:30 UTC"
         />
-        <MetricCard
+        <MetricCardWithTooltip
           title="Avg. Turnaround"
           value="3.2 days"
           icon={<Clock className="h-6 w-6" />}
           trend={{ value: 0.5, direction: "down", label: "faster" }}
           variant="info"
+          methodology="Average calendar days from TRF submission to final result, measured across all completed TRFs in the last 30 days."
+          lastUpdated="1 hour ago"
         />
       </div>
 

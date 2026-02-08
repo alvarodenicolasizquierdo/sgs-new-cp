@@ -1,9 +1,14 @@
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { RiskMap } from "@/components/risk-map/RiskMap";
-import { Globe, Activity, Sparkles } from "lucide-react";
+import { Globe, Activity, Sparkles, ChevronDown, ChevronUp, Info } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function RiskAssessment() {
+  const [methodologyOpen, setMethodologyOpen] = useState(false);
+
   return (
     <DashboardLayout>
       {/* Premium Page Header */}
@@ -52,6 +57,71 @@ export default function RiskAssessment() {
             AI-Powered Insights
           </motion.div>
         </div>
+      </motion.div>
+
+      {/* Methodology Disclosure [C-10] */}
+      <motion.div
+        className="mb-6"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        <Card className="border-dashed">
+          <CardContent className="p-4">
+            <button
+              onClick={() => setMethodologyOpen(!methodologyOpen)}
+              className="flex items-center justify-between w-full text-left"
+            >
+              <div className="flex items-center gap-2">
+                <Info className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-medium">Risk Scoring Methodology</span>
+              </div>
+              {methodologyOpen ? (
+                <ChevronUp className="h-4 w-4 text-muted-foreground" />
+              ) : (
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              )}
+            </button>
+            
+            <AnimatePresence>
+              {methodologyOpen && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-4 space-y-3 text-sm text-muted-foreground border-t pt-4">
+                    <div>
+                      <p className="font-medium text-foreground mb-1">Calculation Method</p>
+                      <p>Weighted composite of inspection pass rate (40%), corrective action response time (25%), historical non-conformance trends (20%), and supplier self-assessment compliance (15%).</p>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      <div className="p-2 rounded-lg bg-muted/50">
+                        <p className="text-xs font-medium text-foreground">Data Period</p>
+                        <p className="text-xs">Rolling 12 months</p>
+                      </div>
+                      <div className="p-2 rounded-lg bg-muted/50">
+                        <p className="text-xs font-medium text-foreground">Sample Size</p>
+                        <p className="text-xs">847 inspections</p>
+                      </div>
+                      <div className="p-2 rounded-lg bg-muted/50">
+                        <p className="text-xs font-medium text-foreground">Deterministic Data</p>
+                        <p className="text-xs">85% of score</p>
+                      </div>
+                      <div className="p-2 rounded-lg bg-muted/50">
+                        <p className="text-xs font-medium text-foreground">AI-Estimated Factors</p>
+                        <p className="text-xs">15% of score</p>
+                      </div>
+                    </div>
+                    <p className="text-xs italic">Risk thresholds: Low (0–39), Medium (40–64), High (65–100). Scores update daily at 00:00 UTC.</p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </CardContent>
+        </Card>
       </motion.div>
 
       {/* Risk Map */}

@@ -36,7 +36,7 @@ const typeOptions: { value: InspectionType; label: string }[] = [
 const resultOptions: { value: InspectionResult; label: string }[] = [
   { value: "pass", label: "Pass" },
   { value: "fail", label: "Fail" },
-  { value: "conditional", label: "Conditional" },
+  { value: "requires_action", label: "Requires Corrective Action" },
   { value: "pending", label: "Pending" },
 ];
 
