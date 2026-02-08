@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { CareSymbolIcon } from "@/components/care-symbols/CareSymbolIcon";
 import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -682,7 +683,7 @@ export default function StyleCreate() {
                                 : "hover:border-primary/50"
                             )}
                           >
-                            <span className="text-2xl">{symbol.icon}</span>
+                            <CareSymbolIcon code={symbol.code} size={36} />
                             <span className="text-xs mt-1 text-center">{symbol.description}</span>
                           </button>
                         ))}
@@ -697,8 +698,9 @@ export default function StyleCreate() {
                         {formData.selectedCareSymbols.map(id => {
                           const symbol = mockCareSymbols.find(s => s.id === id);
                           return symbol ? (
-                            <Badge key={id} variant="secondary" className="gap-1">
-                              {symbol.icon} {symbol.description}
+                            <Badge key={id} variant="secondary" className="gap-1.5 py-1">
+                              <CareSymbolIcon code={symbol.code} size={20} />
+                              {symbol.description}
                             </Badge>
                           ) : null;
                         })}

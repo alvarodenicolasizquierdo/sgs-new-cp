@@ -79,22 +79,22 @@ export const mockSuppliers: Supplier[] = [
 
 // Mock Care Symbols
 export const mockCareSymbols: CareSymbol[] = [
-  { id: "care-1", code: "W30", category: "wash", description: "Machine wash at 30°C", icon: "🧺" },
-  { id: "care-2", code: "W40", category: "wash", description: "Machine wash at 40°C", icon: "🧺" },
-  { id: "care-3", code: "W60", category: "wash", description: "Machine wash at 60°C", icon: "🧺" },
-  { id: "care-4", code: "HW", category: "wash", description: "Hand wash only", icon: "🤚" },
-  { id: "care-5", code: "DNW", category: "wash", description: "Do not wash", icon: "🚫" },
-  { id: "care-6", code: "BL", category: "bleach", description: "Bleach allowed", icon: "⬜" },
-  { id: "care-7", code: "DNB", category: "bleach", description: "Do not bleach", icon: "🚫" },
-  { id: "care-8", code: "TDL", category: "tumble_dry", description: "Tumble dry low", icon: "🔵" },
-  { id: "care-9", code: "TDN", category: "tumble_dry", description: "Tumble dry normal", icon: "⚫" },
-  { id: "care-10", code: "DNTD", category: "tumble_dry", description: "Do not tumble dry", icon: "🚫" },
-  { id: "care-11", code: "IL", category: "iron", description: "Iron low", icon: "🔵" },
-  { id: "care-12", code: "IM", category: "iron", description: "Iron medium", icon: "🟡" },
-  { id: "care-13", code: "IH", category: "iron", description: "Iron high", icon: "🔴" },
-  { id: "care-14", code: "DNI", category: "iron", description: "Do not iron", icon: "🚫" },
-  { id: "care-15", code: "DC", category: "dry_clean", description: "Dry clean", icon: "🔵" },
-  { id: "care-16", code: "DNDC", category: "dry_clean", description: "Do not dry clean", icon: "🚫" },
+  { id: "care-1", code: "W30", category: "wash", description: "Machine wash at 30°C", icon: "W30" },
+  { id: "care-2", code: "W40", category: "wash", description: "Machine wash at 40°C", icon: "W40" },
+  { id: "care-3", code: "W60", category: "wash", description: "Machine wash at 60°C", icon: "W60" },
+  { id: "care-4", code: "HW", category: "wash", description: "Hand wash only", icon: "HW" },
+  { id: "care-5", code: "DNW", category: "wash", description: "Do not wash", icon: "DNW" },
+  { id: "care-6", code: "BL", category: "bleach", description: "Bleach allowed", icon: "BL" },
+  { id: "care-7", code: "DNB", category: "bleach", description: "Do not bleach", icon: "DNB" },
+  { id: "care-8", code: "TDL", category: "tumble_dry", description: "Tumble dry low", icon: "TDL" },
+  { id: "care-9", code: "TDN", category: "tumble_dry", description: "Tumble dry normal", icon: "TDN" },
+  { id: "care-10", code: "DNTD", category: "tumble_dry", description: "Do not tumble dry", icon: "DNTD" },
+  { id: "care-11", code: "IL", category: "iron", description: "Iron low (110°C)", icon: "IL" },
+  { id: "care-12", code: "IM", category: "iron", description: "Iron medium (150°C)", icon: "IM" },
+  { id: "care-13", code: "IH", category: "iron", description: "Iron high (200°C)", icon: "IH" },
+  { id: "care-14", code: "DNI", category: "iron", description: "Do not iron", icon: "DNI" },
+  { id: "care-15", code: "DC", category: "dry_clean", description: "Dry clean", icon: "DC" },
+  { id: "care-16", code: "DNDC", category: "dry_clean", description: "Do not dry clean", icon: "DNDC" },
 ];
 
 // Mock Care Wording
