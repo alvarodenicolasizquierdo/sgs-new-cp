@@ -33,11 +33,11 @@ function getProgressColor(score: number) {
 
 export function SupplierScorecard() {
   return (
-    <div className="bg-card rounded-xl border border-border p-6">
+    <div className="bg-card rounded-xl border border-border/60 p-6 shadow-card">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-semibold">Supplier Performance</h3>
-          <p className="text-sm text-muted-foreground">Top suppliers by quality score</p>
+          <h3 className="text-base font-semibold tracking-tight">Supplier Performance</h3>
+          <p className="text-sm text-muted-foreground mt-0.5">Top suppliers by quality score</p>
         </div>
         <Building2 className="h-5 w-5 text-muted-foreground" />
       </div>
@@ -45,7 +45,7 @@ export function SupplierScorecard() {
         {topSuppliers.map((supplier, index) => (
           <div
             key={supplier.id}
-            className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors"
+            className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/40 transition-all duration-200"
           >
             <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted text-sm font-medium">
               {index + 1}

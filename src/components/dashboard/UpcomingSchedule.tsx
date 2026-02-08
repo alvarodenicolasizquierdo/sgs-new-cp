@@ -53,11 +53,11 @@ const typeColors = {
 
 export function UpcomingSchedule() {
   return (
-    <div className="bg-card rounded-xl border border-border p-6">
+    <div className="bg-card rounded-xl border border-border/60 p-6 shadow-card">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-semibold">Today's Schedule</h3>
-          <p className="text-sm text-muted-foreground">February 3, 2026</p>
+          <h3 className="text-base font-semibold tracking-tight">Today's Schedule</h3>
+          <p className="text-sm text-muted-foreground mt-0.5">February 3, 2026</p>
         </div>
         <Calendar className="h-5 w-5 text-muted-foreground" />
       </div>
@@ -65,7 +65,7 @@ export function UpcomingSchedule() {
         {upcomingItems.map((item) => (
           <div
             key={item.id}
-            className="flex gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
+            className="flex gap-4 p-3 rounded-lg hover:bg-muted/40 transition-all duration-200 cursor-pointer"
           >
             <div className="flex flex-col items-center gap-1">
               <span

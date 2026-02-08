@@ -10,10 +10,10 @@ const data = [
 
 export function TestTypeDistribution() {
   return (
-    <div className="bg-card rounded-xl border border-border p-6">
+    <div className="bg-card rounded-xl border border-border/60 p-6 shadow-card">
       <div className="mb-6">
-        <h3 className="text-lg font-semibold">Test Distribution</h3>
-        <p className="text-sm text-muted-foreground">By test category this month</p>
+        <h3 className="text-base font-semibold tracking-tight">Test Distribution</h3>
+        <p className="text-sm text-muted-foreground mt-0.5">By test category this month</p>
       </div>
       <div className="h-[280px]">
         <ResponsiveContainer width="100%" height="100%">

@@ -20,10 +20,10 @@ const data = [
 
 export function QualityTrendsChart() {
   return (
-    <div className="bg-card rounded-xl border border-border p-6">
+    <div className="bg-card rounded-xl border border-border/60 p-6 shadow-card">
       <div className="mb-6">
-        <h3 className="text-lg font-semibold">Quality Trends</h3>
-        <p className="text-sm text-muted-foreground">
+        <h3 className="text-base font-semibold tracking-tight">Quality Trends</h3>
+        <p className="text-sm text-muted-foreground mt-0.5">
           Pass/fail rates over the last 6 months
         </p>
       </div>

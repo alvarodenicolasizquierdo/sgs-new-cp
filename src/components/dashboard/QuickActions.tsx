@@ -15,10 +15,10 @@ export function QuickActions() {
   const navigate = useNavigate();
   
   return (
-    <div className="bg-card rounded-xl border border-border p-6">
+    <div className="bg-card rounded-xl border border-border/60 p-6 shadow-card">
       <div className="mb-4">
-        <h3 className="text-lg font-semibold">Quick Actions</h3>
-        <p className="text-sm text-muted-foreground">Common tasks and shortcuts</p>
+        <h3 className="text-base font-semibold tracking-tight">Quick Actions</h3>
+        <p className="text-sm text-muted-foreground mt-0.5">Common tasks and shortcuts</p>
       </div>
       <div className="grid grid-cols-3 gap-3">
         {actions.map((action) => (
