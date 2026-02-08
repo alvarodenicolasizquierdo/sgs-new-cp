@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { useDemoMode, isDemoAllowedRoute } from "@/contexts/DemoModeContext";
 import {
   LayoutDashboard,
   ClipboardCheck,
@@ -91,6 +92,17 @@ const SidebarNavItem = ({ item, collapsed }: SidebarNavItemProps) => {
 
 export function AppSidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const { isDemoMode } = useDemoMode();
+
+  const filteredMainNav = isDemoMode
+    ? mainNavItems.filter(item => isDemoAllowedRoute(item.url))
+    : mainNavItems;
+  const filteredMgmtNav = isDemoMode
+    ? managementNavItems.filter(item => isDemoAllowedRoute(item.url))
+    : managementNavItems;
+  const filteredBottomNav = isDemoMode
+    ? bottomNavItems.filter(item => isDemoAllowedRoute(item.url))
+    : bottomNavItems;
 
   return (
     <aside
@@ -128,7 +140,7 @@ export function AppSidebar() {
             </span>
           )}
           <div className="space-y-0.5 pt-2">
-            {mainNavItems.map((item) => (
+            {filteredMainNav.map((item) => (
               <SidebarNavItem key={item.url} item={item} collapsed={collapsed} />
             ))}
           </div>
@@ -143,7 +155,7 @@ export function AppSidebar() {
             </span>
           )}
           <div className="space-y-0.5 pt-2">
-            {managementNavItems.map((item) => (
+            {filteredMgmtNav.map((item) => (
               <SidebarNavItem key={item.url} item={item} collapsed={collapsed} />
             ))}
           </div>
@@ -152,7 +164,7 @@ export function AppSidebar() {
 
       {/* Bottom Section */}
       <div className="p-3 border-t border-sidebar-border space-y-1">
-        {bottomNavItems.map((item) => (
+        {filteredBottomNav.map((item) => (
           <SidebarNavItem key={item.url} item={item} collapsed={collapsed} />
         ))}
         
