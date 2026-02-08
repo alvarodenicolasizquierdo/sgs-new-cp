@@ -30,6 +30,8 @@ export function Header() {
           <img 
             src={sgsLogo} 
             alt="SGS Logo" 
+            width={65}
+            height={32}
             className="h-8 w-auto object-contain flex-shrink-0"
           />
           <ContextualHelpTooltip helpKey="search-input" side="bottom">

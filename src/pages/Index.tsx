@@ -164,7 +164,7 @@ const Index = () => {
                 className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors"
               >
                 <Avatar className="h-8 w-8 flex-shrink-0">
-                  <AvatarImage src={item.user.avatar} alt={item.user.name} />
+                  <AvatarImage src={item.user.avatar} alt={item.user.name} width={32} height={32} loading="lazy" />
                   <AvatarFallback className="text-xs">{item.user.initials}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
