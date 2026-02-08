@@ -69,7 +69,7 @@ export const mockInspections: Inspection[] = [
     inspector: { id: "i3", name: "Mike Johnson", avatar: ammAvatar },
     status: "pending_review",
     inspectionType: "final_random",
-    result: "conditional",
+    result: "requires_action",
     riskLevel: "high",
     scheduledDate: "2026-02-01",
     completedDate: "2026-02-01",
