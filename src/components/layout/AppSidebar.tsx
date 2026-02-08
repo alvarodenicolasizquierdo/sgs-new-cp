@@ -117,6 +117,8 @@ export function AppSidebar() {
           <img 
             src={sgsLogo} 
             alt="SGS Logo" 
+            width={65}
+            height={32}
             className={cn(
               "object-contain",
               collapsed ? "h-8 w-8" : "h-8 w-auto max-w-[80px]"
