@@ -122,8 +122,8 @@ export default function Styles() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold">Styles</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-2xl font-semibold">Styles</h1>
+            <p className="text-muted-foreground/80">
               Manage product styles and their testing lifecycle
             </p>
           </div>
@@ -137,37 +137,37 @@ export default function Styles() {
         
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <Card>
+          <Card className="border-border/60 rounded-xl shadow-card">
             <CardContent className="p-4">
-              <div className="text-2xl font-bold">{stats.total}</div>
-              <div className="text-sm text-muted-foreground">Total Styles</div>
+              <div className="text-2xl font-semibold">{stats.total}</div>
+              <div className="text-sm text-muted-foreground/70">Total Styles</div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-border/60 rounded-xl shadow-card">
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-warning">{stats.pending}</div>
-              <div className="text-sm text-muted-foreground">Pending</div>
+              <div className="text-2xl font-semibold text-warning">{stats.pending}</div>
+              <div className="text-sm text-muted-foreground/70">Pending</div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-border/60 rounded-xl shadow-card">
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-primary">{stats.submitted}</div>
-              <div className="text-sm text-muted-foreground">Submitted</div>
+              <div className="text-2xl font-semibold text-primary">{stats.submitted}</div>
+              <div className="text-sm text-muted-foreground/70">Submitted</div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-border/60 rounded-xl shadow-card">
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-success">{stats.approved}</div>
-              <div className="text-sm text-muted-foreground">Approved</div>
+              <div className="text-2xl font-semibold text-success">{stats.approved}</div>
+              <div className="text-sm text-muted-foreground/70">Approved</div>
             </CardContent>
           </Card>
-          <Card className={cn(stats.atRisk > 0 && "border-destructive/50")}>
+          <Card className={cn("border-border/60 rounded-xl shadow-card", stats.atRisk > 0 && "border-destructive/50")}>
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <div className="text-2xl font-bold text-destructive">{stats.atRisk}</div>
+                <div className="text-2xl font-semibold text-destructive">{stats.atRisk}</div>
                 {stats.atRisk > 0 && <AlertTriangle className="h-5 w-5 text-destructive" />}
               </div>
-              <div className="text-sm text-muted-foreground">At Risk</div>
+              <div className="text-sm text-muted-foreground/70">At Risk</div>
             </CardContent>
           </Card>
         </div>
@@ -328,7 +328,7 @@ export default function Styles() {
         </div>
         
         {/* Results Count */}
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm text-muted-foreground/60">
           Showing {filteredStyles.length} of {mockStyles.length} styles
         </div>
         
@@ -340,7 +340,7 @@ export default function Styles() {
             ))}
           </div>
         ) : (
-          <Card>
+          <Card className="border-border/60 rounded-xl shadow-card overflow-hidden">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -365,7 +365,7 @@ export default function Styles() {
                     <TableCell>
                       <div className="max-w-[200px]">
                         <div className="font-medium truncate">{style.description}</div>
-                        <div className="text-xs text-muted-foreground">{style.designStyleRef}</div>
+                        <div className="text-xs text-muted-foreground/60">{style.designStyleRef}</div>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -407,11 +407,11 @@ export default function Styles() {
         )}
         
         {filteredStyles.length === 0 && (
-          <Card className="p-12">
+          <Card className="p-12 border-border/60 rounded-xl">
             <div className="text-center">
-              <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium">No styles found</h3>
-              <p className="text-muted-foreground mt-1">
+              <Package className="h-12 w-12 mx-auto text-muted-foreground/60 mb-4" />
+              <h3 className="text-lg font-semibold">No styles found</h3>
+              <p className="text-muted-foreground/70 mt-1">
                 {hasActiveFilters 
                   ? "Try adjusting your filters to find what you're looking for."
                   : "Create your first style to get started."}

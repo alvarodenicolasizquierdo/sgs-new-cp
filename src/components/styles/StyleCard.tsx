@@ -58,7 +58,7 @@ export function StyleCard({ style, className }: StyleCardProps) {
               <h3 className="font-semibold text-base mt-1 truncate group-hover:text-primary transition-colors">
                 {style.description}
               </h3>
-              <p className="text-sm text-muted-foreground truncate">
+              <p className="text-sm text-muted-foreground/70 truncate">
                 {style.designStyleRef} • {style.productColour}
               </p>
             </div>
@@ -81,15 +81,15 @@ export function StyleCard({ style, className }: StyleCardProps) {
           
           {/* Metadata Grid */}
           <div className="grid grid-cols-2 gap-2 text-sm">
-            <div className="flex items-center gap-2 text-muted-foreground">
+            <div className="flex items-center gap-2 text-muted-foreground/70">
               <Factory className="h-4 w-4 flex-shrink-0" />
               <span className="truncate">{style.factory.name}</span>
             </div>
-            <div className="flex items-center gap-2 text-muted-foreground">
+            <div className="flex items-center gap-2 text-muted-foreground/70">
               <Package className="h-4 w-4 flex-shrink-0" />
               <span>{divisionConfig[style.division].label} / {style.department}</span>
             </div>
-            <div className="flex items-center gap-2 text-muted-foreground">
+            <div className="flex items-center gap-2 text-muted-foreground/70">
               <Calendar className="h-4 w-4 flex-shrink-0" />
               <span className={cn(isGoldSealOverdue && "text-destructive")}>
                 GS: {format(parseISO(style.goldSealDate), "dd MMM yyyy")}
