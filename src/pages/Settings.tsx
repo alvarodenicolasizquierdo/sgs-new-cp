@@ -57,8 +57,8 @@ export default function Settings() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
-          <p className="text-muted-foreground">
+         <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
+          <p className="text-muted-foreground/80">
             Manage your account settings and preferences
           </p>
         </div>
@@ -93,10 +93,10 @@ export default function Settings() {
 
           {/* Profile Tab */}
           <TabsContent value="profile" className="space-y-6">
-            <Card>
+            <Card className="border-border/60 rounded-xl shadow-card">
               <CardHeader>
-                <CardTitle>Profile Information</CardTitle>
-                <CardDescription>
+                <CardTitle className="font-semibold">Profile Information</CardTitle>
+                <CardDescription className="text-muted-foreground/70">
                   Update your personal details and contact information
                 </CardDescription>
               </CardHeader>
@@ -113,7 +113,7 @@ export default function Settings() {
                       <Upload className="h-4 w-4" />
                       Upload Photo
                     </Button>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-muted-foreground/60">
                       JPG, PNG or GIF. Max size 2MB.
                     </p>
                   </div>
@@ -164,10 +164,10 @@ export default function Settings() {
 
           {/* Notifications Tab */}
           <TabsContent value="notifications" className="space-y-6">
-            <Card>
+            <Card className="border-border/60 rounded-xl shadow-card">
               <CardHeader>
-                <CardTitle>Notification Preferences</CardTitle>
-                <CardDescription>
+                <CardTitle className="font-semibold">Notification Preferences</CardTitle>
+                <CardDescription className="text-muted-foreground/70">
                   Choose how you want to receive notifications
                 </CardDescription>
               </CardHeader>
@@ -178,7 +178,7 @@ export default function Settings() {
                       <Mail className="h-5 w-5 text-muted-foreground" />
                       <div>
                         <p className="font-medium">Email Notifications</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-muted-foreground/70">
                           Receive notifications via email
                         </p>
                       </div>
@@ -193,7 +193,7 @@ export default function Settings() {
                       <Smartphone className="h-5 w-5 text-muted-foreground" />
                       <div>
                         <p className="font-medium">Push Notifications</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-muted-foreground/70">
                           Receive push notifications on your device
                         </p>
                       </div>
@@ -208,14 +208,14 @@ export default function Settings() {
                 <Separator />
 
                 <div className="space-y-4">
-                  <h4 className="font-medium">Notification Types</h4>
+                  <h4 className="font-semibold">Notification Types</h4>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <CheckCircle2 className="h-5 w-5 text-emerald-500" />
                         <div>
                           <p className="font-medium">Test Results</p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-muted-foreground/70">
                             When test results are ready
                           </p>
                         </div>
@@ -227,7 +227,7 @@ export default function Settings() {
                         <AlertTriangle className="h-5 w-5 text-amber-500" />
                         <div>
                           <p className="font-medium">Inspection Alerts</p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-muted-foreground/70">
                             Critical inspection findings
                           </p>
                         </div>
@@ -242,7 +242,7 @@ export default function Settings() {
                         <Building2 className="h-5 w-5 text-blue-500" />
                         <div>
                           <p className="font-medium">Supplier Updates</p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-muted-foreground/70">
                             Changes to supplier status
                           </p>
                         </div>
@@ -257,7 +257,7 @@ export default function Settings() {
                         <Clock className="h-5 w-5 text-purple-500" />
                         <div>
                           <p className="font-medium">Weekly Digest</p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-muted-foreground/70">
                             Summary of weekly activities
                           </p>
                         </div>
@@ -272,10 +272,10 @@ export default function Settings() {
 
           {/* Security Tab */}
           <TabsContent value="security" className="space-y-6">
-            <Card>
+            <Card className="border-border/60 rounded-xl shadow-card">
               <CardHeader>
-                <CardTitle>Password</CardTitle>
-                <CardDescription>Change your password</CardDescription>
+                <CardTitle className="font-semibold">Password</CardTitle>
+                <CardDescription className="text-muted-foreground/70">Change your password</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
@@ -297,10 +297,10 @@ export default function Settings() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-border/60 rounded-xl shadow-card">
               <CardHeader>
-                <CardTitle>Two-Factor Authentication</CardTitle>
-                <CardDescription>
+                <CardTitle className="font-semibold">Two-Factor Authentication</CardTitle>
+                <CardDescription className="text-muted-foreground/70">
                   Add an extra layer of security to your account
                 </CardDescription>
               </CardHeader>
@@ -310,7 +310,7 @@ export default function Settings() {
                     <Shield className="h-5 w-5 text-muted-foreground" />
                     <div>
                       <p className="font-medium">Enable 2FA</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-muted-foreground/70">
                         Use an authenticator app for additional security
                       </p>
                     </div>
@@ -333,10 +333,10 @@ export default function Settings() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-border/60 rounded-xl shadow-card">
               <CardHeader>
-                <CardTitle>Active Sessions</CardTitle>
-                <CardDescription>Manage your active login sessions</CardDescription>
+                <CardTitle className="font-semibold">Active Sessions</CardTitle>
+                <CardDescription className="text-muted-foreground/70">Manage your active login sessions</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
@@ -345,7 +345,7 @@ export default function Settings() {
                       <Monitor className="h-5 w-5 text-muted-foreground" />
                       <div>
                         <p className="font-medium text-sm">Chrome on Windows</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground/60">
                           Current session • London, UK
                         </p>
                       </div>
@@ -359,7 +359,7 @@ export default function Settings() {
                       <Smartphone className="h-5 w-5 text-muted-foreground" />
                       <div>
                         <p className="font-medium text-sm">Safari on iPhone</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground/60">
                           Last active 2 hours ago • London, UK
                         </p>
                       </div>
@@ -375,10 +375,10 @@ export default function Settings() {
 
           {/* Appearance Tab */}
           <TabsContent value="appearance" className="space-y-6">
-            <Card>
+            <Card className="border-border/60 rounded-xl shadow-card">
               <CardHeader>
-                <CardTitle>Theme</CardTitle>
-                <CardDescription>Customize the look and feel of the application</CardDescription>
+                <CardTitle className="font-semibold">Theme</CardTitle>
+                <CardDescription className="text-muted-foreground/70">Customize the look and feel of the application</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-4">
@@ -462,10 +462,10 @@ export default function Settings() {
 
           {/* Organization Tab */}
           <TabsContent value="organization" className="space-y-6">
-            <Card>
+            <Card className="border-border/60 rounded-xl shadow-card">
               <CardHeader>
-                <CardTitle>Organization Details</CardTitle>
-                <CardDescription>
+                <CardTitle className="font-semibold">Organization Details</CardTitle>
+                <CardDescription className="text-muted-foreground/70">
                   Manage your organization's information
                 </CardDescription>
               </CardHeader>
@@ -525,18 +525,18 @@ export default function Settings() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-border/60 rounded-xl shadow-card">
               <CardHeader>
-                <CardTitle>Data Management</CardTitle>
-                <CardDescription>Export or delete your organization data</CardDescription>
+                <CardTitle className="font-semibold">Data Management</CardTitle>
+                <CardDescription className="text-muted-foreground/70">Export or delete your organization data</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border border-border/60 rounded-xl">
                   <div className="flex items-center gap-3">
-                    <Database className="h-5 w-5 text-muted-foreground" />
+                    <span className="p-2.5 rounded-xl bg-muted/40"><Database className="h-5 w-5 text-muted-foreground" /></span>
                     <div>
                       <p className="font-medium">Export Data</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-muted-foreground/70">
                         Download all your organization data
                       </p>
                     </div>
@@ -552,23 +552,23 @@ export default function Settings() {
 
           {/* Integrations Tab */}
           <TabsContent value="integrations" className="space-y-6">
-            <Card>
+            <Card className="border-border/60 rounded-xl shadow-card">
               <CardHeader>
-                <CardTitle>Connected Services</CardTitle>
-                <CardDescription>
+                <CardTitle className="font-semibold">Connected Services</CardTitle>
+                <CardDescription className="text-muted-foreground/70">
                   Manage third-party integrations and API connections
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center justify-between p-4 border border-border/60 rounded-xl">
                     <div className="flex items-center gap-4">
-                      <div className="h-10 w-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                      <div className="h-10 w-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
                         <span className="text-blue-600 font-bold text-sm">SAP</span>
                       </div>
                       <div>
                         <p className="font-medium">SAP Integration</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-muted-foreground/70">
                           Sync supplier and order data
                         </p>
                       </div>
@@ -577,14 +577,14 @@ export default function Settings() {
                       Connected
                     </Badge>
                   </div>
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center justify-between p-4 border border-border/60 rounded-xl">
                     <div className="flex items-center gap-4">
-                      <div className="h-10 w-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                      <div className="h-10 w-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
                         <span className="text-purple-600 font-bold text-sm">SF</span>
                       </div>
                       <div>
                         <p className="font-medium">Salesforce</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-muted-foreground/70">
                           CRM and customer data sync
                         </p>
                       </div>
@@ -593,14 +593,14 @@ export default function Settings() {
                       Connect
                     </Button>
                   </div>
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center justify-between p-4 border border-border/60 rounded-xl">
                     <div className="flex items-center gap-4">
-                      <div className="h-10 w-10 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
+                      <div className="h-10 w-10 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center">
                         <Webhook className="h-5 w-5 text-orange-600" />
                       </div>
                       <div>
                         <p className="font-medium">Webhooks</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-muted-foreground/70">
                           Send real-time notifications to external services
                         </p>
                       </div>
@@ -613,16 +613,16 @@ export default function Settings() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-border/60 rounded-xl shadow-card">
               <CardHeader>
-                <CardTitle>API Access</CardTitle>
-                <CardDescription>Manage API keys for programmatic access</CardDescription>
+                <CardTitle className="font-semibold">API Access</CardTitle>
+                <CardDescription className="text-muted-foreground/70">Manage API keys for programmatic access</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                <div className="flex items-center justify-between p-4 bg-muted/50 rounded-xl">
                   <div>
                     <p className="font-medium text-sm">Production API Key</p>
-                    <p className="text-xs text-muted-foreground font-mono">
+                    <p className="text-xs text-muted-foreground/60 font-mono">
                       sk_live_****************************a1b2
                     </p>
                   </div>

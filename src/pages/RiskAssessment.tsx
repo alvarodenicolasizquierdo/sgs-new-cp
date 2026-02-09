@@ -29,7 +29,7 @@ export default function RiskAssessment() {
             </motion.div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold text-foreground">Risk Assessment</h1>
+                <h1 className="text-2xl font-semibold text-foreground">Risk Assessment</h1>
                 <motion.div 
                   className="flex items-center gap-1 px-2 py-0.5 bg-success/10 text-success text-xs font-medium rounded-full"
                   initial={{ scale: 0 }}
@@ -40,7 +40,7 @@ export default function RiskAssessment() {
                   Live
                 </motion.div>
               </div>
-              <p className="text-muted-foreground mt-1 max-w-xl">
+              <p className="text-muted-foreground/80 mt-1 max-w-xl">
                 Real-time visibility into factory locations, risk scores, and supplier performance across your global supply chain.
               </p>
             </div>
@@ -66,7 +66,7 @@ export default function RiskAssessment() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        <Card className="border-dashed">
+        <Card className="border-dashed border-border/60 rounded-xl">
           <CardContent className="p-4">
             <button
               onClick={() => setMethodologyOpen(!methodologyOpen)}
@@ -74,7 +74,7 @@ export default function RiskAssessment() {
             >
               <div className="flex items-center gap-2">
                 <Info className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Risk Scoring Methodology</span>
+                <span className="text-sm font-semibold">Risk Scoring Methodology</span>
               </div>
               {methodologyOpen ? (
                 <ChevronUp className="h-4 w-4 text-muted-foreground" />
@@ -92,7 +92,7 @@ export default function RiskAssessment() {
                   transition={{ duration: 0.2 }}
                   className="overflow-hidden"
                 >
-                  <div className="mt-4 space-y-3 text-sm text-muted-foreground border-t pt-4">
+                  <div className="mt-4 space-y-3 text-sm text-muted-foreground/80 border-t border-border/60 pt-4">
                     <div>
                       <p className="font-medium text-foreground mb-1">Calculation Method</p>
                       <p>Weighted composite of inspection pass rate (40%), corrective action response time (25%), historical non-conformance trends (20%), and supplier self-assessment compliance (15%).</p>
@@ -115,7 +115,7 @@ export default function RiskAssessment() {
                         <p className="text-xs">15% of score</p>
                       </div>
                     </div>
-                    <p className="text-xs italic">Risk thresholds: Low (0–39), Medium (40–64), High (65–100). Scores update daily at 00:00 UTC.</p>
+                    <p className="text-xs italic text-muted-foreground/60">Risk thresholds: Low (0–39), Medium (40–64), High (65–100). Scores update daily at 00:00 UTC.</p>
                   </div>
                 </motion.div>
               )}
