@@ -164,10 +164,10 @@ export default function Suppliers() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2">
-              <Building2 className="h-6 w-6" />
+              <span className="p-2.5 rounded-xl bg-muted/40"><Building2 className="h-5 w-5" /></span>
               Suppliers
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground/80">
               Manage supplier directory and performance
             </p>
           </div>
@@ -195,64 +195,64 @@ export default function Suppliers() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-          <Card>
+          <Card className="border-border/60 shadow-card">
             <CardContent className="p-4">
-              <div className="text-2xl font-bold">{stats.total}</div>
-              <div className="text-sm text-muted-foreground">Total</div>
+              <div className="text-2xl font-semibold">{stats.total}</div>
+              <div className="text-sm text-muted-foreground/80">Total</div>
             </CardContent>
           </Card>
-          <Card className="border-success/30">
+          <Card className="border-success/30 shadow-card">
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-success" />
-                <div className="text-2xl font-bold text-success">{stats.compliant}</div>
+                <span className="p-2 rounded-lg bg-success/10"><CheckCircle2 className="h-4 w-4 text-success" /></span>
+                <div className="text-2xl font-semibold text-success">{stats.compliant}</div>
               </div>
-              <div className="text-sm text-muted-foreground">Compliant</div>
+              <div className="text-sm text-muted-foreground/80">Compliant</div>
             </CardContent>
           </Card>
-          <Card className="border-warning/30">
+          <Card className="border-warning/30 shadow-card">
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <AlertTriangle className="h-5 w-5 text-warning" />
-                <div className="text-2xl font-bold text-warning">{stats.atRisk}</div>
+                <span className="p-2 rounded-lg bg-warning/10"><AlertTriangle className="h-4 w-4 text-warning" /></span>
+                <div className="text-2xl font-semibold text-warning">{stats.atRisk}</div>
               </div>
-              <div className="text-sm text-muted-foreground">At Risk</div>
+              <div className="text-sm text-muted-foreground/80">At Risk</div>
             </CardContent>
           </Card>
-          <Card className="border-destructive/30">
+          <Card className="border-destructive/30 shadow-card">
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <XCircle className="h-5 w-5 text-destructive" />
-                <div className="text-2xl font-bold text-destructive">{stats.nonCompliant}</div>
+                <span className="p-2 rounded-lg bg-destructive/10"><XCircle className="h-4 w-4 text-destructive" /></span>
+                <div className="text-2xl font-semibold text-destructive">{stats.nonCompliant}</div>
               </div>
-              <div className="text-sm text-muted-foreground">Non-Compliant</div>
+              <div className="text-sm text-muted-foreground/80">Non-Compliant</div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-border/60 shadow-card">
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <Clock className="h-5 w-5 text-muted-foreground" />
-                <div className="text-2xl font-bold">{stats.pendingAudit}</div>
+                <span className="p-2 rounded-lg bg-muted/40"><Clock className="h-4 w-4 text-muted-foreground" /></span>
+                <div className="text-2xl font-semibold">{stats.pendingAudit}</div>
               </div>
-              <div className="text-sm text-muted-foreground">Pending Audit</div>
+              <div className="text-sm text-muted-foreground/80">Pending Audit</div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-border/60 shadow-card">
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-primary" />
-                <div className="text-2xl font-bold">{stats.avgScore}%</div>
+                <span className="p-2 rounded-lg bg-primary/10"><TrendingUp className="h-4 w-4 text-primary" /></span>
+                <div className="text-2xl font-semibold">{stats.avgScore}%</div>
               </div>
-              <div className="text-sm text-muted-foreground">Avg Score</div>
+              <div className="text-sm text-muted-foreground/80">Avg Score</div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-border/60 shadow-card">
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <Package className="h-5 w-5 text-primary" />
-                <div className="text-2xl font-bold">{stats.totalStyles}</div>
+                <span className="p-2 rounded-lg bg-primary/10"><Package className="h-4 w-4 text-primary" /></span>
+                <div className="text-2xl font-semibold">{stats.totalStyles}</div>
               </div>
-              <div className="text-sm text-muted-foreground">Active Styles</div>
+              <div className="text-sm text-muted-foreground/80">Active Styles</div>
             </CardContent>
           </Card>
         </div>
@@ -299,7 +299,7 @@ export default function Suppliers() {
         </div>
 
         {/* Results count */}
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm text-muted-foreground/60">
           {filteredSuppliers.length} suppliers
         </div>
 
@@ -399,7 +399,7 @@ export default function Suppliers() {
                             </Avatar>
                             <div>
                               <div className="font-medium">{supplier.name}</div>
-                              <div className="text-xs text-muted-foreground font-mono">
+                              <div className="text-xs text-muted-foreground/60 font-mono">
                                 {supplier.code}
                               </div>
                             </div>
@@ -413,10 +413,10 @@ export default function Suppliers() {
                         </TableCell>
                         <TableCell>
                           <div className="text-sm">{supplier.contactName}</div>
-                          <div className="text-xs text-muted-foreground">{supplier.contactEmail}</div>
+                          <div className="text-xs text-muted-foreground/60">{supplier.contactEmail}</div>
                         </TableCell>
                         <TableCell className="text-center">
-                          <div className={cn("text-lg font-bold", getScoreColor(supplier.performanceScore))}>
+                          <div className={cn("text-lg font-semibold", getScoreColor(supplier.performanceScore))}>
                             {supplier.performanceScore}
                           </div>
                         </TableCell>

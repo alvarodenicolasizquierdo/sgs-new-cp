@@ -84,7 +84,7 @@ const Inspections = () => {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold">Inspections</h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-muted-foreground/80 mt-1">
             Manage and track all quality inspections across your supply chain
           </p>
         </div>
@@ -155,7 +155,7 @@ const Inspections = () => {
       </div>
 
       {/* Results Summary */}
-      <div className="mt-4 text-sm text-muted-foreground">
+      <div className="mt-4 text-sm text-muted-foreground/60">
         Showing {filteredData.length} of {mockInspections.length} inspections
       </div>
     </DashboardLayout>

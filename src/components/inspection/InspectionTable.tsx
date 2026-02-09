@@ -43,7 +43,7 @@ export function InspectionTable({ data, selectedIds, onSelectionChange }: Inspec
   };
 
   return (
-    <div className="border rounded-lg overflow-hidden">
+    <div className="border border-border/60 rounded-xl overflow-hidden bg-card shadow-card">
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/50">
@@ -87,7 +87,7 @@ export function InspectionTable({ data, selectedIds, onSelectionChange }: Inspec
               <TableCell>
                 <div>
                   <p className="text-sm font-medium">{inspection.purchaseOrder}</p>
-                  <p className="text-xs text-muted-foreground">{inspection.productName}</p>
+                  <p className="text-xs text-muted-foreground/70">{inspection.productName}</p>
                 </div>
               </TableCell>
               <TableCell>
@@ -96,7 +96,7 @@ export function InspectionTable({ data, selectedIds, onSelectionChange }: Inspec
               <TableCell>
                 <div>
                   <p className="text-sm font-medium">{inspection.supplier.name}</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground/60">
                     {inspection.factory.name}, {inspection.factory.country}
                   </p>
                 </div>

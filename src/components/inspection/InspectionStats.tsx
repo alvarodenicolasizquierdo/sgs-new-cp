@@ -27,45 +27,45 @@ export function InspectionStats({ data }: InspectionStatsProps) {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-      <Card>
+      <Card className="border-border/60 shadow-card">
         <CardContent className="p-4">
-          <p className="text-sm text-muted-foreground">Total</p>
-          <p className="text-2xl font-bold">{stats.total}</p>
+          <p className="text-sm text-muted-foreground/80">Total</p>
+          <p className="text-2xl font-semibold">{stats.total}</p>
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="border-border/60 shadow-card">
         <CardContent className="p-4">
-          <p className="text-sm text-muted-foreground">Scheduled</p>
-          <p className="text-2xl font-bold text-info">{stats.scheduled}</p>
+          <p className="text-sm text-muted-foreground/80">Scheduled</p>
+          <p className="text-2xl font-semibold text-info">{stats.scheduled}</p>
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="border-border/60 shadow-card">
         <CardContent className="p-4">
-          <p className="text-sm text-muted-foreground">In Progress</p>
-          <p className="text-2xl font-bold text-primary">{stats.inProgress}</p>
+          <p className="text-sm text-muted-foreground/80">In Progress</p>
+          <p className="text-2xl font-semibold text-primary">{stats.inProgress}</p>
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="border-border/60 shadow-card">
         <CardContent className="p-4">
-          <p className="text-sm text-muted-foreground">Completed</p>
-          <p className="text-2xl font-bold">{stats.completed}</p>
+          <p className="text-sm text-muted-foreground/80">Completed</p>
+          <p className="text-2xl font-semibold">{stats.completed}</p>
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="border-border/60 shadow-card">
         <CardContent className="p-4">
-          <p className="text-sm text-muted-foreground">Pass Rate</p>
-          <p className="text-2xl font-bold text-success">{stats.passRate}%</p>
+          <p className="text-sm text-muted-foreground/80">Pass Rate</p>
+          <p className="text-2xl font-semibold text-success">{stats.passRate}%</p>
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="border-border/60 shadow-card">
         <CardContent className="p-4">
-          <p className="text-sm text-muted-foreground">High Risk</p>
-          <p className="text-2xl font-bold text-destructive">{stats.riskBreakdown.high}</p>
+          <p className="text-sm text-muted-foreground/80">High Risk</p>
+          <p className="text-2xl font-semibold text-destructive">{stats.riskBreakdown.high}</p>
         </CardContent>
       </Card>
     </div>
