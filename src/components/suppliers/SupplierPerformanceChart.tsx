@@ -89,8 +89,8 @@ export function SupplierPerformanceChart({
               {scoreDiff} pts
             </Badge>
             <div className="text-right">
-              <p className="text-2xl font-bold">{currentScore}</p>
-              <p className="text-xs text-muted-foreground">Current</p>
+              <p className="text-2xl font-semibold">{currentScore}</p>
+              <p className="text-xs text-muted-foreground/60">Current</p>
             </div>
           </div>
         </div>

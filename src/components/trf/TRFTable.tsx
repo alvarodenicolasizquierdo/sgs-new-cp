@@ -140,7 +140,7 @@ export function TRFTable({ data, selectedIds, onSelectionChange }: TRFTableProps
   );
 
   return (
-    <div className="border rounded-lg bg-card overflow-hidden">
+    <div className="border border-border/60 rounded-xl bg-card overflow-hidden shadow-card">
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/50">
@@ -185,7 +185,7 @@ export function TRFTable({ data, selectedIds, onSelectionChange }: TRFTableProps
               <TableCell>
                 <div>
                   <p className="font-medium">{trf.styleName}</p>
-                  <p className="text-xs text-muted-foreground">{trf.styleNumber}</p>
+                  <p className="text-xs text-muted-foreground/60">{trf.styleNumber}</p>
                 </div>
               </TableCell>
               <TableCell>

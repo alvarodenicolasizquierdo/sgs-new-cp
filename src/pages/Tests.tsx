@@ -93,7 +93,7 @@ const Tests = () => {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold">Test Request Forms</h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-muted-foreground/80 mt-1">
             Manage and track all test requests across your supply chain
           </p>
         </div>
@@ -116,30 +116,30 @@ const Tests = () => {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-card border rounded-lg p-4">
-          <p className="text-sm text-muted-foreground">Total TRFs</p>
-          <p className="text-2xl font-bold">{stats.total}</p>
+        <div className="bg-card border border-border/60 rounded-xl p-4 shadow-card">
+          <p className="text-sm text-muted-foreground/80">Total TRFs</p>
+          <p className="text-2xl font-semibold">{stats.total}</p>
         </div>
-        <div className="bg-card border rounded-lg p-4">
+        <div className="bg-card border border-border/60 rounded-xl p-4 shadow-card">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-success" />
-            <p className="text-sm text-muted-foreground">On Track</p>
+            <span className="p-1.5 rounded-lg bg-success/10"><span className="block w-2 h-2 rounded-full bg-success" /></span>
+            <p className="text-sm text-muted-foreground/80">On Track</p>
           </div>
-          <p className="text-2xl font-bold text-success">{stats.onTrack}</p>
+          <p className="text-2xl font-semibold text-success">{stats.onTrack}</p>
         </div>
-        <div className="bg-card border rounded-lg p-4">
+        <div className="bg-card border border-border/60 rounded-xl p-4 shadow-card">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-warning" />
-            <p className="text-sm text-muted-foreground">At Risk</p>
+            <span className="p-1.5 rounded-lg bg-warning/10"><span className="block w-2 h-2 rounded-full bg-warning" /></span>
+            <p className="text-sm text-muted-foreground/80">At Risk</p>
           </div>
-          <p className="text-2xl font-bold text-warning">{stats.atRisk}</p>
+          <p className="text-2xl font-semibold text-warning">{stats.atRisk}</p>
         </div>
-        <div className="bg-card border rounded-lg p-4">
+        <div className="bg-card border border-border/60 rounded-xl p-4 shadow-card">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-destructive" />
-            <p className="text-sm text-muted-foreground">Overdue</p>
+            <span className="p-1.5 rounded-lg bg-destructive/10"><span className="block w-2 h-2 rounded-full bg-destructive" /></span>
+            <p className="text-sm text-muted-foreground/80">Overdue</p>
           </div>
-          <p className="text-2xl font-bold text-destructive">{stats.overdue}</p>
+          <p className="text-2xl font-semibold text-destructive">{stats.overdue}</p>
         </div>
       </div>
 
@@ -188,7 +188,7 @@ const Tests = () => {
       </div>
 
       {/* Results Summary */}
-      <div className="mt-4 text-sm text-muted-foreground">
+      <div className="mt-4 text-sm text-muted-foreground/60">
         Showing {filteredData.length} of {mockTRFs.length} test requests
       </div>
     </DashboardLayout>
