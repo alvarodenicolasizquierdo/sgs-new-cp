@@ -142,7 +142,7 @@ export default function SupportCenter() {
                 <HelpCircle className="h-4 w-4" />
                 Support Center
               </div>
-              <h1 className="text-2xl font-bold">How can we help you today?</h1>
+              <h1 className="text-2xl font-semibold">How can we help you today?</h1>
             </div>
           </div>
         </motion.div>
@@ -153,9 +153,9 @@ export default function SupportCenter() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Card className="h-[calc(100vh-220px)] overflow-hidden">
+          <Card className="h-[calc(100vh-220px)] overflow-hidden border-border/60 rounded-xl shadow-card">
             {/* Tab Navigation */}
-            <div className="border-b border-border">
+            <div className="border-b border-border/60">
               <div className="flex">
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
@@ -273,7 +273,7 @@ export default function SupportCenter() {
             {escalationType === 'email' ? (
               <div className="space-y-4">
                 <div className="bg-secondary/50 rounded-lg p-4">
-                  <p className="text-sm text-muted-foreground mb-2">Context included:</p>
+                  <p className="text-sm text-muted-foreground/70 mb-2">Context included:</p>
                   <ul className="text-sm space-y-1">
                     <li>• Current page: {contextHelp?.title || 'Unknown'}</li>
                     <li>• Recent conversation history</li>
