@@ -168,14 +168,6 @@ export default function SupplierInbox() {
           </div>
           
           <div className="flex gap-2 flex-wrap">
-            {/* Status Toggle */}
-            <Tabs value={statusFilter} onValueChange={(v) => setStatusFilter(v as TaskStatus)} className="w-auto">
-              <TabsList>
-                <TabsTrigger value="pending">Pending</TabsTrigger>
-                <TabsTrigger value="completed">Completed</TabsTrigger>
-              </TabsList>
-            </Tabs>
-            
             {/* Type Filter */}
             <Select value={typeFilter} onValueChange={(v) => setTypeFilter(v as TaskType | "all")}>
               <SelectTrigger className="w-[180px]">
