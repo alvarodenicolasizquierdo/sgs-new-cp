@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { tagScreen } from "@/utils/clarityTracking";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { mockInspections } from "@/data/mockInspections";
 import { InspectionStatus, inspectionStatusConfig } from "@/types/inspection";
@@ -49,6 +50,7 @@ const availableInspectionStatuses: { value: InspectionStatus; label: string; des
 const InspectionDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  useEffect(() => { tagScreen('smart-inspection-detail'); }, []);
   const [currentStatus, setCurrentStatus] = useState<InspectionStatus | null>(null);
 
   const inspection = mockInspections.find((i) => i.id === id);

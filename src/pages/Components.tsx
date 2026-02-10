@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { tagScreen } from "@/utils/clarityTracking";
 import { Link } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { 
@@ -73,6 +74,7 @@ import {
 import { cn } from "@/lib/utils";
 
 export default function Components() {
+  useEffect(() => { tagScreen('smart-components'); }, []);
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState<ComponentType | "all">("all");
   const [statusFilter, setStatusFilter] = useState<ComponentStatus[]>([]);

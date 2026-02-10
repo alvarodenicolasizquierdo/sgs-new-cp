@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   ClipboardCheck,
   CheckCircle2,
@@ -6,6 +7,7 @@ import {
   FlaskConical,
   TrendingUp,
 } from "lucide-react";
+import { tagScreen } from "@/utils/clarityTracking";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import markAvatar from "@/assets/profiles/mark.png";
 import karukaAvatar from "@/assets/profiles/karuka.jpg";
@@ -22,6 +24,8 @@ import { QuickActions } from "@/components/dashboard/QuickActions";
 import { UpcomingSchedule } from "@/components/dashboard/UpcomingSchedule";
 
 const Index = () => {
+  useEffect(() => { tagScreen('smart-dashboard'); }, []);
+
   return (
     <DashboardLayout>
       {/* Page Header */}

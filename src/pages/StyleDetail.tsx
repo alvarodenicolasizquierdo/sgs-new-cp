@@ -1,4 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { tagScreen } from "@/utils/clarityTracking";
 import { CareSymbolIcon } from "@/components/care-symbols/CareSymbolIcon";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { StyleStatusBadge } from "@/components/styles/StyleStatusBadge";
@@ -47,6 +49,7 @@ import { FabricComponent, TrimComponent } from "@/types/component";
 export default function StyleDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  useEffect(() => { tagScreen('smart-style-detail'); }, []);
   
   const style = getStyleById(id || "");
   const components = style ? getComponentsByStyle(style.id) : [];

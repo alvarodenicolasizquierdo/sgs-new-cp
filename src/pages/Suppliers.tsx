@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { tagScreen } from "@/utils/clarityTracking";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
@@ -78,6 +79,7 @@ import {
 
 export default function Suppliers() {
   const navigate = useNavigate();
+  useEffect(() => { tagScreen('smart-suppliers'); }, []);
   const [searchQuery, setSearchQuery] = useState("");
   const [complianceFilter, setComplianceFilter] = useState<string>("all");
   const [tierFilter, setTierFilter] = useState<string>("all");

@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { tagScreen } from "@/utils/clarityTracking";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { mockTRFs } from "@/data/mockTRFs";
 import { TRFStatus, statusConfig } from "@/types/trf";
@@ -62,6 +63,7 @@ const availableTRFStatuses: { value: TRFStatus; label: string; description: stri
 const TRFDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  useEffect(() => { tagScreen('smart-trf-detail'); }, []);
   const [expandedSections, setExpandedSections] = useState<string[]>([
     "basic",
     "product",

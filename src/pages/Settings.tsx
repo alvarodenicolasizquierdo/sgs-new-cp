@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { tagScreen } from "@/utils/clarityTracking";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -43,6 +44,7 @@ import {
 import markAvatar from "@/assets/profiles/mark.png";
 
 export default function Settings() {
+  useEffect(() => { tagScreen('smart-settings'); }, []);
   const [theme, setTheme] = useState("system");
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);

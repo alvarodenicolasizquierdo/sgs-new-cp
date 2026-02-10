@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { tagScreen } from "@/utils/clarityTracking";
 import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { InspectionFilters } from "@/components/inspection/InspectionFilters";
@@ -34,6 +35,7 @@ const defaultFilters: InspectionFilter = {
 
 const Inspections = () => {
   const navigate = useNavigate();
+  useEffect(() => { tagScreen('smart-inspections'); }, []);
   const [viewMode, setViewMode] = useState<"table" | "kanban">("table");
   const [filters, setFilters] = useState<InspectionFilter>(defaultFilters);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
