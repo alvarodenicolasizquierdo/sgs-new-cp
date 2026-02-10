@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { tagScreen } from '@/utils/clarityTracking';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   MessageCircle, 
@@ -51,6 +52,7 @@ const CURRENT_USER_ROLE = 'admin'; // 'user' | 'admin'
 export default function SupportCenter() {
   const [searchParams] = useSearchParams();
   const initialTab = searchParams.get('tab') || 'chat';
+  useEffect(() => { tagScreen('smart-support-center'); }, []);
   const [activeTab, setActiveTab] = useState(initialTab);
   const [showNewTicketDialog, setShowNewTicketDialog] = useState(false);
   const [showEscalationDialog, setShowEscalationDialog] = useState(false);

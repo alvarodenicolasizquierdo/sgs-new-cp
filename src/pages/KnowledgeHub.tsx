@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { tagScreen } from '@/utils/clarityTracking';
 import { motion } from 'framer-motion';
 import { 
   Search, 
@@ -53,6 +54,7 @@ const recentUpdates = [
 ];
 
 export default function KnowledgeHub() {
+  useEffect(() => { tagScreen('smart-knowledge-hub'); }, []);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<HelpItem | null>(null);

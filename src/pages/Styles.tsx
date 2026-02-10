@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { tagScreen } from "@/utils/clarityTracking";
 import { Link } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { StyleCard } from "@/components/styles/StyleCard";
@@ -52,6 +53,7 @@ import { cn } from "@/lib/utils";
 type ViewMode = "cards" | "table";
 
 export default function Styles() {
+  useEffect(() => { tagScreen('smart-styles'); }, []);
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<ViewMode>("cards");
   const [statusFilter, setStatusFilter] = useState<StyleStatus[]>([]);

@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { tagScreen } from "@/utils/clarityTracking";
 import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { TRFFilters } from "@/components/trf/TRFFilters";
@@ -33,6 +34,7 @@ const defaultFilters: TRFFilter = {
 
 const Tests = () => {
   const navigate = useNavigate();
+  useEffect(() => { tagScreen('smart-trf-lifecycle'); }, []);
   const [viewMode, setViewMode] = useState<"table" | "kanban">("table");
   const [filters, setFilters] = useState<TRFFilter>(defaultFilters);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);

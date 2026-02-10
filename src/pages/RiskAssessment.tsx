@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { tagScreen } from "@/utils/clarityTracking";
 import { motion, AnimatePresence } from "framer-motion";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { RiskMap } from "@/components/risk-map/RiskMap";
@@ -8,6 +9,7 @@ import { Button } from "@/components/ui/button";
 
 export default function RiskAssessment() {
   const [methodologyOpen, setMethodologyOpen] = useState(false);
+  useEffect(() => { tagScreen('smart-risk-assessment'); }, []);
 
   return (
     <DashboardLayout>

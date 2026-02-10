@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { tagScreen } from "@/utils/clarityTracking";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -30,6 +31,7 @@ import { mockTransactions, transactionColumns } from "@/data/mockReports";
 const ITEMS_PER_PAGE = 20;
 
 export default function Reports() {
+  useEffect(() => { tagScreen('smart-analytics'); }, []);
   const [activeTab, setActiveTab] = useState("risk");
   const [filters, setFilters] = useState<TransactionFiltersState>({
     search: "",
