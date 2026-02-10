@@ -32,6 +32,7 @@ import KnowledgeHub from "./pages/KnowledgeHub";
 import SupportAdmin from "./pages/SupportAdmin";
 import SupportCenter from "./pages/SupportCenter";
 import CompetitiveMatrix from "./pages/CompetitiveMatrix";
+import CompetitiveIntelBrief from "./pages/CompetitiveIntelBrief";
 import FeatureSpec from "./pages/FeatureSpec";
 import NotFound from "./pages/NotFound";
 
@@ -74,6 +75,7 @@ const App = () => {
               <Route path="/support" element={<SupportCenter />} />
               <Route path="/support-admin" element={<SupportAdmin />} />
               <Route path="/competitive-matrix" element={<CompetitiveMatrix />} />
+              <Route path="/competitive-intel" element={<CompetitiveIntelBrief />} />
               <Route path="/feature-spec" element={<FeatureSpec />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
