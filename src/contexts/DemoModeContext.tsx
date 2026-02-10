@@ -34,8 +34,6 @@ const DEMO_BLOCKED_ROUTES = [
   '/settings',
   '/users',
   '/support-admin',
-  '/competitive-matrix',
-  '/feature-spec',
   '/help',
 ];
 
