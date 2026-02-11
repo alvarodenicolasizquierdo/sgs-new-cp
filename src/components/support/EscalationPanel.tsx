@@ -43,7 +43,7 @@ export function EscalationPanel({ isOpen, onClose, type, context }: EscalationPa
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     // In a real app, this would send to your backend
-    console.log('Support ticket submitted:', {
+    void ({
       ...formData,
       context: {
         page: context.currentPage,

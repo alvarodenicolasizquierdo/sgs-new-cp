@@ -77,7 +77,7 @@ export function SupportCenterAdmin() {
   }, [statusFilter, searchQuery]);
 
   const handleSaveAnswer = () => {
-    console.log('Saving answer for:', selectedQuestion?.id, editingAnswer);
+    // TODO: persist answer to backend
     setSelectedQuestion(null);
     setEditingAnswer('');
   };

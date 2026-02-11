@@ -178,7 +178,7 @@ export function SupportCenterKnowledge({ onAskAI }: SupportCenterKnowledgeProps)
                   <ArticleRating 
                     articleId={selectedArticle.id}
                     onSubmit={async (rating, feedback) => {
-                      console.log('Article rating:', { articleId: selectedArticle.id, rating, feedback });
+                      // In production, send rating to analytics
                       // In production, send to analytics
                     }}
                   />

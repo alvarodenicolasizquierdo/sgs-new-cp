@@ -88,7 +88,7 @@ export default function SupportCenter() {
     
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    console.log('Ticket submitted:', ticketFormData);
+    // TODO: persist ticket to backend
     
     setIsSubmitting(false);
     setShowNewTicketDialog(false);
@@ -248,7 +248,7 @@ export default function SupportCenter() {
           <DialogContent className="sm:max-w-2xl max-h-[90vh] p-0 overflow-hidden">
             <TicketCreateWizard
               onSubmit={async (data) => {
-                console.log('Ticket submitted:', data);
+                // TODO: persist ticket to backend
                 setShowNewTicketDialog(false);
                 setActiveTab('tickets');
               }}
