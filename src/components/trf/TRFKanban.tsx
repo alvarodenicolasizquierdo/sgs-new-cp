@@ -52,7 +52,7 @@ export function TRFKanban({ data }: TRFKanbanProps) {
 
   const handleDrop = (e: React.DragEvent, status: TRFStatus) => {
     e.preventDefault();
-    console.log(`Move ${draggedItem} to ${status}`);
+    // TODO: persist status change
     setDraggedItem(null);
     setDropTarget(null);
   };

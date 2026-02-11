@@ -50,7 +50,7 @@ export function InspectionKanban({ data }: InspectionKanbanProps) {
 
   const handleDrop = (e: React.DragEvent, status: InspectionStatus) => {
     e.preventDefault();
-    console.log(`Move ${draggedItem} to ${status}`);
+    // TODO: persist status change
     setDraggedItem(null);
     setDropTarget(null);
   };

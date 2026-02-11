@@ -103,7 +103,7 @@ export default function SupportAdmin() {
 
   const handleSaveAnswer = () => {
     // In a real app, this would save to the database
-    console.log('Saving answer for:', selectedQuestion?.id, editingAnswer);
+    // TODO: persist answer to backend
     setSelectedQuestion(null);
     setEditingAnswer('');
   };
